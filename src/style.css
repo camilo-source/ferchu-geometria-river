@@ -11,68 +11,77 @@
 
 :root {
   /* ═══════════════════════════════════════════════════════════
-     Paleta River Plate - Versión TDAH-Friendly
-     Colores menos saturados, más calmados para mejor concentración
+     Paleta River Plate - OFICIAL 🐔
+     Identidad Visual Monumental
      ═══════════════════════════════════════════════════════════ */
 
-  /* Colores Principales de River (suavizados) */
-  --primary: #D32F2F;
-  /* Rojo River más suave */
-  --primary-dark: #C62828;
+  /* River Red: Pantone 186 C approx */
+  --primary: #E4002B;
+  /* Rojo River vibrante */
+  --primary-dark: #B90023;
   /* Rojo oscuro */
-  --primary-light: #EF5350;
-  /* Rojo claro */
+  --primary-light: #FF4D6A;
+  /* Rojo claro/brillante */
 
-  --secondary: #388E3C;
-  /* Verde césped */
-  --secondary-dark: #2E7D32;
-  /* Verde oscuro */
-  --secondary-light: #4CAF50;
-  /* Verde claro */
+  /* Blanco y Negro (Contrastes) */
+  --white: #FFFFFF;
+  --black: #1A1A1A;
+  /* Negro suave para UI */
+  --silver: #E0E0E0;
+  /* Detalles en plata */
 
-  --accent: #42A5F5;
-  /* Azul calmado (reemplaza cyan brillante) */
-  --accent-dark: #1E88E5;
-  /* Azul oscuro */
-  --accent-light: #64B5F6;
-  /* Azul claro */
+  /* Colores Funcionales */
+  --secondary: #1A1A1A;
+  /* Secundario ahora es Negro/Gris */
+  --secondary-dark: #000000;
+  --secondary-light: #424242;
 
-  /* Colores de Feedback TDAH-optimizados */
-  --success: #2E7D32;
-  /* Verde oscuro para fondo claro */
-  --warning: #F57C00;
-  /* Naranja oscuro */
-  --danger: #C62828;
-  /* Rojo oscuro, NO punitivo */
+  --accent: #E4002B;
+  /* El acento principal sigue siendo River */
 
-  /* Backgrounds (para cards) */
-  --bg-card: #FFFFFF;
-  /* Blanco para tarjetas */
-  --bg-card-hover: #F5F5F5;
-  /* Gris muy claro hover */
+  /* Feedback */
+  --success: #00A650;
+  /* Verde Éxito (MercadoLibre style, funciona con rojo) */
+  --warning: #FFD700;
+  /* Dorado (Gloria) */
+  --danger: #D32F2F;
+  /* Rojo Error */
 
-  /* Colores de Texto (para fondo BLANCO)*/
-  --text-primary: #2C3E50;
-  /* Texto oscuro principal */
-  --text-secondary: #546E7A;
-  /* Gris medio */
-  --text-accent: #D32F2F;
-  /* Rojo River para acentos */
+  /* Backgrounds */
+  --bg-app: #F5F5F7;
+  /* Gris muy claro, limpio */
+  --bg-card: rgba(255, 255, 255, 0.85);
 
-  /* Efectos Suavizados */
-  --glow-primary: 0 0 15px rgba(211, 47, 47, 0.3);
-  /* Glow suave */
-  --glow-secondary: 0 0 15px rgba(56, 142, 60, 0.3);
-  --glow-accent: 0 0 15px rgba(66, 165, 245, 0.3);
+  /* Texto */
+  --text-primary: #1A1A1A;
+  --text-secondary: #595959;
+  --text-accent: #E4002B;
 
-  /* Sombras */
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --shadow-float: 0 8px 24px rgba(211, 47, 47, 0.25);
+  /* Efectos Pro (Glassmorphism & Shadows) */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: 20px;
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --glow-primary: 0 0 20px rgba(228, 0, 43, 0.3);
 
   /* Tipografía */
   --font-title: 'Fredoka One', cursive;
-  --font-body: 'Poppins', sans-serif;
+  /* Mantendremos esta por ser amigable */
+  --font-body: 'Inter', system-ui, sans-serif;
+  /* Moderno y limpio como ATS */
   --font-number: 'Orbitron', monospace;
+}
+
+/* UTILIDAD GLASS-PANEL (Ported from ATS) */
+.glass-panel {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -89,7 +98,7 @@ html,
 body {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; -- REMOVED to allow zoom/scroll if needed */
   font-family: var(--font-body);
   color: #2C3E50;
   /* Texto oscuro sobre fondo claro */
@@ -97,40 +106,36 @@ body {
   background: #FFFFFF;
 }
 
-body {
-  position: relative;
-}
-
-/* Banda diagonal River Plate - SUTIL */
+/* Banda diagonal River Plate - OFICIAL */
 body::before {
   content: '';
   position: fixed;
-  top: -20%;
-  left: -10%;
-  width: 40%;
-  height: 140%;
-  background: linear-gradient(135deg,
-      rgba(211, 47, 47, 0.03) 0%,
-      rgba(255, 255, 255, 0.05) 100%);
-  transform: rotate(-15deg);
-  pointer-events: none;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 245, 247, 0.9) 100%),
+    url('/assets/images/figuras/pattern-river.png');
+  /* Fallback/Pattern si existiera */
+  z-index: -2;
 }
 
-/* Líneas decorativas del campo - MUY SUTILES */
+/* La Banda Roja Gloriosa */
 body::after {
   content: '';
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(211, 47, 47, 0.2) 50%,
-      transparent 100%);
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(115deg,
+      transparent 45%,
+      rgba(228, 0, 43, 0.1) 45%,
+      rgba(228, 0, 43, 0.1) 55%,
+      transparent 55%);
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -255,37 +260,45 @@ canvas {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:hover {
-  box-shadow: var(--glow-primary), var(--shadow-float);
+  box-shadow: var(--glow-primary);
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  background: var(--white);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
   color: white;
 }
 
 .btn-success {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  background: linear-gradient(135deg, var(--success), #008f45);
   color: white;
 }
 
-/* Cards */
+/* Cards con efecto Glass */
 .card {
-  background: #FFFFFF;
-  backdrop-filter: none;
-  border: 2px solid rgba(211, 47, 47, 0.15);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 32px rgba(211, 47, 47, 0.15);
-  border-color: var(--primary);
+  border-color: var(--primary-light);
+  box-shadow: var(--glow-primary);
 }
 
 /* Título principal */
@@ -712,6 +725,7 @@ canvas {
 /* Inputs numéricos */
 input[type="number"] {
   font-family: var(--font-number);
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
@@ -782,11 +796,16 @@ input[type="text"]:focus {
   border: 4px solid var(--primary) !important;
   border-radius: 20px !important;
   background: #FFFFFF !important;
-  color: var(--text-primary) !important;
+  color: #1A1A1A !important;
+  /* NEGRO para que se vea */
   font-family: var(--font-number) !important;
   font-weight: 700 !important;
   box-shadow: 0 4px 20px rgba(211, 47, 47, 0.15) !important;
   transition: all 0.3s ease !important;
+  pointer-events: auto !important;
+  /* CRÍTICO: Permitir interacción */
+  caret-color: var(--primary) !important;
+  /* Cursor rojo visible */
 }
 
 .answer-input:focus {
@@ -794,6 +813,20 @@ input[type="text"]:focus {
   border-color: var(--primary-dark) !important;
   box-shadow: 0 6px 28px rgba(211, 47, 47, 0.25) !important;
   outline: none !important;
+  color: #000000 !important;
+  /* Negro más fuerte en focus */
+}
+
+/* Asegurar que TODOS los inputs sean clickeables y visibles */
+input[type="number"],
+input[type="text"] {
+  pointer-events: auto !important;
+  color: #1A1A1A !important;
+}
+
+input[type="number"]::placeholder,
+input[type="text"]::placeholder {
+  color: rgba(26, 26, 26, 0.3) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════

@@ -54,18 +54,18 @@ export class ActivityManager {
                 ]
             },
 
-            // 🟡 NIVEL 3: Rompecabezas 90° (Complementarios)
+            // 🔵 NIVEL 3: Rompecabezas 90° (Complementarios)
             {
                 id: 3,
                 type: 'complementario',
-                title: 'Completá la Esquina (90°)',
-                instructions: 'Observá el gráfico. Si un lado mide X, ¿cuánto falta para 90°?',
+                title: 'Completá el 90°',
+                instructions: '¿Cuánto mide el ángulo complementario?',
                 exercises: [
                     { given: 30, correctAnswer: 60 },
                     { given: 45, correctAnswer: 45 },
-                    { given: 80, correctAnswer: 10 },
-                    { given: 15, correctAnswer: 75 },
-                    { given: 60, correctAnswer: 30 }
+                    { given: 60, correctAnswer: 30 },
+                    { given: 20, correctAnswer: 70 },
+                    { given: 75, correctAnswer: 15 }
                 ]
             },
 
@@ -74,7 +74,7 @@ export class ActivityManager {
                 id: 4,
                 type: 'suplementario',
                 title: 'Completá la Recta (180°)',
-                instructions: 'Observá el gráfico. ¿Cuánto le falta al ángulo para llegar a 180°?',
+                instructions: '¿Cuánto mide el ángulo suplementario?',
                 exercises: [
                     { given: 120, correctAnswer: 60 },
                     { given: 90, correctAnswer: 90 },
@@ -84,49 +84,65 @@ export class ActivityManager {
                 ]
             },
 
-            // 🔴 NIVEL 5: Triángulos por Lados (Visualmente Exactos)
+            // 🔴 NIVEL 5: Triángulos por Lados (TP Nº 6)
             {
                 id: 5,
                 type: 'clasificar-triangulo-lados',
-                title: 'Triángulos: La Forma',
-                instructions: 'Según las longitudes de sus lados (miralos bien), es:',
+                title: 'Triángulos: La Forma (TP 6)',
+                instructions: 'Según las longitudes de sus lados, es:',
                 exercises: [
                     { sides: [5, 5, 5], correctAnswer: 'equilátero' },
-                    { sides: [3, 4, 5], correctAnswer: 'escaleno' }, // Rectángulo escaleno
+                    { sides: [3, 4, 5], correctAnswer: 'escaleno' }, // Del TP: Rectángulo
                     { sides: [4, 4, 6], correctAnswer: 'isósceles' },
-                    { sides: [6, 8, 10], correctAnswer: 'escaleno' }, // Otro rectángulo escaleno
-                    { sides: [5, 5, 2], correctAnswer: 'isósceles' }  // Isósceles muy agudo
+                    { sides: [6, 8, 10], correctAnswer: 'escaleno' }, // Del TP: Escaleno
+                    { sides: [5, 5, 2], correctAnswer: 'isósceles' }
                 ]
             },
 
-            // 🔴 NIVEL 6: Triángulos por Ángulos
+            // 🔴 NIVEL 6: Triángulos por Ángulos (TP Nº 6)
             {
                 id: 6,
                 type: 'clasificar-triangulo-angulos',
-                title: 'Triángulos: La Apertura',
-                instructions: 'Según sus ángulos internos, este triángulo es:',
-                // Nota: Proporcionamos ángulos para la lógica, y el renderer los usará
+                title: 'Triángulos: La Apertura (TP 6)',
+                instructions: 'Calculá mentalmente sus ángulos y clasificalo:',
                 exercises: [
-                    { angles: [60, 60, 60], sides: [5, 5, 5], correctAnswer: 'acutángulo' },
-                    { angles: [90, 45, 45], sides: [3, 3, 4.24], correctAnswer: 'rectángulo' },
-                    { angles: [120, 30, 30], sides: [5, 5, 8.66], correctAnswer: 'obtusángulo' },
-                    { angles: [80, 70, 30], sides: [4, 4.5, 2.5], correctAnswer: 'acutángulo' }, // Aprox
-                    { angles: [100, 40, 40], sides: [5, 5, 7], correctAnswer: 'obtusángulo' }
+                    // TP6 Pt1 1a: Internos 80, 10, 90 (Recto)
+                    { labels: ['90°', '80°', '10°'], sides: [5, 4.9, 0.8], correctAnswer: 'rectángulo' },
+                    // TP6 Pt2 2: 3x, 3x, 9x -> 36, 36, 108 (Obtuso)
+                    { labels: ['108°', '36°', '36°'], sides: [8, 5, 5], correctAnswer: 'obtusángulo' },
+                    // TP6 Pt2 6: x, 2x, 6x -> 20, 40, 120 (Obtuso)
+                    { labels: ['120°', '40°', '20°'], sides: [8, 6, 3], correctAnswer: 'obtusángulo' },
+                    // Equilátero clásico
+                    { labels: ['60°', '60°', '60°'], sides: [5, 5, 5], correctAnswer: 'acutángulo' },
+                    // TP6 Pt1 1c: Internos 80, 60, 40 (Acude)
+                    { labels: ['80°', '60°', '40°'], sides: [5, 4.5, 3.5], correctAnswer: 'acutángulo' }
                 ]
             },
 
-            // ⚫ NIVEL 7: El Ángulo Perdido
+            // ⚫ NIVEL 7: El Ángulo Perdido (Desafíos TP 6)
             {
                 id: 7,
                 type: 'angulo-faltante',
-                title: 'Misterio Triangular',
-                instructions: 'La suma debe ser 180°. ¿Cuánto mide el ángulo "?"',
+                title: 'Calculá el ángulo X',
+                instructions: '¿Cuánto mide el ángulo "x"?',
                 exercises: [
-                    { angles: [60, 60, 60], sides: [5, 5, 5], correctAnswer: 60 }, // Equilátero
-                    { angles: [90, 45, 45], sides: [3, 3, 4.2], correctAnswer: 45 }, // Rectángulo
-                    { angles: [100, 30, 50], sides: [6, 3.5, 5], correctAnswer: 50 }, // Obtusángulo escaleno
-                    { angles: [70, 70, 40], sides: [5, 5, 3.4], correctAnswer: 40 }, // Isósceles
-                    { angles: [30, 60, 90], sides: [3, 5.2, 6], correctAnswer: 90 }  // Rectángulo 30-60-90
+                    // TP6 Pt1 1a: Falta 90.
+                    { labels: ['80°', '10°', 'x'], sides: [5, 0.9, 5.1], correctAnswer: 90 },
+                    // TP6 Pt2 6: Falta 120. (Dados 20 y 40)
+                    { labels: ['20°', '40°', 'x'], sides: [3, 6, 8], correctAnswer: 120 },
+                    // TP6 Pt2 2: Falta 108. (Dados 36 y 36)
+                    { labels: ['36°', '36°', 'x'], sides: [5, 5, 8], correctAnswer: 108 },
+                    // Equilátero: falta 60.
+                    { labels: ['60°', '60°', 'x'], sides: [5, 5, 5], correctAnswer: 60 },
+                    // Rectángulo: falta 45.
+                    { labels: ['90°', '45°', 'x'], sides: [3, 3, 4.24], correctAnswer: 45 },
+                    // 🔥 NUEVOS DIFÍCILES:
+                    // Isósceles agudo
+                    { labels: ['70°', 'x', '70°'], sides: [5, 6, 5], correctAnswer: 40 },
+                    // Obtuso delgado
+                    { labels: ['120°', 'x', '30°'], sides: [8, 3, 5], correctAnswer: 30 },
+                    // Casi plano
+                    { labels: ['150°', '15°', 'x'], sides: [9, 2, 7.5], correctAnswer: 15 }
                 ]
             },
 
@@ -140,8 +156,12 @@ export class ActivityManager {
                     { given: 60, type: 'alterno-interno', correctAnswer: 60 },
                     { given: 120, type: 'correspondiente', correctAnswer: 120 },
                     { given: 45, type: 'alterno-externo', correctAnswer: 45 },
-                    { given: 150, type: 'conjugado', correctAnswer: 30 }, // Este requiere cálculo, cuidado
-                    { given: 90, type: 'correspondiente', correctAnswer: 90 }
+                    { given: 150, type: 'conjugado', correctAnswer: 30 }, // Requiere cálculo (180-150)
+                    { given: 90, type: 'correspondiente', correctAnswer: 90 },
+                    // 🔥 NUEVOS DIFÍCILES:
+                    { given: 135, type: 'conjugado', correctAnswer: 45 }, // 180-135
+                    { given: 75, type: 'alterno-interno', correctAnswer: 75 },
+                    { given: 110, type: 'conjugado', correctAnswer: 70 } // 180-110, ¡final épico!
                 ]
             }
         ];

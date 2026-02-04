@@ -33,7 +33,7 @@ function init() {
       setTimeout(() => {
         imageRenderer.container = document.getElementById('geometry-container-inline');
         if (imageRenderer.container) {
-          imageRenderer.update(activityType, exercise);
+          imageRenderer.updateForExercise(activityType, exercise);
         }
       }, 100);
     }

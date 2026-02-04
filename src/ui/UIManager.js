@@ -11,11 +11,14 @@ import { PenalesGame } from '../games/PenalesGame.js';
 import { PulpoArmani } from '../components/PulpoArmani.js';
 import { RiverHeader } from '../components/RiverHeader.js';
 
+import { SoundSystem } from '../systems/SoundSystem.js';
+
 export class UIManager {
   constructor(scene) {
     this.scene = scene;
     this.activityManager = new ActivityManager();
     this.breakManager = new BreakManager();
+    this.soundSystem = new SoundSystem(); // 🔊 Sistema de Sonido
     this.pulpoArmani = new PulpoArmani();
     this.riverHeader = new RiverHeader();
     this.container = document.getElementById('ui-container');
@@ -36,8 +39,8 @@ export class UIManager {
           <!-- Escudo River Educativo -->
           <div style="margin-bottom: 2rem;">
             <img 
-              src="/assets/images/figuras/escudo-river.png" 
-              alt="Escudo River" 
+              src="/assets/river/Escudo.png" 
+              alt="Escudo River Plate" 
               style="
                 width: 150px;
                 height: 150px;
@@ -183,6 +186,7 @@ export class UIManager {
     // Event listeners para las tarjetas de actividades
     document.querySelectorAll('.activity-card').forEach(card => {
       card.addEventListener('click', () => {
+        this.soundSystem.play('click');
         const activityId = parseInt(card.dataset.activityId);
         this.startActivity(activityId);
       });
@@ -208,8 +212,9 @@ export class UIManager {
     const exercise = activity.exercises[this.currentExerciseIndex];
     this.exerciseStartTime = Date.now();
 
-    // Actualizar la escena 3D según el tipo de ejercicio
-    this.scene.updateForExercise(activity.type, exercise);
+    // Actualizar la escena 3D / 2D
+    // MOVIDO: Se llama al final para asegurar que el contenedor #scene-3d exista en el DOM
+    // this.scene.updateForExercise(activity.type, exercise);
 
     // Crear UI específica según el tipo
     let exerciseUI = '';
@@ -287,8 +292,10 @@ export class UIManager {
                 flex-direction: column;
                 gap: 1.5rem;
                 padding: 1rem;
-                max-height: calc(100vh - 200px);
+                max-height: calc(100vh - 280px);
                 overflow-y: auto;
+                position: relative;
+                z-index: 100;
               ">
                 <h3 style="
                   margin: 0;
@@ -302,7 +309,7 @@ export class UIManager {
                 </h3>
                 
                 <!-- Área de opciones/inputs -->
-                <div id="exercise-options" style="flex: 1; overflow-y: auto;">
+                <div id="exercise-options" style="flex: 1; overflow-y: auto; position: relative; z-index: 101;">
                   ${exerciseUI}
                 </div>
                 
@@ -333,27 +340,22 @@ export class UIManager {
                 </div>
               </div>
               
-              <!-- COLUMNA DERECHA: Figura Geométrica -->
+              <!-- COLUMNA DERECHA: Figura Geométrica MÁS GRANDE -->
               <div style="
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                min-height: 500px;
+                min-height: 600px;
                 position: sticky;
                 top: 2rem;
+                padding: 2rem;
               ">
                 <div id="geometry-container-inline" style="
                   width: 100%;
                   height: 100%;
-                  min-height: 500px;
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  background: #FFFFFF;
-                  border-radius: 20px;
-                  border: 3px solid rgba(211, 47, 47, 0.2);
-                  padding: 2rem;
-                  box-shadow: 0 8px 32px rgba(211, 47, 47, 0.15);
                 "></div>
               </div>
               
@@ -369,6 +371,7 @@ export class UIManager {
     });
 
     document.getElementById('submit-btn').addEventListener('click', () => {
+      this.soundSystem.play('click');
       this.submitAnswer();
     });
 
@@ -381,6 +384,11 @@ export class UIManager {
         btn.classList.add('selected');
       });
     });
+
+    // ⚡ Renderizar escena DESPUÉS de actualizar el DOM y listeners
+    setTimeout(() => {
+      this.scene.updateForExercise(activity.type, exercise);
+    }, 0);
   }
 
   // UI para identificar tipo de ángulo
@@ -510,13 +518,13 @@ export class UIManager {
           </p>
           <div style="display: flex; gap: 2rem; justify-content: center; margin: 1.5rem 0;">
             <span style="color: var(--secondary); font-family: var(--font-number); font-size: 2.5rem;">
-              ${exercise.angles[0]}°
+              ${exercise.labels ? exercise.labels[0] : exercise.angles[0] + '°'}
             </span>
             <span style="color: var(--secondary); font-family: var(--font-number); font-size: 2.5rem;">
-              ${exercise.angles[1]}°
+              ${exercise.labels ? exercise.labels[1] : exercise.angles[1] + '°'}
             </span>
             <span style="color: var(--warning); font-family: var(--font-number); font-size: 2.5rem;">
-              ?°
+              ${exercise.labels ? exercise.labels[2] : '?°'}
             </span>
           </div>
           <p style="font-size: 1rem; color: var(--text-secondary);">
@@ -558,7 +566,7 @@ export class UIManager {
 
     const info = isByLados ?
       `Lados: ${exercise.sides.join(', ')}` :
-      `Ángulos: ${exercise.angles.join('°, ')}°`;
+      `Ángulos: ${exercise.labels ? exercise.labels.join(', ') : exercise.angles.join('°, ')}`;
 
     const options = isByLados ?
       ['equilátero', 'isósceles', 'escaleno'] :
@@ -678,9 +686,11 @@ export class UIManager {
     this.riverHeader.updateExerciseCount(this.exercisesCompletedTotal);
 
     if (result.isCorrect) {
+      this.soundSystem.play('success'); // 🔊 Dopamine hit!
       this.currentStreak++;
       this.riverHeader.updateStreak(this.currentStreak);
     } else {
+      this.soundSystem.play('error'); // 🔊 Suave, NO punitivo
       this.currentStreak = 0;
       this.riverHeader.resetStreak();
     }
@@ -724,6 +734,8 @@ export class UIManager {
 
   // Mostrar pantalla de actividad completada
   showActivityComplete() {
+    this.soundSystem.play('fanfare'); // 🔊 ¡GLORIA!
+
     const activity = this.currentActivity;
     const responses = this.activityManager.responses.filter(
       r => r.activityId === activity.id
