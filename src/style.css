@@ -1,0 +1,841 @@
+/* ═══════════════════════════════════════════════════════════
+   🌌 GEOMETRÍA ANTI-GRAVEDAD - Estilos Globales
+   Para Ferchu, con amor ✨
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&family=Orbitron:wght@700&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   Variables Globales
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════
+     Paleta River Plate - Versión TDAH-Friendly
+     Colores menos saturados, más calmados para mejor concentración
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Colores Principales de River (suavizados) */
+  --primary: #D32F2F;
+  /* Rojo River más suave */
+  --primary-dark: #C62828;
+  /* Rojo oscuro */
+  --primary-light: #EF5350;
+  /* Rojo claro */
+
+  --secondary: #388E3C;
+  /* Verde césped */
+  --secondary-dark: #2E7D32;
+  /* Verde oscuro */
+  --secondary-light: #4CAF50;
+  /* Verde claro */
+
+  --accent: #42A5F5;
+  /* Azul calmado (reemplaza cyan brillante) */
+  --accent-dark: #1E88E5;
+  /* Azul oscuro */
+  --accent-light: #64B5F6;
+  /* Azul claro */
+
+  /* Colores de Feedback TDAH-optimizados */
+  --success: #2E7D32;
+  /* Verde oscuro para fondo claro */
+  --warning: #F57C00;
+  /* Naranja oscuro */
+  --danger: #C62828;
+  /* Rojo oscuro, NO punitivo */
+
+  /* Backgrounds (para cards) */
+  --bg-card: #FFFFFF;
+  /* Blanco para tarjetas */
+  --bg-card-hover: #F5F5F5;
+  /* Gris muy claro hover */
+
+  /* Colores de Texto (para fondo BLANCO)*/
+  --text-primary: #2C3E50;
+  /* Texto oscuro principal */
+  --text-secondary: #546E7A;
+  /* Gris medio */
+  --text-accent: #D32F2F;
+  /* Rojo River para acentos */
+
+  /* Efectos Suavizados */
+  --glow-primary: 0 0 15px rgba(211, 47, 47, 0.3);
+  /* Glow suave */
+  --glow-secondary: 0 0 15px rgba(56, 142, 60, 0.3);
+  --glow-accent: 0 0 15px rgba(66, 165, 245, 0.3);
+
+  /* Sombras */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-float: 0 8px 24px rgba(211, 47, 47, 0.25);
+
+  /* Tipografía */
+  --font-title: 'Fredoka One', cursive;
+  --font-body: 'Poppins', sans-serif;
+  --font-number: 'Orbitron', monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Reset y Base
+   ═══════════════════════════════════════════════════════════ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-body);
+  color: #2C3E50;
+  /* Texto oscuro sobre fondo claro */
+  /* FONDO BLANCO LIMPIO */
+  background: #FFFFFF;
+}
+
+body {
+  position: relative;
+}
+
+/* Banda diagonal River Plate - SUTIL */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 40%;
+  height: 140%;
+  background: linear-gradient(135deg,
+      rgba(211, 47, 47, 0.03) 0%,
+      rgba(255, 255, 255, 0.05) 100%);
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Líneas decorativas del campo - MUY SUTILES */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(211, 47, 47, 0.2) 50%,
+      transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Contenedores de Geometría
+   ═══════════════════════════════════════════════════════════ */
+
+/* Contenedor fijo original (ahora oculto) */
+#geometry-container {
+  display: none;
+}
+
+/* Contenedor inline dentro de ejercicios (NUEVO) */
+#geometry-container-inline {
+  position: relative;
+  z-index: 1;
+}
+
+/* Canvas 3D (ya no se usa) */
+#scene-container {
+  display: none;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UI Container
+   ═══════════════════════════════════════════════════════════ */
+
+#ui-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Los elementos interactivos dentro tendrán pointer-events: auto */
+#ui-container>* {
+  pointer-events: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Componentes de UI
+   ═══════════════════════════════════════════════════════════ */
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+}
+
+.logo {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: var(--glow-primary);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1) rotate(-2deg);
+}
+
+/* Botones */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: var(--shadow-card);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+}
+
+.btn:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+}
+
+.btn-primary:hover {
+  box-shadow: var(--glow-primary), var(--shadow-float);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: white;
+}
+
+/* Cards */
+.card {
+  background: #FFFFFF;
+  backdrop-filter: none;
+  border: 2px solid rgba(211, 47, 47, 0.15);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 32px rgba(211, 47, 47, 0.15);
+  border-color: var(--primary);
+}
+
+/* Título principal */
+.title-main {
+  font-family: var(--font-title);
+  font-size: 4rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  text-shadow: var(--glow-primary);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* HUD (Head-Up Display) */
+.hud {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hud-item {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-number);
+}
+
+.hud-icon {
+  font-size: 1.5rem;
+}
+
+/* Sistema de estrellas */
+.star-rating {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.star {
+  font-size: 2.5rem;
+  color: var(--warning);
+  filter: drop-shadow(0 0 10px var(--warning));
+  animation: star-pulse 1s ease-in-out infinite;
+}
+
+.star.empty {
+  color: rgba(255, 255, 255, 0.2);
+  filter: none;
+  animation: none;
+}
+
+@keyframes star-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Loading */
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-top: 5px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 1000;
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--primary);
+}
+
+/* Feedback animations */
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-10px);
+  }
+
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.bounce-in {
+  animation: bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Centrado general */
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Pantalla de carga */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-space);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title-main {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Utilidades */
+.hidden {
+  display: none !important;
+}
+
+.fade-in {
+  animation: fade-in 0.5s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-out {
+  animation: fade-out 0.5s ease;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-light);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Estilos específicos para Ejercicios
+   ═══════════════════════════════════════════════════════════ */
+
+/* Grid de actividades */
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.activity-card {
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.activity-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-float);
+}
+
+.activity-card:hover::before {
+  transform: scaleX(1);
+}
+
+.activity-number {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-number);
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.activity-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-accent);
+}
+
+.activity-card p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.exercise-count {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Grid de opciones */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.option-btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  padding: 1.5rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-size: 1.1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.option-btn small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  font-weight: 400;
+}
+
+.option-btn:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  background: rgba(108, 99, 255, 0.2);
+  box-shadow: var(--glow-primary);
+}
+
+.option-btn.selected {
+  border-color: var(--accent);
+  background: rgba(78, 205, 196, 0.3);
+  box-shadow: var(--glow-accent);
+}
+
+.option-btn.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 1.5rem;
+  color: var(--success);
+}
+
+/* Feedback */
+.feedback {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.feedback.success {
+  background: rgba(149, 225, 211, 0.2);
+  border: 2px solid var(--success);
+  color: var(--success);
+}
+
+.feedback.error {
+  background: rgba(243, 129, 129, 0.2);
+  border: 2px solid var(--danger);
+  color: var(--danger);
+}
+
+/* Inputs numéricos */
+input[type="number"] {
+  font-family: var(--font-number);
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--glow-accent);
+}
+
+/* Fix backdrop-filter para Safari */
+@supports (-webkit-backdrop-filter: blur(10px)) {
+
+  .card,
+  .activity-card,
+  .hud-item {
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Botones de Opción Mejorados (TDAH-friendly)
+   ═══════════════════════════════════════════════════════════ */
+
+.option-btn {
+  font-size: 1.5rem !important;
+  padding: 1.5rem 2.5rem !important;
+  min-width: 200px !important;
+  background: #FFFFFF !important;
+  color: var(--text-primary) !important;
+  border: 3px solid rgba(211, 47, 47, 0.3) !important;
+  border-radius: 15px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.option-btn:hover {
+  border-color: var(--primary) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 20px rgba(211, 47, 47, 0.2) !important;
+}
+
+.option-btn.selected {
+  background: var(--primary) !important;
+  color: white !important;
+  border-color: var(--primary-dark) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 8px 24px rgba(211, 47, 47, 0.3) !important;
+}
+
+/* Inputs mejorados */
+.answer-input {
+  font-size: 3rem !important;
+  padding: 1.5rem 2rem !important;
+  text-align: center !important;
+  width: 100% !important;
+  max-width: 350px !important;
+  margin: 0 auto !important;
+  display: block !important;
+  border: 4px solid var(--primary) !important;
+  border-radius: 20px !important;
+  background: #FFFFFF !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-number) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 20px rgba(211, 47, 47, 0.15) !important;
+  transition: all 0.3s ease !important;
+}
+
+.answer-input:focus {
+  transform: scale(1.05) !important;
+  border-color: var(--primary-dark) !important;
+  box-shadow: 0 6px 28px rgba(211, 47, 47, 0.25) !important;
+  outline: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Layout de Ejercicios - Dos Columnas
+   ═══════════════════════════════════════════════════════════ */
+
+.exercise-layout-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.exercise-options-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+  padding-bottom: 2rem;
+}
+
+.exercise-figure-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+  position: sticky;
+  top: 2rem;
+}
+
+/* Responsivo para layout de ejercicios */
+@media (max-width: 1024px) {
+  .exercise-layout-2col {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .exercise-figure-column {
+    position: relative;
+    top: 0;
+    order: -1;
+    /* Figura arriba en móvil */
+    min-height: 300px;
+  }
+}
