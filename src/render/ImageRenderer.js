@@ -380,16 +380,10 @@ export class ImageRenderer {
     drawParallelLines(given, type) {
         const cx = 300;
         const cy = 300;
-        const length = 550; // Líneas muy largas para llenar viewBox
-        const gap = 120; // Buena separación
+        const length = 550;
+        const gap = 120; // Separación vertical
 
-        // Paralelas: Superior e Inferior
-        const yTop = cy - gap / 2;
-        const yBot = cy + gap / 2;
-
-        // Transversal: Cruza de abajo-izq a arriba-der (aprox 60 grados)
-        // x = (y - y_0) / m + x_0
-        // Usamos un ángulo fijo visualmente agradable
+        // Ángulo de la transversal (65 grados visuales)
         const angleDeg = 65;
         const angleRad = angleDeg * Math.PI / 180;
         // Longitud transversal suficiente para cruzar
