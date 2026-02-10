@@ -1764,7 +1764,7 @@ export class UIManager {
   endSeasonMatch() {
     if (this.sessionTimer) clearInterval(this.sessionTimer);
 
-    const result = this.seasonManager.endMatch(this.matchStats);
+    const result = this.seasonManager.endMatch(this.matchStats, this.currentMatchJornada);
     this.showPostMatch(result);
   }
 

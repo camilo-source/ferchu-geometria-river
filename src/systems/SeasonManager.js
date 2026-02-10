@@ -357,9 +357,9 @@ export class SeasonManager {
         return this.getCurrentMatch();
     }
 
-    endMatch(stats) {
+    endMatch(stats, playedJornada) {
         // stats: { correct, total, turnosCompleted }
-        const jornada = this.data.currentJornada;
+        const jornada = playedJornada || this.data.currentJornada;
 
         this.data.matchResults.push({
             jornada,
