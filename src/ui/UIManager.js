@@ -1513,129 +1513,222 @@ export class UIManager {
     const color = this.seasonManager.getEtapaColor(match.etapa);
     const emoji = this.seasonManager.getEtapaEmoji(match.etapa);
 
-    // Build teaching steps
-    let stepsHTML = '';
+    // Build slides array
+    const slides = [];
+
+    // Slide 1: Stadium intro
+    slides.push({
+      bg: `linear-gradient(135deg, ${color}20, ${color}08)`,
+      content: `
+        <div style="font-size: 4rem; margin-bottom: 1rem; animation: bounceEmoji 1s ease infinite;">${emoji}</div>
+        <div style="font-size: 0.9rem; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 0.5rem;">${match.etapa}</div>
+        <h1 style="font-size: 2.2rem; color: var(--text-primary); font-family: var(--font-title); margin: 0.5rem 0;">${match.nombre}</h1>
+        <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 500px; margin: 1rem auto; line-height: 1.6;">${match.narrativa.intro}</p>
+        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1.5rem;">⬇️ Deslizá para aprender</div>
+      `
+    });
+
+    // Slide 2: Pulpo intro
     if (teaching) {
+      slides.push({
+        bg: 'linear-gradient(135deg, rgba(211,47,47,0.08), rgba(25,118,210,0.05))',
+        content: `
+          <img src="/assets/images/armani/pulpo-armani.png" style="width: 120px; height: 120px; object-fit: contain; margin-bottom: 1rem; animation: bounceEmoji 2s ease infinite;" alt="Pulpo"/>
+          <h2 style="font-size: 1.8rem; color: var(--primary); font-family: var(--font-title); margin-bottom: 0.5rem;">${teaching.titulo}</h2>
+          <p style="font-size: 1.15rem; color: var(--text-secondary);">El Pulpo Armani te va a explicar paso a paso 🐙</p>
+          <div style="margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: rgba(211,47,47,0.08); border-radius: 30px; display: inline-block;">
+            <span style="font-size: 0.9rem; color: var(--primary); font-weight: 600;">${teaching.pasos.length} pasos para entenderlo</span>
+          </div>
+        `
+      });
+
+      // Slides 3-N: Teaching steps (one per slide)
+      const stepColors = ['#1976D2', '#388E3C', '#F57C00', '#7B1FA2', '#D32F2F'];
       teaching.pasos.forEach((paso, i) => {
-        stepsHTML += `
-          <div class="teaching-step" style="
-            display: flex; align-items: flex-start; gap: 1rem;
-            padding: 1rem; background: rgba(255,255,255,0.9);
-            border-radius: 12px; border-left: 4px solid ${color};
-            opacity: 0; transform: translateX(-20px);
-            animation: slideIn 0.5s ease ${0.5 + i * 0.4}s forwards;
+        const stepColor = stepColors[i % stepColors.length];
+        slides.push({
+          bg: `linear-gradient(135deg, ${stepColor}12, ${stepColor}05)`,
+          content: `
+            <div style="
+              width: 80px; height: 80px; border-radius: 50%;
+              background: ${stepColor}15; border: 3px solid ${stepColor}30;
+              display: flex; align-items: center; justify-content: center;
+              margin-bottom: 1.5rem; animation: bounceEmoji 1.5s ease infinite;
+            ">
+              <span style="font-size: 2.5rem;">${paso.emoji}</span>
+            </div>
+            <div style="
+              font-size: 0.8rem; color: ${stepColor}; font-weight: 700;
+              text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem;
+            ">Paso ${i + 1} de ${teaching.pasos.length}</div>
+            <p style="
+              font-size: 1.35rem; color: var(--text-primary);
+              max-width: 480px; margin: 0 auto; line-height: 1.7;
+              font-weight: 500;
+            ">${paso.texto}</p>
+          `
+        });
+      });
+
+      // Rule slide
+      slides.push({
+        bg: 'linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,160,0,0.06))',
+        content: `
+          <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: bounceEmoji 1s ease infinite;">📌</div>
+          <div style="font-size: 0.85rem; color: #F57C00; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">REGLA CLAVE</div>
+          <div style="
+            background: rgba(255,255,255,0.9); padding: 1.5rem 2rem;
+            border-radius: 16px; border: 3px solid rgba(255,160,0,0.3);
+            box-shadow: 0 8px 30px rgba(255,160,0,0.1);
+            max-width: 480px; margin: 0 auto;
           ">
-            <span style="font-size: 1.8rem; flex-shrink: 0;">${paso.emoji}</span>
-            <p style="margin: 0; font-size: 1.1rem; line-height: 1.5; color: var(--text-primary);">
-              ${paso.texto}
+            <p style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
+              ${teaching.regla}
             </p>
           </div>
-        `;
+        `
+      });
+
+      // Example slide
+      slides.push({
+        bg: 'linear-gradient(135deg, rgba(76,175,80,0.1), rgba(56,142,60,0.05))',
+        content: `
+          <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: bounceEmoji 1.5s ease infinite;">💡</div>
+          <div style="font-size: 0.85rem; color: #388E3C; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">EJEMPLO</div>
+          <div style="
+            background: rgba(255,255,255,0.9); padding: 1.5rem 2rem;
+            border-radius: 16px; border: 3px solid rgba(76,175,80,0.3);
+            box-shadow: 0 8px 30px rgba(76,175,80,0.1);
+            max-width: 480px; margin: 0 auto;
+          ">
+            <p style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
+              ${teaching.ejemplo}
+            </p>
+          </div>
+        `
       });
     }
 
+    // Final slide: CTA
+    slides.push({
+      bg: `linear-gradient(135deg, ${color}15, ${color}08)`,
+      content: `
+        <img src="/assets/images/armani/pulpo-armani.png" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 1rem;" alt="Pulpo"/>
+        <p style="font-size: 1.3rem; font-style: italic; color: var(--text-secondary); max-width: 450px; margin: 0 auto 1.5rem; line-height: 1.6;">
+          🐙 "${match.narrativa.motivacion}"
+        </p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2rem;">— Pulpo Armani, DT</p>
+        <button class="btn btn-primary" id="start-match-btn" style="
+          font-size: 1.5rem; padding: 1.2rem 3.5rem;
+          background: linear-gradient(135deg, ${color}, ${color}DD);
+          box-shadow: 0 8px 25px ${color}40;
+          animation: pulseBtn 2s ease infinite;
+        ">
+          ¡A LA CANCHA! ⚽
+        </button>
+      `
+    });
+
+    // Build progress dots
+    const dotsHTML = slides.map((_, i) => `
+      <div class="slide-dot" data-index="${i}" style="
+        width: ${i === 0 ? '24px' : '8px'}; height: 8px;
+        border-radius: 4px;
+        background: ${i === 0 ? color : 'rgba(0,0,0,0.2)'};
+        transition: all 0.3s;
+      "></div>
+    `).join('');
+
+    // Build slides HTML
+    const slidesHTML = slides.map((slide, i) => `
+      <section class="prematch-slide" data-index="${i}" style="
+        min-height: 100vh; min-height: 100dvh;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        text-align: center; padding: 2rem 1.5rem;
+        background: ${slide.bg};
+        scroll-snap-align: start;
+        opacity: ${i === 0 ? '1' : '0.3'};
+        transform: ${i === 0 ? 'scale(1)' : 'scale(0.95)'};
+        transition: opacity 0.5s, transform 0.5s;
+      ">
+        ${slide.content}
+      </section>
+    `).join('');
+
     this.container.innerHTML = `
       <style>
-        @keyframes slideIn {
-          to { opacity: 1; transform: translateX(0); }
+        @keyframes bounceEmoji {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
         }
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 20px ${color}30; }
-          50% { box-shadow: 0 0 40px ${color}50; }
+        @keyframes pulseBtn {
+          0%, 100% { transform: scale(1); box-shadow: 0 8px 25px ${color}40; }
+          50% { transform: scale(1.03); box-shadow: 0 12px 35px ${color}50; }
+        }
+        .scroll-snap-container {
+          height: 100vh; height: 100dvh;
+          overflow-y: auto;
+          scroll-snap-type: y mandatory;
+          scroll-behavior: smooth;
+          -webkit-overflow-scrolling: touch;
+        }
+        .scroll-snap-container::-webkit-scrollbar { display: none; }
+        .slide-dots-container {
+          position: fixed; right: 16px; top: 50%;
+          transform: translateY(-50%);
+          display: flex; flex-direction: column;
+          gap: 6px; z-index: 100;
+          align-items: center;
+        }
+        @media (max-width: 600px) {
+          .slide-dots-container {
+            right: 8px;
+          }
         }
       </style>
-      <div class="center-container">
-        <div class="card" style="max-width: 650px; padding: 2rem;">
-          
-          <!-- Match header -->
-          <div style="
-            text-align: center; padding: 1.5rem;
-            background: linear-gradient(135deg, ${color}10, ${color}05);
-            border-radius: 16px; border: 2px solid ${color}30;
-            margin-bottom: 1.5rem;
-            animation: pulseGlow 2s ease infinite;
-          ">
-            <div style="font-size: 0.9rem; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
-              ${emoji} ${match.etapa}
-            </div>
-            <h2 style="font-size: 1.8rem; margin: 0.5rem 0; color: var(--text-primary); font-family: var(--font-title);">
-              ${match.nombre}
-            </h2>
-            <p style="color: var(--text-secondary); font-size: 1.05rem; margin: 0;">
-              ${match.narrativa.intro}
-            </p>
-          </div>
 
-          <!-- Pulpo teaches -->
-          ${teaching ? `
-            <div style="
-              display: flex; align-items: center; gap: 1rem;
-              margin-bottom: 1rem;
-            ">
-              <img src="/assets/images/armani/pulpo-armani.png" style="width: 70px; height: 70px; object-fit: contain;" alt="Pulpo"/>
-              <div>
-                <h3 style="margin: 0; font-size: 1.3rem; color: var(--primary);">
-                  ${teaching.titulo}
-                </h3>
-                <p style="margin: 0.2rem 0 0; font-size: 0.9rem; color: var(--text-secondary);">
-                  El Pulpo Armani te explica...
-                </p>
-              </div>
-            </div>
+      <div class="slide-dots-container">${dotsHTML}</div>
 
-            <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
-              ${stepsHTML}
-            </div>
-
-            <!-- Rule box -->
-            <div style="
-              background: linear-gradient(135deg, rgba(211,47,47,0.06), rgba(25,118,210,0.06));
-              padding: 1.2rem; border-radius: 12px;
-              border: 2px dashed ${color}40; text-align: center;
-              margin-bottom: 1rem;
-            ">
-              <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.3rem;">📌 REGLA CLAVE</div>
-              <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-number);">
-                ${teaching.regla}
-              </div>
-            </div>
-
-            <!-- Example -->
-            <div style="
-              background: rgba(76,175,80,0.08); padding: 0.8rem 1rem;
-              border-radius: 10px; text-align: center; margin-bottom: 1.5rem;
-            ">
-              <span style="font-size: 0.85rem; color: var(--text-secondary);">💡 Ejemplo: </span>
-              <span style="font-weight: 600; font-family: var(--font-number);">${teaching.ejemplo}</span>
-            </div>
-          ` : ''}
-
-          <!-- Motivación -->
-          <div style="text-align: center; margin-bottom: 1.5rem;">
-            <p style="font-size: 1.1rem; font-style: italic; color: var(--text-secondary);">
-              🐙 "${match.narrativa.motivacion}"
-            </p>
-            <p style="font-size: 0.85rem; color: var(--text-secondary);">— Pulpo Armani, DT</p>
-          </div>
-
-          <!-- Start button -->
-          <div style="text-align: center;">
-            <button class="btn btn-primary" id="start-match-btn" style="
-              font-size: 1.4rem; padding: 1rem 3rem;
-              background: linear-gradient(135deg, ${color}, ${color}DD);
-              box-shadow: 0 6px 20px ${color}30;
-            ">
-              ¡A LA CANCHA! ⚽
-            </button>
-          </div>
-        </div>
+      <div class="scroll-snap-container" id="prematch-scroller">
+        ${slidesHTML}
       </div>
     `;
 
-    document.getElementById('start-match-btn').addEventListener('click', () => {
-      this.soundSystem.play('click');
-      this.startTurno();
-    });
+    // Intersection observer for slide animations
+    const scroller = document.getElementById('prematch-scroller');
+    const dots = document.querySelectorAll('.slide-dot');
+    const slideElements = document.querySelectorAll('.prematch-slide');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = parseInt(entry.target.dataset.index);
+          // Activate current slide
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'scale(1)';
+          // Update dots
+          dots.forEach((dot, di) => {
+            dot.style.width = di === idx ? '24px' : '8px';
+            dot.style.background = di === idx ? color : 'rgba(0,0,0,0.2)';
+          });
+        } else {
+          entry.target.style.opacity = '0.3';
+          entry.target.style.transform = 'scale(0.95)';
+        }
+      });
+    }, { root: scroller, threshold: 0.6 });
+
+    slideElements.forEach(slide => observer.observe(slide));
+
+    // Bind start button
+    const startBtn = document.getElementById('start-match-btn');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
+        this.soundSystem.play('click');
+        this.startTurno();
+      });
+    }
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -1700,51 +1793,91 @@ export class UIManager {
   // ⏸️ HALFTIME — Entretiempo
   // ═══════════════════════════════════════════════════════════
   showHalftime() {
-    const match = this.seasonManager.getCurrentMatch();
+    const season = this.seasonManager.getSeasonData();
+    const match = this.currentMatchJornada ? season[this.currentMatchJornada - 1] : this.seasonManager.getCurrentMatch();
     if (!match) return;
     const color = this.seasonManager.getEtapaColor(match.etapa);
     const pct = this.matchStats.total > 0 ? Math.round((this.matchStats.correct / this.matchStats.total) * 100) : 0;
 
-    const tip = pct >= 70
+    const isGreat = pct >= 70;
+    const isOk = pct >= 40;
+    const pulpoMood = isGreat ? '🤩' : isOk ? '🤔' : '💪';
+    const tip = isGreat
       ? "¡Vas volando! Seguí así en el segundo tiempo."
-      : pct >= 40
+      : isOk
         ? "Buen primer tiempo. Acordate de las reglas que te enseñé."
-        : "Tranqui, el segundo tiempo es una nueva oportunidad. Pensá cada respuesta.";
+        : "Tranqui, el segundo tiempo es una nueva oportunidad. Pensá bien cada respuesta.";
+
+    const statColor = isGreat ? '#4CAF50' : isOk ? '#FF9800' : '#F44336';
 
     this.container.innerHTML = `
+      <style>
+        @keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+      </style>
       <div class="center-container">
         <div class="card" style="max-width: 550px; text-align: center; padding: 2.5rem;">
           
-          <h2 style="font-size: 2rem; margin-bottom: 1rem; font-family: var(--font-title);">
-            ⏸️ ¡Entretiempo!
-          </h2>
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">⏸️</div>
+          <h2 style="font-size: 2rem; margin-bottom: 0.3rem; font-family: var(--font-title);">¡Entretiempo!</h2>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">${match.nombre}</p>
 
-          <!-- Stats -->
+          <!-- Animated score circle -->
           <div style="
-            display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem;
+            width: 120px; height: 120px; border-radius: 50%;
+            background: ${statColor}15;
+            border: 4px solid ${statColor};
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+            animation: countUp 0.8s ease forwards, breathe 3s ease infinite;
           ">
-            <div style="
-              padding: 1rem 1.5rem; background: rgba(76,175,80,0.1);
-              border-radius: 12px; border: 2px solid rgba(76,175,80,0.2);
-            ">
-              <div style="font-size: 2rem; font-family: var(--font-number); color: var(--success);">${this.matchStats.correct}</div>
-              <div style="font-size: 0.85rem; color: var(--text-secondary);">Correctas</div>
+            <div style="font-size: 2.5rem; font-family: var(--font-number); font-weight: 800; color: ${statColor};">
+              ${pct}%
             </div>
-            <div style="
-              padding: 1rem 1.5rem; background: rgba(211,47,47,0.1);
-              border-radius: 12px; border: 2px solid rgba(211,47,47,0.2);
-            ">
-              <div style="font-size: 2rem; font-family: var(--font-number); color: var(--primary);">${this.matchStats.total - this.matchStats.correct}</div>
-              <div style="font-size: 0.85rem; color: var(--text-secondary);">Incorrectas</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+              ${this.matchStats.correct}/${this.matchStats.total}
             </div>
           </div>
 
-          <!-- Pulpo tip -->
-          ${this.pulpoArmani.render(tip, pct >= 70 ? 'happy' : 'thinking')}
+          <!-- Stats row -->
+          <div style="display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1.5rem;">
+            <div style="
+              padding: 0.7rem 1.2rem; background: rgba(76,175,80,0.1);
+              border-radius: 10px; animation: slideUp 0.5s ease 0.3s both;
+            ">
+              <div style="font-size: 1.5rem; font-family: var(--font-number); color: var(--success); font-weight: 700;">✅ ${this.matchStats.correct}</div>
+            </div>
+            <div style="
+              padding: 0.7rem 1.2rem; background: rgba(244,67,54,0.1);
+              border-radius: 10px; animation: slideUp 0.5s ease 0.5s both;
+            ">
+              <div style="font-size: 1.5rem; font-family: var(--font-number); color: var(--primary); font-weight: 700;">❌ ${this.matchStats.total - this.matchStats.correct}</div>
+            </div>
+          </div>
+
+          <!-- Pulpo tip bubble -->
+          <div style="
+            background: rgba(211,47,47,0.05); border: 2px solid rgba(211,47,47,0.15);
+            border-radius: 20px; padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem; text-align: left;
+            animation: slideUp 0.5s ease 0.7s both;
+            position: relative;
+          ">
+            <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem;">
+              <span style="font-size: 2rem;">${pulpoMood}</span>
+              <span style="font-weight: 700; color: var(--primary); font-size: 0.9rem;">Pulpo Armani dice:</span>
+            </div>
+            <p style="margin: 0; font-size: 1.05rem; color: var(--text-primary); line-height: 1.5;">
+              "${tip}"
+            </p>
+          </div>
 
           <button class="btn btn-primary" id="halftime-btn" style="
-            font-size: 1.3rem; padding: 1rem 3rem; margin-top: 1.5rem;
+            font-size: 1.3rem; padding: 1rem 3rem;
             background: linear-gradient(135deg, ${color}, ${color}DD);
+            animation: slideUp 0.5s ease 0.9s both;
           ">
             ¡Segundo Tiempo! ⚽
           </button>
@@ -1773,45 +1906,85 @@ export class UIManager {
     const color = this.seasonManager.getEtapaColor(match.etapa);
     const isWin = result.isWin;
     const progress = this.seasonManager.getProgress();
+    const pct = Math.round(result.percentage);
+    const statColor = isWin ? '#4CAF50' : '#F44336';
 
     this.container.innerHTML = `
+      <style>
+        @keyframes popIn { 
+          0% { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+          60% { transform: scale(1.2) rotate(5deg); }
+          100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes confettiPop {
+          0% { opacity: 0; transform: scale(0); }
+          50% { opacity: 1; transform: scale(1.3); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      </style>
       <div class="center-container">
         <div class="card" style="max-width: 600px; text-align: center; padding: 2.5rem;">
           
-          <!-- Result banner -->
-          <div style="
-            padding: 2rem; border-radius: 20px;
-            background: ${isWin ? 'linear-gradient(135deg, rgba(76,175,80,0.1), rgba(56,142,60,0.05))' : 'linear-gradient(135deg, rgba(244,67,54,0.1), rgba(211,47,47,0.05))'};
-            border: 3px solid ${isWin ? 'rgba(76,175,80,0.3)' : 'rgba(244,67,54,0.3)'};
-            margin-bottom: 1.5rem;
+          <!-- Result emoji -->
+          <div style="font-size: 5rem; animation: popIn 0.8s ease forwards;">
+            ${isWin ? '🏆' : '😔'}
+          </div>
+
+          <!-- Title -->
+          <h2 style="
+            font-size: 2.2rem; margin: 0.5rem 0; font-family: var(--font-title);
+            ${isWin ? 'background: linear-gradient(90deg, #FFD700, #FF8F00, #FFD700); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 2s linear infinite;' : 'color: var(--text-primary);'}
           ">
-            <div style="font-size: 3rem; margin-bottom: 0.5rem;">${isWin ? '🏆' : '😔'}</div>
-            <h2 style="font-size: 2rem; margin-bottom: 0.5rem; font-family: var(--font-title);">
-              ${isWin ? '¡VICTORIA!' : 'Derrota'}
-            </h2>
-            <p style="font-size: 1.1rem; color: var(--text-secondary);">${match.nombre}</p>
-            
-            <div style="
-              font-size: 3rem; font-family: var(--font-number);
-              color: ${isWin ? 'var(--success)' : 'var(--primary)'};
-              margin: 1rem 0;
-            ">
-              ${this.matchStats.correct}/${this.matchStats.total}
+            ${isWin ? '¡VICTORIA!' : 'Derrota'}
+          </h2>
+          <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1.5rem;">${match.nombre}</p>
+          
+          <!-- Animated score circle -->
+          <div style="
+            width: 130px; height: 130px; border-radius: 50%;
+            background: ${statColor}12;
+            border: 5px solid ${statColor};
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+            animation: confettiPop 0.6s ease 0.3s both;
+          ">
+            <div style="font-size: 2.8rem; font-family: var(--font-number); font-weight: 800; color: ${statColor};">
+              ${pct}%
             </div>
-            <div style="font-size: 1.1rem; color: var(--text-secondary);">
-              ${Math.round(result.percentage)}% de aciertos
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">
+              ${this.matchStats.correct}/${this.matchStats.total}
             </div>
           </div>
 
           <!-- Pulpo cierre -->
-          ${this.pulpoArmani.render(result.cierre, isWin ? 'celebrate' : 'thinking')}
+          <div style="
+            background: rgba(211,47,47,0.05); border: 2px solid rgba(211,47,47,0.15);
+            border-radius: 20px; padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem; text-align: left;
+            animation: fadeUp 0.5s ease 0.6s both;
+          ">
+            <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem;">
+              <span style="font-size: 2rem;">${isWin ? '🤩' : '💪'}</span>
+              <span style="font-weight: 700; color: var(--primary); font-size: 0.9rem;">Pulpo Armani:</span>
+            </div>
+            <p style="margin: 0; font-size: 1.05rem; color: var(--text-primary); line-height: 1.5;">
+              "${result.cierre}"
+            </p>
+          </div>
 
           <!-- Season progress -->
           <div style="
-            margin-top: 1.5rem; padding: 1rem;
-            background: rgba(0,0,0,0.03); border-radius: 12px;
+            padding: 1rem; background: rgba(0,0,0,0.03);
+            border-radius: 12px; margin-bottom: 1.5rem;
+            animation: fadeUp 0.5s ease 0.8s both;
           ">
-            <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
               Progreso de la Temporada
             </div>
             <div style="
@@ -1819,35 +1992,37 @@ export class UIManager {
               border-radius: 6px; overflow: hidden;
             ">
               <div style="
-                width: ${((progress.currentJornada - 1) / 10) * 100}%; height: 100%;
+                width: ${((progress.currentJornada - 1) / progress.totalJornadas) * 100}%; height: 100%;
                 background: linear-gradient(90deg, #4CAF50, #D32F2F);
-                border-radius: 6px; transition: width 1s ease;
+                border-radius: 6px; transition: width 1s ease 1s;
               "></div>
             </div>
-            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.3rem;">
-              Jornada ${Math.min(progress.currentJornada, 10)} de 10 · Promedio: ${progress.promedio}%
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">
+              Jornada ${Math.min(progress.currentJornada, progress.totalJornadas)} de ${progress.totalJornadas} · Promedio: ${progress.promedio}%
             </div>
           </div>
 
           ${result.seasonComplete ? `
             <div style="
-              margin-top: 1.5rem; padding: 1.5rem;
+              padding: 1.5rem;
               background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,160,0,0.1));
               border-radius: 16px; border: 2px solid rgba(255,215,0,0.3);
+              margin-bottom: 1rem; animation: confettiPop 0.6s ease 1s both;
             ">
-              <p style="font-size: 1.3rem; font-weight: 700; color: #FF8F00;">
+              <p style="font-size: 1.3rem; font-weight: 700; color: #FF8F00; margin: 0;">
                 🏆 ¡Completaste la Temporada!
               </p>
-              <p style="color: var(--text-secondary);">¡Ya podés rendir el Examen Final!</p>
+              <p style="color: var(--text-secondary); margin: 0.3rem 0 0;">¡Ya podés rendir el Examen Final!</p>
             </div>
           ` : `
-            <p style="margin-top: 1rem; color: var(--text-secondary);">
-              ⏰ ¡Volvé mañana para la Jornada ${progress.currentJornada}!
+            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              ⚽ ¡Elegí otra jornada para seguir entrenando!
             </p>
           `}
 
           <button class="btn btn-primary" id="back-season-btn" style="
-            font-size: 1.2rem; padding: 0.8rem 2.5rem; margin-top: 1.5rem;
+            font-size: 1.2rem; padding: 0.8rem 2.5rem;
+            animation: fadeUp 0.5s ease 1.2s both;
           ">
             ${result.seasonComplete ? '🏆 Ver Temporada' : '📋 Volver al Mapa'}
           </button>
