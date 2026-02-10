@@ -1175,9 +1175,22 @@ export class UIManager {
 
     const timeSpent = Math.round((Date.now() - this.exerciseStartTime) / 1000);
 
+    // In guided flow, currentExerciseIndex is global — compute local index for the activity
+    let localExerciseIndex = this.currentExerciseIndex;
+    if (this._guidedExercises && this._guidedExercises.length > 0) {
+      // Count how many exercises of THIS activity appear before currentExerciseIndex
+      let localIdx = 0;
+      for (let i = 0; i < this.currentExerciseIndex; i++) {
+        if (this._guidedActivities[i].id === this.currentActivity.id) {
+          localIdx++;
+        }
+      }
+      localExerciseIndex = localIdx;
+    }
+
     const result = this.activityManager.recordResponse(
       this.currentActivity.id,
-      this.currentExerciseIndex,
+      localExerciseIndex,
       userAnswer,
       timeSpent
     );
