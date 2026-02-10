@@ -283,6 +283,8 @@ const CONCEPT_TEACHINGS = {
 export class SeasonManager {
     constructor() {
         this.storageKey = 'ferchu_season_v1';
+        // Always start fresh — no persistence for now
+        localStorage.removeItem(this.storageKey);
         this.data = this.load();
     }
 
@@ -347,7 +349,11 @@ export class SeasonManager {
     }
 
     // ═══ MATCH FLOW ═══
-    startMatch() {
+    startMatch(jornadaNum) {
+        // If a specific jornada is requested, use that one
+        if (jornadaNum && jornadaNum >= 1 && jornadaNum <= SEASON.length) {
+            return SEASON[jornadaNum - 1];
+        }
         return this.getCurrentMatch();
     }
 

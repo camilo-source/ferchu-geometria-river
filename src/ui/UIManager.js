@@ -1346,42 +1346,47 @@ export class UIManager {
     let jornadasHTML = '';
     season.forEach((match, i) => {
       const jornada = i + 1;
-      const isPast = jornada < progress.currentJornada;
-      const isCurrent = jornada === progress.currentJornada;
-      const isFuture = jornada > progress.currentJornada;
       const result = progress.matchResults.find(r => r.jornada === jornada);
       const color = this.seasonManager.getEtapaColor(match.etapa);
       const emoji = this.seasonManager.getEtapaEmoji(match.etapa);
+
+      // First 3 jornadas always unlocked; rest unlock via progression
+      const isUnlocked = jornada <= 3 || jornada <= progress.currentJornada;
+      const isCompleted = !!result;
+      const isPlayable = isUnlocked && !isCompleted;
 
       let statusIcon = '🔒';
       let bg = 'rgba(100,100,100,0.1)';
       let border = 'rgba(100,100,100,0.2)';
       let opacity = '0.5';
+      let cursor = 'default';
 
-      if (isPast && result) {
+      if (isCompleted) {
         const pct = (result.score / result.total) * 100;
         statusIcon = pct >= 60 ? '✅' : '❌';
         bg = pct >= 60 ? 'rgba(76,175,80,0.08)' : 'rgba(244,67,54,0.08)';
         border = pct >= 60 ? 'rgba(76,175,80,0.3)' : 'rgba(244,67,54,0.3)';
         opacity = '1';
-      } else if (isCurrent) {
+      } else if (isPlayable) {
         statusIcon = '▶️';
         bg = `${color}15`;
         border = `${color}60`;
         opacity = '1';
+        cursor = 'pointer';
       }
 
       jornadasHTML += `
-        <div style="
+        <div class="jornada-card" data-jornada="${jornada}" style="
           display: flex; align-items: center; gap: 0.8rem;
           padding: 0.8rem 1rem; border-radius: 12px;
           background: ${bg}; border: 2px solid ${border};
           opacity: ${opacity}; transition: all 0.3s;
-          ${isCurrent ? 'box-shadow: 0 4px 15px ' + color + '20;' : ''}
+          cursor: ${cursor};
+          ${isPlayable ? 'box-shadow: 0 4px 15px ' + color + '20;' : ''}
         ">
           <span style="font-size: 1.5rem;">${emoji}</span>
           <div style="flex: 1; text-align: left;">
-            <div style="font-weight: 700; font-size: 0.95rem; color: ${isCurrent ? color : 'var(--text-primary)'};">
+            <div style="font-weight: 700; font-size: 0.95rem; color: ${isPlayable ? color : 'var(--text-primary)'};">
               J${jornada}: ${match.nombre}
             </div>
             ${result ? `<div style="font-size: 0.8rem; color: var(--text-secondary);">${result.score}/${result.total} correctas</div>` : ''}
@@ -1391,8 +1396,6 @@ export class UIManager {
       `;
     });
 
-    // Check if can play today
-    const canPlay = this.seasonManager.canPlayToday();
     const isComplete = this.seasonManager.isSeasonComplete();
 
     this.container.innerHTML = `
@@ -1409,28 +1412,29 @@ export class UIManager {
             ">La Temporada de Ferchu</h2>
           </div>
 
-          <!-- Stats bar -->
           <div style="
             display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1.5rem;
             font-size: 0.95rem; color: var(--text-secondary);
           ">
-            <div>📅 Jornada <strong>${Math.min(progress.currentJornada, 10)}</strong>/10</div>
+            <div>📅 Jornada <strong>${Math.min(progress.currentJornada, season.length)}</strong>/${season.length}</div>
             <div>📊 Promedio <strong style="color: ${progress.promedio >= 60 ? 'var(--success)' : 'var(--primary)'};">${progress.promedio}%</strong></div>
           </div>
 
-          <!-- Progress bar -->
           <div style="
             width: 100%; height: 10px; background: rgba(0,0,0,0.1);
-            border-radius: 5px; margin-bottom: 1.5rem; overflow: hidden;
+            border-radius: 5px; margin-bottom: 1rem; overflow: hidden;
           ">
             <div style="
-              width: ${((progress.currentJornada - 1) / 10) * 100}%; height: 100%;
+              width: ${((progress.currentJornada - 1) / season.length) * 100}%; height: 100%;
               background: linear-gradient(90deg, #4CAF50, #D32F2F);
               border-radius: 5px; transition: width 0.5s;
             "></div>
           </div>
 
-          <!-- Jornadas list -->
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            ☝️ Tocá una jornada desbloqueada para jugar
+          </p>
+
           <div style="
             display: flex; flex-direction: column; gap: 0.5rem;
             max-height: 380px; overflow-y: auto; padding-right: 0.5rem;
@@ -1439,63 +1443,49 @@ export class UIManager {
             ${jornadasHTML}
           </div>
 
-          <!-- Action button -->
           ${isComplete && !progress.examTaken ? `
             <button class="btn btn-primary" id="exam-btn" style="
               font-size: 1.4rem; padding: 1rem 3rem;
-              background: linear-gradient(135deg, #FFD700, #FFA000);
-              color: #333;
-            ">
-              🏆 ¡RENDIR EL EXAMEN FINAL!
-            </button>
+              background: linear-gradient(135deg, #FFD700, #FFA000); color: #333;
+            ">🏆 ¡RENDIR EL EXAMEN FINAL!</button>
           ` : isComplete && progress.examTaken ? `
             <div style="padding: 1.5rem; background: rgba(76,175,80,0.1); border-radius: 12px;">
-              <p style="font-size: 1.3rem; font-weight: 700; color: var(--success);">
-                🏆 ¡Temporada Completada!
-              </p>
+              <p style="font-size: 1.3rem; font-weight: 700; color: var(--success);">🏆 ¡Temporada Completada!</p>
               <p>Examen: ${progress.examScore?.score}/${progress.examScore?.total}</p>
             </div>
-          ` : canPlay ? `
-            <button class="btn btn-primary" id="play-btn" style="
-              font-size: 1.4rem; padding: 1rem 3rem;
-              background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            ">
-              ⚽ ¡Jugar Jornada ${progress.currentJornada}!
-            </button>
-          ` : `
-            <div style="padding: 1.5rem; background: rgba(0,0,0,0.05); border-radius: 12px;">
-              <p style="font-size: 1.2rem; font-weight: 700; color: var(--text-secondary);">
-                ⏰ ¡Ya jugaste hoy!
-              </p>
-              <p style="color: var(--text-secondary);">Volvé mañana para la próxima jornada.</p>
-            </div>
-          `}
+          ` : ''}
         </div>
       </div>
     `;
 
-    // Bind buttons
-    const playBtn = document.getElementById('play-btn');
-    if (playBtn) {
-      playBtn.addEventListener('click', () => {
-        this.startSeasonMatch();
+    // Bind clickable jornada cards
+    document.querySelectorAll('.jornada-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const jornadaNum = parseInt(card.dataset.jornada);
+        const result = progress.matchResults.find(r => r.jornada === jornadaNum);
+        const isUnlocked = jornadaNum <= 3 || jornadaNum <= progress.currentJornada;
+        if (isUnlocked && !result) {
+          this.soundSystem.play('click');
+          this.startSeasonMatch(jornadaNum);
+        }
       });
-    }
+    });
 
     const examBtn = document.getElementById('exam-btn');
     if (examBtn) {
-      examBtn.addEventListener('click', () => {
-        this.showFinalExam();
-      });
+      examBtn.addEventListener('click', () => this.showFinalExam());
     }
   }
 
   // ═══════════════════════════════════════════════════════════
   // 🎯 START SEASON MATCH
   // ═══════════════════════════════════════════════════════════
-  startSeasonMatch() {
-    const match = this.seasonManager.startMatch();
+  startSeasonMatch(jornadaNum) {
+    const match = this.seasonManager.startMatch(jornadaNum);
     if (!match) return;
+
+    // Track which jornada we're playing (for endMatch)
+    this.currentMatchJornada = jornadaNum || this.seasonManager.getProgress().currentJornada;
 
     // Reset match stats
     this.currentTurno = 0;
@@ -1507,7 +1497,6 @@ export class UIManager {
       this.topicManager.setCurrentTopic(match.tema);
       this.activityManager.loadActivitiesForTopic(match.tema);
     } else {
-      // Mixed: alternate topics
       this.topicManager.setCurrentTopic('triangulos');
       this.activityManager.loadActivitiesForTopic('triangulos');
     }
