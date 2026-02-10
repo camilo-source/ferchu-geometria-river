@@ -1200,16 +1200,13 @@ export class UIManager {
     this.currentExerciseIndex++;
     this.breakManager.exerciseCompleted();
 
-    if (this.breakManager.needsBreak()) {
+    // If we're in season mode, always use break as turno boundary
+    if (this.breakManager.needsBreak() || this.currentExerciseIndex >= this.currentActivity.exercises.length) {
       this.showBreakScreen();
       return;
     }
 
-    if (this.currentExerciseIndex >= this.currentActivity.exercises.length) {
-      this.showActivityComplete();
-    } else {
-      this.showExercise();
-    }
+    this.showExercise();
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -1664,6 +1661,7 @@ export class UIManager {
     // Start session timer on first turno
     if (this.currentTurno === 1) {
       this.startSessionTimer();
+      this.breakManager.startSession();
     }
 
     // Load appropriate exercises for this turno
@@ -1673,6 +1671,14 @@ export class UIManager {
       const topic = this.currentTurno % 2 === 0 ? 'potenciacion' : 'triangulos';
       this.topicManager.setCurrentTopic(topic);
       this.activityManager.loadActivitiesForTopic(topic);
+    }
+
+    // Pick a random activity from the loaded topic
+    const activities = this.activityManager.activities;
+    if (activities && activities.length > 0) {
+      const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+      this.currentActivity = randomActivity;
+      this.activityManager.currentActivity = randomActivity.id;
     }
 
     this.showExercise();

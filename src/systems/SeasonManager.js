@@ -20,16 +20,30 @@ const SEASON = [
             cierre_bueno: "¡Gran primer entrenamiento! El DT te tiene en el radar.",
             cierre_malo: "Tranqui, fue el primer día. ¡Mañana volvemos más fuertes!"
         },
-        dificultad: [1, 1, 2] // dificultad por turno: fácil, fácil, medio
+        dificultad: [1, 1, 2]
     },
     {
         jornada: 2,
         nombre: "Pretemporada — Día 2",
         etapa: "pretemporada",
+        tema: "triangulos",
+        concepto: "triangulos-clasificacion",
+        narrativa: {
+            intro: "Segundo día de pretemporada. Hoy nos metemos con los triángulos.",
+            motivacion: "Los triángulos están en todas partes: en la cancha, en las jugadas, en la defensa.",
+            cierre_bueno: "¡Enorme! Ya clasificás triángulos como un geómetra profesional.",
+            cierre_malo: "Los triángulos pueden ser complicados al principio, ¡pero la vas a sacar!"
+        },
+        dificultad: [1, 1, 2]
+    },
+    {
+        jornada: 3,
+        nombre: "Pretemporada — Día 3",
+        etapa: "pretemporada",
         tema: "potenciacion",
         concepto: "potencia-multiplicacion",
         narrativa: {
-            intro: "Segundo día de pretemporada. Hoy nos metemos con las potencias.",
+            intro: "Tercer día de pretemporada. Hoy arrancamos con las potencias.",
             motivacion: "Las potencias son como los pases: hay que dominarlas para jugar bien.",
             cierre_bueno: "¡Enorme! Ya manejás la multiplicación de potencias como un pro.",
             cierre_malo: "Las potencias son duras al principio, pero vas a agarrarles la mano."
@@ -37,21 +51,21 @@ const SEASON = [
         dificultad: [1, 1, 2]
     },
     {
-        jornada: 3,
+        jornada: 4,
         nombre: "Liga — Fecha 1",
         etapa: "liga",
         tema: "triangulos",
-        concepto: "triangulos-clasificacion",
+        concepto: "angulos-complementarios",
         narrativa: {
-            intro: "¡Arranca la Liga! Primer partido oficial. Hoy vemos triángulos.",
-            motivacion: "Un jugador de River domina la cancha. Y la cancha tiene forma de... ¡rectángulo con triángulos!",
+            intro: "¡Arranca la Liga! Primer partido oficial. Complementarios y suplementarios.",
+            motivacion: "Un jugador de River domina la cancha. ¡Y los ángulos dominan las jugadas!",
             cierre_bueno: "¡Victoria en la Fecha 1! El equipo confía en vos.",
             cierre_malo: "Derrota en la primera fecha. Pero la Liga es larga, a no bajar los brazos."
         },
         dificultad: [1, 2, 2]
     },
     {
-        jornada: 4,
+        jornada: 5,
         nombre: "Liga — Fecha 2",
         etapa: "liga",
         tema: "potenciacion",
@@ -65,7 +79,7 @@ const SEASON = [
         dificultad: [1, 2, 2]
     },
     {
-        jornada: 5,
+        jornada: 6,
         nombre: "Copa Interna",
         etapa: "copa",
         tema: "potenciacion",
@@ -79,27 +93,13 @@ const SEASON = [
         dificultad: [2, 2, 3]
     },
     {
-        jornada: 6,
-        nombre: "Liga — Fecha 3",
-        etapa: "liga",
-        tema: "triangulos",
-        concepto: "angulos-complementarios",
-        narrativa: {
-            intro: "Fecha 3. Ángulos complementarios y suplementarios.",
-            motivacion: "Los ángulos están en todas partes: en la cancha, en los pases, en los tiros.",
-            cierre_bueno: "¡Goleada! Estamos liderando la tabla.",
-            cierre_malo: "Fecha complicada, pero los grandes se hacen en los malos momentos."
-        },
-        dificultad: [2, 2, 3]
-    },
-    {
         jornada: 7,
-        nombre: "Liga — Fecha 4",
+        nombre: "Liga — Fecha 3",
         etapa: "liga",
         tema: "potenciacion",
         concepto: "potencia-combinados",
         narrativa: {
-            intro: "Fecha 4. Combinamos todas las propiedades de potencias.",
+            intro: "Fecha 3. Combinamos todas las propiedades de potencias.",
             motivacion: "Un crack no domina una sola cosa. Domina todo y lo combina.",
             cierre_bueno: "¡Impecable! Sos el goleador de la Liga.",
             cierre_malo: "Partido difícil. Las combinaciones son el nivel más alto."
@@ -108,26 +108,26 @@ const SEASON = [
     },
     {
         jornada: 8,
-        nombre: "Semifinal",
-        etapa: "semifinal",
+        nombre: "Liga — Fecha 4",
+        etapa: "liga",
         tema: "triangulos",
         concepto: "paralelas-transversal",
         narrativa: {
-            intro: "¡SEMIFINAL! Todo River confía en vos. Paralelas y transversales.",
-            motivacion: "Las semifinales son para los valientes. ¡Dale con todo!",
-            cierre_bueno: "¡ESTAMOS EN LA FINAAAAL! 🏟️",
-            cierre_malo: "Caímos en la semi... pero la experiencia queda. Vamos por la revancha."
+            intro: "Fecha 4. Paralelas cortadas por transversal.",
+            motivacion: "Las paralelas son como las líneas del campo. ¡Dominá los ángulos que se forman!",
+            cierre_bueno: "¡Goleada! Estamos liderando la tabla.",
+            cierre_malo: "Fecha complicada, pero los grandes se hacen en los malos momentos."
         },
         dificultad: [2, 3, 3]
     },
     {
         jornada: 9,
-        nombre: "Semifinal — Vuelta",
+        nombre: "Semifinal",
         etapa: "semifinal",
         tema: "potenciacion",
         concepto: "potencia-boss",
         narrativa: {
-            intro: "Vuelta de la semi. Es todo o nada. Potencias nivel BOSS.",
+            intro: "¡SEMIFINAL! Todo River confía en vos. Potencias nivel BOSS.",
             motivacion: "Mirá a tu alrededor: El Monumental está lleno. Es por River. Es por vos.",
             cierre_bueno: "¡CLASIFICADOS A LA FINAL! ¡VAMOS RIVER! 🔴⚪",
             cierre_malo: "Quedamos afuera... ¡pero aprendiste un montón! El próximo año volvemos."
@@ -136,6 +136,20 @@ const SEASON = [
     },
     {
         jornada: 10,
+        nombre: "Semifinal — Vuelta",
+        etapa: "semifinal",
+        tema: "triangulos",
+        concepto: "angulos-basicos",
+        narrativa: {
+            intro: "Vuelta de la semi. Es todo o nada. Repaso total de geometría.",
+            motivacion: "Las semifinales son para los valientes. ¡Dale con todo!",
+            cierre_bueno: "¡ESTAMOS EN LA FINAAAAL! 🏟️",
+            cierre_malo: "Caímos en la semi... pero la experiencia queda. Vamos por la revancha."
+        },
+        dificultad: [3, 3, 3]
+    },
+    {
+        jornada: 11,
         nombre: "⭐ FINAL — Copa Libertadores ⭐",
         etapa: "final",
         tema: "mixto",
