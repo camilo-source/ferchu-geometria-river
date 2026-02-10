@@ -18,7 +18,7 @@ export class PenalesGame {
     this.canvas = null;
     this.ctx = null;
     this.W = 640;
-    this.H = 440;
+    this.H = 520;
 
     // Estado
     this.phase = 'aiming'; // aiming | charging | flying | celebrating | result
@@ -30,7 +30,7 @@ export class PenalesGame {
 
     // Pelota
     this.ball = { x: 0, y: 0, vx: 0, vy: 0, radius: 12, spin: 0, trail: [] };
-    this.ballStart = { x: 320, y: 430 };
+    this.ballStart = { x: 320, y: 480 };
 
     // Arco (perspectiva)
     this.goal = { x: 110, y: 60, w: 420, h: 170 };
@@ -735,29 +735,97 @@ export class PenalesGame {
     ctx.save();
     ctx.translate(this.shakeX, this.shakeY);
 
+    // ═══ CIELO NOCTURNO (detrás de la tribuna) ═══
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, 60);
+    skyGrad.addColorStop(0, '#0D1B2A');
+    skyGrad.addColorStop(1, '#1B2838');
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, W, 60);
+
+    // ═══ TRIBUNA DEL MONUMENTAL (crowd) ═══
+    const crowdGrad = ctx.createLinearGradient(0, 10, 0, 65);
+    crowdGrad.addColorStop(0, '#2C1810');
+    crowdGrad.addColorStop(0.5, '#3E2723');
+    crowdGrad.addColorStop(1, '#4E342E');
+    ctx.fillStyle = crowdGrad;
+    ctx.fillRect(0, 10, W, 55);
+
+    // Crowd dots (hinchas animados)
+    for (let x = 5; x < W; x += 8) {
+      for (let row = 0; row < 4; row++) {
+        const y = 18 + row * 12;
+        const wobble = Math.sin(this.frameCount * 0.03 + x * 0.5 + row) * 1.5;
+        const isRed = (x + row) % 3 === 0;
+        const isWhite = (x + row) % 5 === 0;
+        ctx.fillStyle = isRed ? '#D32F2F' : (isWhite ? '#FFFFFF' : '#8D6E63');
+        ctx.beginPath();
+        ctx.arc(x, y + wobble, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Banderas de River (animadas)
+    const flagWave = Math.sin(this.frameCount * 0.05) * 5;
+    // Bandera izquierda
+    ctx.fillStyle = '#D32F2F';
+    ctx.fillRect(50, 12, 3, 30);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(53, 12 + flagWave, 25, 8);
+    ctx.fillStyle = '#D32F2F';
+    ctx.fillRect(53, 17 + flagWave, 25, 3);
+    // Bandera derecha
+    ctx.fillStyle = '#D32F2F';
+    ctx.fillRect(W - 80, 12, 3, 30);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(W - 77, 14 + flagWave * -1, 25, 8);
+    ctx.fillStyle = '#D32F2F';
+    ctx.fillRect(W - 77, 19 + flagWave * -1, 25, 3);
+
+    // Telón "RIVER PLATE" en la tribuna
+    ctx.fillStyle = 'rgba(211, 47, 47, 0.6)';
+    ctx.fillRect(W / 2 - 80, 12, 160, 14);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 10px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('★ RIVER PLATE ★ EL MÁS GRANDE ★', W / 2, 23);
+
+    // ═══ LUCES DEL ESTADIO (reflectores) ═══
+    // Halos de luz
+    const lightGrad1 = ctx.createRadialGradient(80, 0, 0, 80, 0, 200);
+    lightGrad1.addColorStop(0, 'rgba(255, 253, 208, 0.08)');
+    lightGrad1.addColorStop(1, 'rgba(255, 253, 208, 0)');
+    ctx.fillStyle = lightGrad1;
+    ctx.fillRect(0, 0, 200, 300);
+
+    const lightGrad2 = ctx.createRadialGradient(W - 80, 0, 0, W - 80, 0, 200);
+    lightGrad2.addColorStop(0, 'rgba(255, 253, 208, 0.08)');
+    lightGrad2.addColorStop(1, 'rgba(255, 253, 208, 0)');
+    ctx.fillStyle = lightGrad2;
+    ctx.fillRect(W - 200, 0, 200, 300);
+
     // ═══ CANCHA ═══
-    const grassGrad = ctx.createLinearGradient(0, 0, 0, H);
+    const grassGrad = ctx.createLinearGradient(0, 60, 0, H);
     grassGrad.addColorStop(0, '#1B5E20');
-    grassGrad.addColorStop(0.4, '#2E7D32');
+    grassGrad.addColorStop(0.3, '#2E7D32');
     grassGrad.addColorStop(1, '#388E3C');
     ctx.fillStyle = grassGrad;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 60, W, H - 60);
 
-    // Franjas de pasto
-    ctx.fillStyle = 'rgba(76, 175, 80, 0.12)';
-    for (let i = 0; i < H; i += 30) {
-      if (i % 60 === 0) ctx.fillRect(0, i, W, 30);
+    // Franjas de pasto (más realistas)
+    for (let i = 60; i < H; i += 25) {
+      ctx.fillStyle = i % 50 === 0 ? 'rgba(76, 175, 80, 0.1)' : 'rgba(27, 94, 32, 0.08)';
+      ctx.fillRect(0, i, W, 25);
     }
 
     // ═══ ARCO con perspectiva ═══
     const g = this.goal;
 
-    // Red de fondo
-    ctx.fillStyle = 'rgba(200, 200, 200, 0.06)';
+    // Red de fondo (más visible)
+    ctx.fillStyle = 'rgba(200, 200, 200, 0.08)';
     ctx.fillRect(g.x, g.y, g.w, g.h);
 
     // Patrón de red
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
     ctx.lineWidth = 0.5;
     for (let x = g.x; x <= g.x + g.w; x += 12) {
       ctx.beginPath(); ctx.moveTo(x, g.y); ctx.lineTo(x, g.y + g.h); ctx.stroke();
@@ -786,7 +854,14 @@ export class PenalesGame {
     ctx.setLineDash([]);
     ctx.strokeRect(60, g.y - 10, W - 120, g.h + 210);
 
+    // Área chica
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(g.x + 40, g.y - 5, g.w - 80, g.h + 60);
+
     // Media luna
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(W / 2, g.y + g.h + 200, 60, Math.PI, 0, true);
     ctx.stroke();

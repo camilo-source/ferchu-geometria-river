@@ -479,7 +479,16 @@ export class UIManager {
   // ═══════════════════════════════════════════════════════════
   showExercise() {
     const activity = this.currentActivity;
-    const exercise = activity.exercises[this.currentExerciseIndex];
+    // Guided flow: use the flat exercise list if available
+    let exercise;
+    let totalExercises;
+    if (this._guidedExercises && this._guidedExercises.length > 0) {
+      exercise = this._guidedExercises[this.currentExerciseIndex];
+      totalExercises = this._guidedExercises.length;
+    } else {
+      exercise = activity.exercises[this.currentExerciseIndex];
+      totalExercises = activity.exercises.length;
+    }
     this.exerciseStartTime = Date.now();
 
     let exerciseUI = '';
@@ -532,7 +541,7 @@ export class UIManager {
                 <span>${topic ? topic.icon : '📐'} ${activity.title}</span>
               </div>
               <div class="hud-item">
-                <span>${this.currentExerciseIndex + 1}/${activity.exercises.length}</span>
+                <span>${this.currentExerciseIndex + 1}/${totalExercises}</span>
               </div>
             </div>
           </div>
@@ -543,7 +552,7 @@ export class UIManager {
             <div style="
               background: linear-gradient(90deg, ${topic ? topic.color : 'var(--primary)'}, var(--accent));
               height: 100%;
-              width: ${((this.currentExerciseIndex + 1) / activity.exercises.length) * 100}%;
+              width: ${((this.currentExerciseIndex + 1) / totalExercises) * 100}%;
               transition: width 0.3s ease;
             "></div>
           </div>
@@ -675,7 +684,15 @@ export class UIManager {
 
     // Event listeners
     document.getElementById('back-btn').addEventListener('click', () => {
-      this.showActivitySelector();
+      if (this.navigationSource === 'season') {
+        // In season mode, back = confirm exit to season map
+        if (confirm('¿Seguro querés volver? Se va a perder el progreso de este partido.')) {
+          if (this.sessionTimer) clearInterval(this.sessionTimer);
+          this.showSeasonMap();
+        }
+      } else {
+        this.showActivitySelector();
+      }
     });
 
     document.getElementById('submit-btn').addEventListener('click', () => {
@@ -1204,8 +1221,20 @@ export class UIManager {
     this.currentExerciseIndex++;
     this.breakManager.exerciseCompleted();
 
-    // If we're in season mode, always use break as turno boundary
-    if (this.breakManager.needsBreak() || this.currentExerciseIndex >= this.currentActivity.exercises.length) {
+    // Guided flow: check if we exhausted ALL guided exercises
+    if (this._guidedExercises && this._guidedExercises.length > 0) {
+      if (this.currentExerciseIndex >= this._guidedExercises.length) {
+        // All done → go to penalty
+        this.showBreakScreen();
+        return;
+      }
+      // Update current activity to match the current exercise
+      const act = this._guidedActivities[this.currentExerciseIndex];
+      if (act && act.id !== this.currentActivity.id) {
+        this.currentActivity = act;
+        this.activityManager.currentActivity = act.id;
+      }
+    } else if (this.currentExerciseIndex >= this.currentActivity.exercises.length) {
       this.showBreakScreen();
       return;
     }
@@ -1554,21 +1583,32 @@ export class UIManager {
       teaching.pasos.forEach((paso, i) => {
         const sc = stepColors[i % stepColors.length];
         slides.push({
-          bg: `linear-gradient(135deg, ${sc}12, ${sc}05)`,
+          bg: `linear-gradient(135deg, ${sc}15, ${sc}06)`,
           content: `
             <div class="pm-emoji" style="
-              width: 90px; height: 90px; border-radius: 50%;
-              background: ${sc}15; border: 3px solid ${sc}40;
+              width: 100px; height: 100px; border-radius: 24px;
+              background: linear-gradient(135deg, ${sc}20, ${sc}08);
+              border: 3px solid ${sc}40;
               display: flex; align-items: center; justify-content: center;
+              box-shadow: 0 8px 25px ${sc}15;
             ">
-              <span style="font-size: 2.8rem;">${paso.emoji}</span>
+              <span style="font-size: 3rem;">${paso.emoji}</span>
             </div>
-            <div style="
-              font-size: 0.8rem; color: ${sc}; font-weight: 700;
-              text-transform: uppercase; letter-spacing: 2px; margin: 1rem 0 0.5rem;
-            ">Paso ${i + 1} de ${teaching.pasos.length}</div>
-            <p style="
-              font-size: 1.4rem; color: var(--text-primary);
+            <div class="pm-text-reveal" style="
+              display: inline-flex; align-items: center; gap: 0.5rem;
+              font-size: 0.85rem; color: ${sc}; font-weight: 800;
+              text-transform: uppercase; letter-spacing: 3px; margin: 1rem 0 0.8rem;
+            ">
+              <span style="
+                display: inline-flex; align-items: center; justify-content: center;
+                width: 32px; height: 32px; border-radius: 50%;
+                background: ${sc}; color: #fff; font-size: 1rem;
+                font-weight: 900; font-family: var(--font-number);
+              ">${i + 1}</span>
+              de ${teaching.pasos.length}
+            </div>
+            <p class="pm-text-reveal-2" style="
+              font-size: 1.5rem; color: var(--text-primary);
               max-width: 480px; margin: 0 auto; line-height: 1.7; font-weight: 500;
             ">${paso.texto}</p>
           `
@@ -1577,17 +1617,12 @@ export class UIManager {
 
       // Rule slide
       slides.push({
-        bg: 'linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,160,0,0.06))',
+        bg: 'linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,160,0,0.08))',
         content: `
-          <div class="pm-emoji" style="font-size: 4rem;">📌</div>
-          <div style="font-size: 0.85rem; color: #F57C00; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">REGLA CLAVE</div>
-          <div style="
-            background: rgba(255,255,255,0.95); padding: 1.5rem 2rem;
-            border-radius: 16px; border: 3px solid rgba(255,160,0,0.3);
-            box-shadow: 0 8px 30px rgba(255,160,0,0.1);
-            max-width: 500px; margin: 0 auto;
-          ">
-            <p style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
+          <div class="pm-emoji" style="font-size: 4.5rem;">📌</div>
+          <div class="pm-text-reveal" style="font-size: 0.9rem; color: #E65100; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 1.2rem;">⚡ REGLA CLAVE ⚡</div>
+          <div class="pm-rule-card">
+            <p style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.7;">
               ${teaching.regla}
             </p>
           </div>
@@ -1596,17 +1631,12 @@ export class UIManager {
 
       // Example slide
       slides.push({
-        bg: 'linear-gradient(135deg, rgba(76,175,80,0.1), rgba(56,142,60,0.05))',
+        bg: 'linear-gradient(135deg, rgba(76,175,80,0.12), rgba(56,142,60,0.06))',
         content: `
-          <div class="pm-emoji" style="font-size: 4rem;">💡</div>
-          <div style="font-size: 0.85rem; color: #388E3C; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">EJEMPLO</div>
-          <div style="
-            background: rgba(255,255,255,0.95); padding: 1.5rem 2rem;
-            border-radius: 16px; border: 3px solid rgba(76,175,80,0.3);
-            box-shadow: 0 8px 30px rgba(76,175,80,0.1);
-            max-width: 500px; margin: 0 auto;
-          ">
-            <p style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
+          <div class="pm-emoji" style="font-size: 4.5rem;">💡</div>
+          <div class="pm-text-reveal" style="font-size: 0.9rem; color: #2E7D32; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 1.2rem;">🎯 EJEMPLO 🎯</div>
+          <div class="pm-example-card">
+            <p style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.7;">
               ${teaching.ejemplo}
             </p>
           </div>
@@ -1640,52 +1670,98 @@ export class UIManager {
     this.container.innerHTML = `
       <style>
         @keyframes slideEnterRight {
-          from { opacity: 0; transform: translateX(60px) scale(0.95); }
-          to { opacity: 1; transform: translateX(0) scale(1); }
+          from { opacity: 0; transform: translateX(80px) scale(0.9) rotate(2deg); }
+          to { opacity: 1; transform: translateX(0) scale(1) rotate(0); }
         }
         @keyframes slideEnterLeft {
-          from { opacity: 0; transform: translateX(-60px) scale(0.95); }
-          to { opacity: 1; transform: translateX(0) scale(1); }
+          from { opacity: 0; transform: translateX(-80px) scale(0.9) rotate(-2deg); }
+          to { opacity: 1; transform: translateX(0) scale(1) rotate(0); }
         }
         @keyframes bounceIn {
-          0% { transform: scale(0.3); opacity: 0; }
-          50% { transform: scale(1.15); }
-          100% { transform: scale(1); opacity: 1; }
+          0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+          40% { transform: scale(1.25) rotate(5deg); opacity: 1; }
+          60% { transform: scale(0.9) rotate(-2deg); }
+          100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+        @keyframes floatUp {
+          0% { transform: translateY(30px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes shimmerRule {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes glowPulse {
+          0%, 100% { box-shadow: 0 0 20px rgba(211,47,47,0.15); }
+          50% { box-shadow: 0 0 40px rgba(211,47,47,0.3), 0 0 60px rgba(211,47,47,0.1); }
         }
         @keyframes pulseBtn {
           0%, 100% { transform: scale(1); box-shadow: 0 8px 25px ${color}40; }
-          50% { transform: scale(1.05); box-shadow: 0 12px 35px ${color}60; }
+          50% { transform: scale(1.08); box-shadow: 0 14px 40px ${color}60; }
+        }
+        @keyframes particleFloat {
+          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+          10% { opacity: 0.7; }
+          90% { opacity: 0.5; }
+          100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+        @keyframes stepCounterPop {
+          from { transform: scale(0.5); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes textReveal {
+          from { opacity: 0; transform: translateY(15px); filter: blur(4px); }
+          to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
         .pm-viewport {
           position: fixed; inset: 0; z-index: 50;
           display: flex; flex-direction: column;
           overflow: hidden;
         }
+        .pm-particles {
+          position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+        }
+        .pm-particle {
+          position: absolute; border-radius: 50%;
+          animation: particleFloat linear infinite;
+          opacity: 0;
+        }
         .pm-progress-bar {
-          height: 5px; background: rgba(0,0,0,0.08);
-          flex-shrink: 0; position: relative;
+          height: 6px; background: rgba(0,0,0,0.06);
+          flex-shrink: 0; position: relative; z-index: 2;
         }
         .pm-progress-fill {
-          height: 100%; background: ${color};
+          height: 100%; background: linear-gradient(90deg, ${color}, ${color}CC, ${color});
+          background-size: 200% 100%;
           border-radius: 0 3px 3px 0;
-          transition: width 0.4s ease;
+          transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          animation: shimmerRule 2s linear infinite;
         }
         .pm-slide-area {
           flex: 1; display: flex;
           align-items: center; justify-content: center;
           text-align: center; padding: 2rem 1.5rem;
-          position: relative;
+          position: relative; transition: background 0.5s ease;
         }
         .pm-slide-inner {
-          animation: slideEnterRight 0.45s ease both;
-          max-width: 650px; width: 100%;
+          animation: slideEnterRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+          max-width: 650px; width: 100%; position: relative; z-index: 1;
         }
         .pm-slide-inner.from-left {
           animation-name: slideEnterLeft;
         }
         .pm-emoji {
-          animation: bounceIn 0.5s cubic-bezier(0.68, -0.3, 0.265, 1.25) both;
-          margin-bottom: 1rem;
+          animation: bounceIn 0.6s cubic-bezier(0.68, -0.4, 0.265, 1.35) both;
+          margin-bottom: 1rem; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+        }
+        .pm-text-reveal {
+          animation: textReveal 0.5s ease 0.2s both;
+        }
+        .pm-text-reveal-2 {
+          animation: textReveal 0.5s ease 0.4s both;
+        }
+        .pm-float-up {
+          animation: floatUp 0.5s ease 0.3s both;
         }
         .pm-hint {
           font-size: 0.8rem; color: var(--text-secondary);
@@ -1693,8 +1769,8 @@ export class UIManager {
           animation: fadeHint 2s ease infinite;
         }
         @keyframes fadeHint {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.8; }
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.9; }
         }
         .pm-counter {
           position: absolute; bottom: 1.5rem; left: 50%;
@@ -1703,16 +1779,33 @@ export class UIManager {
         }
         .pm-dot {
           width: 8px; height: 8px; border-radius: 50%;
-          background: rgba(0,0,0,0.15); transition: all 0.3s;
+          background: rgba(0,0,0,0.12); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .pm-dot.active {
-          width: 24px; border-radius: 4px;
+          width: 28px; border-radius: 4px;
           background: ${color};
+          box-shadow: 0 2px 8px ${color}60;
         }
         .pm-nav-hint {
           position: absolute; bottom: 3.5rem; left: 50%;
           transform: translateX(-50%);
           font-size: 0.75rem; color: var(--text-secondary); opacity: 0.5;
+        }
+        .pm-rule-card {
+          background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,248,225,0.95));
+          padding: 1.8rem 2.2rem; border-radius: 20px;
+          border: 3px solid rgba(255,160,0,0.35);
+          box-shadow: 0 12px 40px rgba(255,160,0,0.12), 0 2px 8px rgba(0,0,0,0.05);
+          max-width: 500px; margin: 0 auto;
+          animation: glowPulse 3s ease infinite, floatUp 0.5s ease 0.3s both;
+        }
+        .pm-example-card {
+          background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(232,245,233,0.95));
+          padding: 1.8rem 2.2rem; border-radius: 20px;
+          border: 3px solid rgba(76,175,80,0.35);
+          box-shadow: 0 12px 40px rgba(76,175,80,0.12), 0 2px 8px rgba(0,0,0,0.05);
+          max-width: 500px; margin: 0 auto;
+          animation: floatUp 0.5s ease 0.3s both;
         }
       </style>
 
@@ -1721,6 +1814,7 @@ export class UIManager {
           <div class="pm-progress-fill" id="pm-progress" style="width: ${(1 / totalSlides) * 100}%"></div>
         </div>
         <div class="pm-slide-area" id="pm-slide-area" style="background: ${slides[0].bg};">
+          <div class="pm-particles" id="pm-particles"></div>
           <div class="pm-slide-inner" id="pm-slide-inner">
             ${slides[0].content}
           </div>
@@ -1733,6 +1827,23 @@ export class UIManager {
         </div>
       </div>
     `;
+
+    // Generate floating particles
+    const particlesContainer = document.getElementById('pm-particles');
+    for (let i = 0; i < 15; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'pm-particle';
+      const size = 4 + Math.random() * 10;
+      const isRed = Math.random() > 0.5;
+      particle.style.cssText = `
+        width: ${size}px; height: ${size}px;
+        left: ${Math.random() * 100}%;
+        background: ${isRed ? 'rgba(211,47,47,0.3)' : 'rgba(255,255,255,0.4)'};
+        animation-duration: ${8 + Math.random() * 12}s;
+        animation-delay: ${Math.random() * 5}s;
+      `;
+      particlesContainer.appendChild(particle);
+    }
 
     const slideArea = document.getElementById('pm-slide-area');
     const slideInner = document.getElementById('pm-slide-inner');
@@ -1853,35 +1964,64 @@ export class UIManager {
   }
 
   // ═══════════════════════════════════════════════════════════
-  // ⏱️ START TURNO (set of 3 exercises)
+  // 🎯 CONCEPTO → ACTIVIDAD mapping
+  // ═══════════════════════════════════════════════════════════
+  getActivityForConcepto(concepto) {
+    // For triángulos topic (IDs 1-10)
+    const TRIANGULOS_MAP = {
+      'angulos-basicos': [1, 2],           // identificar + medir
+      'triangulos-clasificacion': [7, 8],   // lados + ángulos
+      'angulos-complementarios': [3, 4],    // complementarios + suplementarios
+      'paralelas-transversal': [10],         // paralelas
+      'repaso-general': [5, 6, 9],          // opuestos + bisectriz + faltante
+    };
+    // For potenciación topic (IDs 1-3)
+    const POTENCIAS_MAP = {
+      'potencia-multiplicacion': [1],       // simple (mult + div + pot)
+      'potencia-division': [1],             // same activity, different exercises
+      'potencia-de-potencia': [1],          // simple
+      'potencia-combinados': [2],           // combinada
+      'potencia-boss': [3],                 // boss
+    };
+    return TRIANGULOS_MAP[concepto] || POTENCIAS_MAP[concepto] || [1];
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // ⏱️ START TURNO — Linear guided flow (NO dashboard)
   // ═══════════════════════════════════════════════════════════
   startTurno() {
-    this.currentTurno++;
+    this.currentTurno = 1;
     this.correctInCurrentSet = 0;
     this.currentExerciseIndex = 0;
     this.breakManager.exerciseCount = 0;
+    this.breakManager.exercisesPerSet = 999; // Never trigger auto-break
+    this.startSessionTimer();
+    this.breakManager.startSession();
 
-    // Start session timer on first turno
-    if (this.currentTurno === 1) {
-      this.startSessionTimer();
-      this.breakManager.startSession();
-    }
-
-    // Load appropriate exercises for this turno
+    // Map concepto → specific activity IDs
     const match = this.seasonManager.getCurrentMatch();
-    if (match && match.tema === 'mixto' && this.currentTurno > 1) {
-      // Alternate between topics for mixed matches
-      const topic = this.currentTurno % 2 === 0 ? 'potenciacion' : 'triangulos';
-      this.topicManager.setCurrentTopic(topic);
-      this.activityManager.loadActivitiesForTopic(topic);
-    }
+    const concepto = match ? match.concepto : 'angulos-basicos';
+    const activityIds = this.getActivityForConcepto(concepto);
 
-    // Pick a random activity from the loaded topic
+    // Build a combined exercise list from mapped activities
     const activities = this.activityManager.activities;
-    if (activities && activities.length > 0) {
-      const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-      this.currentActivity = randomActivity;
-      this.activityManager.currentActivity = randomActivity.id;
+    this._guidedExercises = [];
+    this._guidedActivities = [];
+
+    activityIds.forEach(id => {
+      const act = activities.find(a => a.id === id);
+      if (act) {
+        act.exercises.forEach(ex => {
+          this._guidedExercises.push({ ...ex, _activityType: act.type, _activityTitle: act.title });
+          this._guidedActivities.push(act);
+        });
+      }
+    });
+
+    // Set first activity
+    if (this._guidedActivities.length > 0) {
+      this.currentActivity = this._guidedActivities[0];
+      this.activityManager.currentActivity = this.currentActivity.id;
     }
 
     this.showExercise();
@@ -2216,8 +2356,16 @@ export class UIManager {
   showBreakScreen() {
     this.breakManager.startBreak();
 
-    // Calcular respuestas correctas en este set (desde el último break)
-    const shotsEarned = this.correctInCurrentSet;
+    // Total correct = penalty shots earned
+    const shotsEarned = this.matchStats.correct;
+
+    // If 0 correct answers → skip penalty, go straight to post-match
+    if (shotsEarned === 0) {
+      this.breakManager.endBreak();
+      this.matchStats.turnosCompleted++;
+      this.endSeasonMatch();
+      return;
+    }
 
     this.container.innerHTML = `
       <div style="text-align: center; padding: 1rem 1rem 0;">
@@ -2247,25 +2395,14 @@ export class UIManager {
 
     const breakContainer = document.getElementById('break-container');
     const penalesGame = new PenalesGame(breakContainer);
-    penalesGame.setShots(shotsEarned); // Reward: shots = correct answers
+    penalesGame.setShots(shotsEarned);
     penalesGame.start();
 
     penalesGame.onComplete(() => {
       this.breakManager.endBreak();
-      this.correctInCurrentSet = 0; // Reset for next set
       this.matchStats.turnosCompleted++;
-
-      // Season turno flow
-      if (this.currentTurno >= 3) {
-        // All 3 turnos done → end match
-        this.endSeasonMatch();
-      } else if (this.currentTurno === 1) {
-        // After turno 1 → halftime
-        this.showHalftime();
-      } else {
-        // After turno 2 → turno 3
-        this.startTurno();
-      }
+      // Linear flow: penalty → post-match directly
+      this.endSeasonMatch();
     });
   }
 }

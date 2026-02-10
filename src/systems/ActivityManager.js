@@ -43,105 +43,172 @@ export class ActivityManager {
     // ═══════════════════════════════════════════════════════════
     loadTriangulosActivities() {
         this.activities = [
-            // 🟢 NIVEL 1: Identificación Visual
+            // ═══════════════════════════════════════════════
+            // 🟢 NIVEL 1: Reconocimiento básico (más fácil)
+            // ═══════════════════════════════════════════════
             {
                 id: 1,
                 type: 'identificar-angulo',
-                title: 'El Ojo de Halcón',
+                title: 'El Ojo de Halcón 👁️',
                 instructions: 'Mirá el gráfico y decí qué tipo de ángulo es:',
                 exercises: [
                     { angle: 90, correctAnswer: 'recto' },
+                    { angle: 45, correctAnswer: 'agudo' },
+                    { angle: 120, correctAnswer: 'obtuso' },
                     { angle: 30, correctAnswer: 'agudo' },
-                    { angle: 140, correctAnswer: 'obtuso' },
+                    { angle: 150, correctAnswer: 'obtuso' },
                     { angle: 10, correctAnswer: 'agudo' },
-                    { angle: 170, correctAnswer: 'obtuso' }
+                    { angle: 175, correctAnswer: 'obtuso' }
                 ]
             },
 
-            // 🟢 NIVEL 2: Precisión (Medición)
+            // ═══════════════════════════════════════════════
+            // 🟢 NIVEL 2: Medición / Estimación
+            // ═══════════════════════════════════════════════
             {
                 id: 2,
                 type: 'medir-angulo',
-                title: 'Francotirador de Ángulos',
+                title: 'Francotirador de Ángulos 🎯',
                 instructions: 'Estimá cuántos grados mide este ángulo:',
                 exercises: [
                     { angle: 90, tolerance: 5, correctAnswer: 90 },
                     { angle: 45, tolerance: 5, correctAnswer: 45 },
+                    { angle: 60, tolerance: 5, correctAnswer: 60 },
+                    { angle: 120, tolerance: 5, correctAnswer: 120 },
                     { angle: 180, tolerance: 5, correctAnswer: 180 },
                     { angle: 135, tolerance: 5, correctAnswer: 135 },
-                    { angle: 30, tolerance: 5, correctAnswer: 30 }
+                    { angle: 30, tolerance: 4, correctAnswer: 30 },
+                    { angle: 15, tolerance: 4, correctAnswer: 15 }
                 ]
             },
 
-            // 🔵 NIVEL 3: Rompecabezas 90° (Complementarios)
+            // ═══════════════════════════════════════════════
+            // 🔵 NIVEL 3: Complementarios (suman 90°)
+            // ═══════════════════════════════════════════════
             {
                 id: 3,
                 type: 'complementario',
-                title: 'Completá el 90°',
-                instructions: '¿Cuánto mide el ángulo complementario?',
+                title: 'Completá el 90° ⚡',
+                instructions: 'Dos ángulos son complementarios si suman 90°. ¿Cuánto mide el otro?',
                 exercises: [
                     { given: 45, correctAnswer: 45 },
                     { given: 30, correctAnswer: 60 },
                     { given: 60, correctAnswer: 30 },
-                    { given: 20, correctAnswer: 70 },
-                    { given: 75, correctAnswer: 15 }
+                    { given: 50, correctAnswer: 40 },
+                    { given: 25, correctAnswer: 65 },
+                    { given: 15, correctAnswer: 75 },
+                    { given: 72, correctAnswer: 18 },
+                    { given: 83, correctAnswer: 7 }
                 ]
             },
 
-            // 🟡 NIVEL 4: Rompecabezas 180° (Suplementarios)
+            // ═══════════════════════════════════════════════
+            // 🔵 NIVEL 4: Suplementarios (suman 180°)
+            // ═══════════════════════════════════════════════
             {
                 id: 4,
                 type: 'suplementario',
-                title: 'Completá la Recta (180°)',
-                instructions: '¿Cuánto mide el ángulo suplementario?',
+                title: 'Completá la Recta (180°) 📏',
+                instructions: 'Dos ángulos son suplementarios si suman 180°. ¿Cuánto mide el otro?',
                 exercises: [
                     { given: 90, correctAnswer: 90 },
                     { given: 120, correctAnswer: 60 },
+                    { given: 60, correctAnswer: 120 },
                     { given: 150, correctAnswer: 30 },
                     { given: 45, correctAnswer: 135 },
-                    { given: 10, correctAnswer: 170 }
+                    { given: 35, correctAnswer: 145 },
+                    { given: 165, correctAnswer: 15 },
+                    { given: 12, correctAnswer: 168 }
                 ]
             },
 
-            // 🔴 NIVEL 5: Triángulos por Lados (TP Nº 6)
+            // ═══════════════════════════════════════════════
+            // 🟡 NIVEL 5: Ángulos Adyacentes y Opuestos por el Vértice
+            // ═══════════════════════════════════════════════
             {
                 id: 5,
-                type: 'clasificar-triangulo-lados',
-                title: 'Triángulos: La Forma (TP 6)',
-                instructions: 'Según las longitudes de sus lados, es:',
+                type: 'angulo-faltante',
+                title: 'Opuestos por el Vértice 🔀',
+                instructions: 'Dos rectas se cortan formando ángulos. Calculá "x":',
                 exercises: [
-                    { sides: [5, 5, 5], correctAnswer: 'equilátero' },
-                    { sides: [3, 4, 5], correctAnswer: 'escaleno' },
-                    { sides: [4, 4, 6], correctAnswer: 'isósceles' },
-                    { sides: [6, 8, 10], correctAnswer: 'escaleno' },
-                    { sides: [5, 5, 2], correctAnswer: 'isósceles' }
+                    { labels: ['60°', 'x', '60°'], sides: [5, 5, 5], correctAnswer: 60 },
+                    { labels: ['90°', 'x', '90°'], sides: [5, 5, 5], correctAnswer: 90 },
+                    { labels: ['45°', 'x', '45°'], sides: [5, 5, 5], correctAnswer: 45 },
+                    { labels: ['130°', 'x'], sides: [5, 5], correctAnswer: 50 },
+                    { labels: ['72°', 'x'], sides: [5, 5], correctAnswer: 108 },
+                    { labels: ['155°', 'x'], sides: [5, 5], correctAnswer: 25 }
                 ]
             },
 
-            // 🔴 NIVEL 6: Triángulos por Ángulos (TP Nº 6)
+            // ═══════════════════════════════════════════════
+            // 🟡 NIVEL 6: Bisectriz
+            // ═══════════════════════════════════════════════
             {
                 id: 6,
-                type: 'clasificar-triangulo-angulos',
-                title: 'Triángulos: La Apertura (TP 6)',
-                instructions: 'Calculá mentalmente sus ángulos y clasificalo:',
+                type: 'angulo-faltante',
+                title: 'La Bisectriz ✂️',
+                instructions: 'La bisectriz divide un ángulo en 2 iguales. ¿Cuánto mide cada mitad?',
                 exercises: [
-                    { labels: ['90°', '80°', '10°'], sides: [5, 4.9, 0.8], correctAnswer: 'rectángulo' },
-                    { labels: ['108°', '36°', '36°'], sides: [8, 5, 5], correctAnswer: 'obtusángulo' },
-                    { labels: ['120°', '40°', '20°'], sides: [8, 6, 3], correctAnswer: 'obtusángulo' },
-                    { labels: ['60°', '60°', '60°'], sides: [5, 5, 5], correctAnswer: 'acutángulo' },
-                    { labels: ['80°', '60°', '40°'], sides: [5, 4.5, 3.5], correctAnswer: 'acutángulo' }
+                    { labels: ['90°', '→', 'x'], sides: [5, 5, 5], correctAnswer: 45 },
+                    { labels: ['60°', '→', 'x'], sides: [5, 5, 5], correctAnswer: 30 },
+                    { labels: ['120°', '→', 'x'], sides: [5, 5, 5], correctAnswer: 60 },
+                    { labels: ['180°', '→', 'x'], sides: [5, 5, 5], correctAnswer: 90 },
+                    { labels: ['70°', '→', 'x'], sides: [5, 5, 5], correctAnswer: 35 },
+                    { labels: ['150°', '→', 'x'], sides: [5, 5, 5], correctAnswer: 75 },
+                    { labels: ['46°', '→', 'x'], sides: [5, 5, 5], correctAnswer: 23 }
                 ]
             },
 
-            // ⚫ NIVEL 7: El Ángulo Perdido (Desafíos TP 6)
+            // ═══════════════════════════════════════════════
+            // 🟠 NIVEL 7: Triángulos por Lados (TP 6)
+            // ═══════════════════════════════════════════════
             {
                 id: 7,
+                type: 'clasificar-triangulo-lados',
+                title: 'Triángulos: Lados (TP 6) 📐',
+                instructions: 'Según las longitudes de sus lados, ¿qué tipo es?',
+                exercises: [
+                    { sides: [5, 5, 5], correctAnswer: 'equilátero' },
+                    { sides: [4, 4, 6], correctAnswer: 'isósceles' },
+                    { sides: [3, 4, 5], correctAnswer: 'escaleno' },
+                    { sides: [7, 7, 3], correctAnswer: 'isósceles' },
+                    { sides: [6, 8, 10], correctAnswer: 'escaleno' },
+                    { sides: [5, 5, 2], correctAnswer: 'isósceles' },
+                    { sides: [9, 12, 15], correctAnswer: 'escaleno' }
+                ]
+            },
+
+            // ═══════════════════════════════════════════════
+            // 🟠 NIVEL 8: Triángulos por Ángulos (TP 6)
+            // ═══════════════════════════════════════════════
+            {
+                id: 8,
+                type: 'clasificar-triangulo-angulos',
+                title: 'Triángulos: Ángulos (TP 6) 📐',
+                instructions: 'Mirá los ángulos y clasificá el triángulo:',
+                exercises: [
+                    { labels: ['60°', '60°', '60°'], sides: [5, 5, 5], correctAnswer: 'acutángulo' },
+                    { labels: ['90°', '45°', '45°'], sides: [5, 3.5, 3.5], correctAnswer: 'rectángulo' },
+                    { labels: ['90°', '60°', '30°'], sides: [5, 4.3, 2.5], correctAnswer: 'rectángulo' },
+                    { labels: ['80°', '60°', '40°'], sides: [5, 4.5, 3.5], correctAnswer: 'acutángulo' },
+                    { labels: ['120°', '35°', '25°'], sides: [8, 5, 4], correctAnswer: 'obtusángulo' },
+                    { labels: ['108°', '36°', '36°'], sides: [8, 5, 5], correctAnswer: 'obtusángulo' },
+                    { labels: ['100°', '50°', '30°'], sides: [7, 5, 3], correctAnswer: 'obtusángulo' }
+                ]
+            },
+
+            // ═══════════════════════════════════════════════
+            // 🔴 NIVEL 9: Ángulo faltante del triángulo (180°)
+            // ═══════════════════════════════════════════════
+            {
+                id: 9,
                 type: 'angulo-faltante',
-                title: 'Calculá el ángulo X',
-                instructions: '¿Cuánto mide el ángulo "x"?',
+                title: 'El Ángulo Perdido 🔍',
+                instructions: 'Los ángulos del triángulo suman 180°. ¿Cuánto mide "x"?',
                 exercises: [
                     { labels: ['60°', '60°', 'x'], sides: [5, 5, 5], correctAnswer: 60 },
-                    { labels: ['90°', '45°', 'x'], sides: [3, 3, 4.24], correctAnswer: 45 },
+                    { labels: ['90°', '45°', 'x'], sides: [5, 3.5, 3.5], correctAnswer: 45 },
+                    { labels: ['90°', '30°', 'x'], sides: [5, 4.3, 2.5], correctAnswer: 60 },
                     { labels: ['80°', '10°', 'x'], sides: [5, 0.9, 5.1], correctAnswer: 90 },
                     { labels: ['36°', '36°', 'x'], sides: [5, 5, 8], correctAnswer: 108 },
                     { labels: ['20°', '40°', 'x'], sides: [3, 6, 8], correctAnswer: 120 },
@@ -151,21 +218,25 @@ export class ActivityManager {
                 ]
             },
 
-            // ⚫ NIVEL 8: Paralelas (Bonus)
+            // ═══════════════════════════════════════════════
+            // 🔴 NIVEL 10: Paralelas cortadas por transversal (Boss)
+            // ═══════════════════════════════════════════════
             {
-                id: 8,
+                id: 10,
                 type: 'lineas-paralelas',
-                title: 'Vías del Tren',
+                title: 'Vías del Tren 🚂',
                 instructions: 'En estas paralelas, ¿cuánto mide el ángulo marcado?',
                 exercises: [
                     { given: 90, type: 'correspondiente', correctAnswer: 90 },
-                    { given: 120, type: 'correspondiente', correctAnswer: 120 },
-                    { given: 60, type: 'alterno-interno', correctAnswer: 60 },
+                    { given: 60, type: 'correspondiente', correctAnswer: 60 },
+                    { given: 45, type: 'alterno-interno', correctAnswer: 45 },
                     { given: 75, type: 'alterno-interno', correctAnswer: 75 },
-                    { given: 45, type: 'alterno-externo', correctAnswer: 45 },
-                    { given: 150, type: 'conjugado', correctAnswer: 30 },
+                    { given: 120, type: 'alterno-externo', correctAnswer: 120 },
+                    { given: 30, type: 'alterno-externo', correctAnswer: 30 },
+                    { given: 110, type: 'conjugado', correctAnswer: 70 },
                     { given: 135, type: 'conjugado', correctAnswer: 45 },
-                    { given: 110, type: 'conjugado', correctAnswer: 70 }
+                    { given: 150, type: 'conjugado', correctAnswer: 30 },
+                    { given: 55, type: 'conjugado', correctAnswer: 125 }
                 ]
             }
         ];
