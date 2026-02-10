@@ -9,6 +9,7 @@
 import { ActivityManager } from '../systems/ActivityManager.js';
 import { BreakManager } from '../systems/BreakManager.js';
 import { TopicManager, TOPICS } from '../systems/TopicManager.js';
+import { SeasonManager } from '../systems/SeasonManager.js';
 import { PenalesGame } from '../games/PenalesGame.js';
 import { PulpoArmani } from '../components/PulpoArmani.js';
 import { RiverHeader } from '../components/RiverHeader.js';
@@ -29,7 +30,14 @@ export class UIManager {
     this.exercisesCompletedTotal = 0;
     this.currentStreak = 0;
     this.isLoggedIn = false;
-    this.correctInCurrentSet = 0; // correct answers since last break
+    this.correctInCurrentSet = 0;
+
+    // Season Mode state
+    this.seasonManager = new SeasonManager();
+    this.currentTurno = 0; // 0, 1, 2 (3 turnos per match)
+    this.matchStats = { correct: 0, total: 0, turnosCompleted: 0 };
+    this.sessionTimer = null;
+    this.sessionTimeLeft = 0;
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -260,7 +268,7 @@ export class UIManager {
 
     document.getElementById('start-btn').addEventListener('click', () => {
       this.activityManager.startSession('Ferchu');
-      this.showTopicSelector();
+      this.showSeasonMap();
     });
   }
 
@@ -1162,12 +1170,14 @@ export class UIManager {
       this.soundSystem.play('success');
       this.currentStreak++;
       this.correctInCurrentSet++;
+      this.matchStats.correct++;
       this.riverHeader.updateStreak(this.currentStreak);
     } else {
       this.soundSystem.play('error');
       this.currentStreak = 0;
       this.riverHeader.resetStreak();
     }
+    this.matchStats.total++;
 
     setTimeout(() => {
       this.nextExercise();
@@ -1329,6 +1339,587 @@ export class UIManager {
   }
 
   // ═══════════════════════════════════════════════════════════
+  // 🏟️ SEASON MAP — Mapa de la Temporada
+  // ═══════════════════════════════════════════════════════════
+  showSeasonMap() {
+    const progress = this.seasonManager.getProgress();
+    const season = this.seasonManager.getSeasonData();
+
+    // Build jornada cards
+    let jornadasHTML = '';
+    season.forEach((match, i) => {
+      const jornada = i + 1;
+      const isPast = jornada < progress.currentJornada;
+      const isCurrent = jornada === progress.currentJornada;
+      const isFuture = jornada > progress.currentJornada;
+      const result = progress.matchResults.find(r => r.jornada === jornada);
+      const color = this.seasonManager.getEtapaColor(match.etapa);
+      const emoji = this.seasonManager.getEtapaEmoji(match.etapa);
+
+      let statusIcon = '🔒';
+      let bg = 'rgba(100,100,100,0.1)';
+      let border = 'rgba(100,100,100,0.2)';
+      let opacity = '0.5';
+
+      if (isPast && result) {
+        const pct = (result.score / result.total) * 100;
+        statusIcon = pct >= 60 ? '✅' : '❌';
+        bg = pct >= 60 ? 'rgba(76,175,80,0.08)' : 'rgba(244,67,54,0.08)';
+        border = pct >= 60 ? 'rgba(76,175,80,0.3)' : 'rgba(244,67,54,0.3)';
+        opacity = '1';
+      } else if (isCurrent) {
+        statusIcon = '▶️';
+        bg = `${color}15`;
+        border = `${color}60`;
+        opacity = '1';
+      }
+
+      jornadasHTML += `
+        <div style="
+          display: flex; align-items: center; gap: 0.8rem;
+          padding: 0.8rem 1rem; border-radius: 12px;
+          background: ${bg}; border: 2px solid ${border};
+          opacity: ${opacity}; transition: all 0.3s;
+          ${isCurrent ? 'box-shadow: 0 4px 15px ' + color + '20;' : ''}
+        ">
+          <span style="font-size: 1.5rem;">${emoji}</span>
+          <div style="flex: 1; text-align: left;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: ${isCurrent ? color : 'var(--text-primary)'};">
+              J${jornada}: ${match.nombre}
+            </div>
+            ${result ? `<div style="font-size: 0.8rem; color: var(--text-secondary);">${result.score}/${result.total} correctas</div>` : ''}
+          </div>
+          <span style="font-size: 1.3rem;">${statusIcon}</span>
+        </div>
+      `;
+    });
+
+    // Check if can play today
+    const canPlay = this.seasonManager.canPlayToday();
+    const isComplete = this.seasonManager.isSeasonComplete();
+
+    this.container.innerHTML = `
+      <div class="center-container">
+        <div class="card" style="max-width: 650px; text-align: center; padding: 2rem;">
+          
+          <div style="display: flex; align-items: center; justify-content: center; gap: 0.8rem; margin-bottom: 1rem;">
+            <img src="/assets/river/Escudo.png" style="width: 50px; height: 50px;" alt="River"/>
+            <h2 style="
+              font-size: 2rem; font-family: var(--font-title);
+              background: linear-gradient(135deg, #D32F2F, #B71C1C);
+              -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+              margin: 0;
+            ">La Temporada de Ferchu</h2>
+          </div>
+
+          <!-- Stats bar -->
+          <div style="
+            display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1.5rem;
+            font-size: 0.95rem; color: var(--text-secondary);
+          ">
+            <div>📅 Jornada <strong>${Math.min(progress.currentJornada, 10)}</strong>/10</div>
+            <div>📊 Promedio <strong style="color: ${progress.promedio >= 60 ? 'var(--success)' : 'var(--primary)'};">${progress.promedio}%</strong></div>
+          </div>
+
+          <!-- Progress bar -->
+          <div style="
+            width: 100%; height: 10px; background: rgba(0,0,0,0.1);
+            border-radius: 5px; margin-bottom: 1.5rem; overflow: hidden;
+          ">
+            <div style="
+              width: ${((progress.currentJornada - 1) / 10) * 100}%; height: 100%;
+              background: linear-gradient(90deg, #4CAF50, #D32F2F);
+              border-radius: 5px; transition: width 0.5s;
+            "></div>
+          </div>
+
+          <!-- Jornadas list -->
+          <div style="
+            display: flex; flex-direction: column; gap: 0.5rem;
+            max-height: 380px; overflow-y: auto; padding-right: 0.5rem;
+            margin-bottom: 1.5rem;
+          ">
+            ${jornadasHTML}
+          </div>
+
+          <!-- Action button -->
+          ${isComplete && !progress.examTaken ? `
+            <button class="btn btn-primary" id="exam-btn" style="
+              font-size: 1.4rem; padding: 1rem 3rem;
+              background: linear-gradient(135deg, #FFD700, #FFA000);
+              color: #333;
+            ">
+              🏆 ¡RENDIR EL EXAMEN FINAL!
+            </button>
+          ` : isComplete && progress.examTaken ? `
+            <div style="padding: 1.5rem; background: rgba(76,175,80,0.1); border-radius: 12px;">
+              <p style="font-size: 1.3rem; font-weight: 700; color: var(--success);">
+                🏆 ¡Temporada Completada!
+              </p>
+              <p>Examen: ${progress.examScore?.score}/${progress.examScore?.total}</p>
+            </div>
+          ` : canPlay ? `
+            <button class="btn btn-primary" id="play-btn" style="
+              font-size: 1.4rem; padding: 1rem 3rem;
+              background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            ">
+              ⚽ ¡Jugar Jornada ${progress.currentJornada}!
+            </button>
+          ` : `
+            <div style="padding: 1.5rem; background: rgba(0,0,0,0.05); border-radius: 12px;">
+              <p style="font-size: 1.2rem; font-weight: 700; color: var(--text-secondary);">
+                ⏰ ¡Ya jugaste hoy!
+              </p>
+              <p style="color: var(--text-secondary);">Volvé mañana para la próxima jornada.</p>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+
+    // Bind buttons
+    const playBtn = document.getElementById('play-btn');
+    if (playBtn) {
+      playBtn.addEventListener('click', () => {
+        this.startSeasonMatch();
+      });
+    }
+
+    const examBtn = document.getElementById('exam-btn');
+    if (examBtn) {
+      examBtn.addEventListener('click', () => {
+        this.showFinalExam();
+      });
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // 🎯 START SEASON MATCH
+  // ═══════════════════════════════════════════════════════════
+  startSeasonMatch() {
+    const match = this.seasonManager.startMatch();
+    if (!match) return;
+
+    // Reset match stats
+    this.currentTurno = 0;
+    this.matchStats = { correct: 0, total: 0, turnosCompleted: 0 };
+    this.correctInCurrentSet = 0;
+
+    // Set topic for this match
+    if (match.tema !== 'mixto') {
+      this.topicManager.setCurrentTopic(match.tema);
+      this.activityManager.loadActivitiesForTopic(match.tema);
+    } else {
+      // Mixed: alternate topics
+      this.topicManager.setCurrentTopic('triangulos');
+      this.activityManager.loadActivitiesForTopic('triangulos');
+    }
+
+    // Show pre-match (Pulpo teaches)
+    this.showPreMatch(match);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // 📚 PRE-MATCH — Pulpo Teaches Concept
+  // ═══════════════════════════════════════════════════════════
+  showPreMatch(match) {
+    const teaching = this.seasonManager.getTeaching(match.concepto);
+    const color = this.seasonManager.getEtapaColor(match.etapa);
+    const emoji = this.seasonManager.getEtapaEmoji(match.etapa);
+
+    // Build teaching steps
+    let stepsHTML = '';
+    if (teaching) {
+      teaching.pasos.forEach((paso, i) => {
+        stepsHTML += `
+          <div class="teaching-step" style="
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 1rem; background: rgba(255,255,255,0.9);
+            border-radius: 12px; border-left: 4px solid ${color};
+            opacity: 0; transform: translateX(-20px);
+            animation: slideIn 0.5s ease ${0.5 + i * 0.4}s forwards;
+          ">
+            <span style="font-size: 1.8rem; flex-shrink: 0;">${paso.emoji}</span>
+            <p style="margin: 0; font-size: 1.1rem; line-height: 1.5; color: var(--text-primary);">
+              ${paso.texto}
+            </p>
+          </div>
+        `;
+      });
+    }
+
+    this.container.innerHTML = `
+      <style>
+        @keyframes slideIn {
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes pulseGlow {
+          0%, 100% { box-shadow: 0 0 20px ${color}30; }
+          50% { box-shadow: 0 0 40px ${color}50; }
+        }
+      </style>
+      <div class="center-container">
+        <div class="card" style="max-width: 650px; padding: 2rem;">
+          
+          <!-- Match header -->
+          <div style="
+            text-align: center; padding: 1.5rem;
+            background: linear-gradient(135deg, ${color}10, ${color}05);
+            border-radius: 16px; border: 2px solid ${color}30;
+            margin-bottom: 1.5rem;
+            animation: pulseGlow 2s ease infinite;
+          ">
+            <div style="font-size: 0.9rem; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
+              ${emoji} ${match.etapa}
+            </div>
+            <h2 style="font-size: 1.8rem; margin: 0.5rem 0; color: var(--text-primary); font-family: var(--font-title);">
+              ${match.nombre}
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 1.05rem; margin: 0;">
+              ${match.narrativa.intro}
+            </p>
+          </div>
+
+          <!-- Pulpo teaches -->
+          ${teaching ? `
+            <div style="
+              display: flex; align-items: center; gap: 1rem;
+              margin-bottom: 1rem;
+            ">
+              <img src="/assets/images/armani/pulpo-armani.png" style="width: 70px; height: 70px; object-fit: contain;" alt="Pulpo"/>
+              <div>
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--primary);">
+                  ${teaching.titulo}
+                </h3>
+                <p style="margin: 0.2rem 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                  El Pulpo Armani te explica...
+                </p>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
+              ${stepsHTML}
+            </div>
+
+            <!-- Rule box -->
+            <div style="
+              background: linear-gradient(135deg, rgba(211,47,47,0.06), rgba(25,118,210,0.06));
+              padding: 1.2rem; border-radius: 12px;
+              border: 2px dashed ${color}40; text-align: center;
+              margin-bottom: 1rem;
+            ">
+              <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.3rem;">📌 REGLA CLAVE</div>
+              <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-number);">
+                ${teaching.regla}
+              </div>
+            </div>
+
+            <!-- Example -->
+            <div style="
+              background: rgba(76,175,80,0.08); padding: 0.8rem 1rem;
+              border-radius: 10px; text-align: center; margin-bottom: 1.5rem;
+            ">
+              <span style="font-size: 0.85rem; color: var(--text-secondary);">💡 Ejemplo: </span>
+              <span style="font-weight: 600; font-family: var(--font-number);">${teaching.ejemplo}</span>
+            </div>
+          ` : ''}
+
+          <!-- Motivación -->
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <p style="font-size: 1.1rem; font-style: italic; color: var(--text-secondary);">
+              🐙 "${match.narrativa.motivacion}"
+            </p>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">— Pulpo Armani, DT</p>
+          </div>
+
+          <!-- Start button -->
+          <div style="text-align: center;">
+            <button class="btn btn-primary" id="start-match-btn" style="
+              font-size: 1.4rem; padding: 1rem 3rem;
+              background: linear-gradient(135deg, ${color}, ${color}DD);
+              box-shadow: 0 6px 20px ${color}30;
+            ">
+              ¡A LA CANCHA! ⚽
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('start-match-btn').addEventListener('click', () => {
+      this.soundSystem.play('click');
+      this.startTurno();
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // ⏱️ START TURNO (set of 3 exercises)
+  // ═══════════════════════════════════════════════════════════
+  startTurno() {
+    this.currentTurno++;
+    this.correctInCurrentSet = 0;
+    this.currentExerciseIndex = 0;
+    this.breakManager.exerciseCount = 0;
+
+    // Start session timer on first turno
+    if (this.currentTurno === 1) {
+      this.startSessionTimer();
+    }
+
+    // Load appropriate exercises for this turno
+    const match = this.seasonManager.getCurrentMatch();
+    if (match && match.tema === 'mixto' && this.currentTurno > 1) {
+      // Alternate between topics for mixed matches
+      const topic = this.currentTurno % 2 === 0 ? 'potenciacion' : 'triangulos';
+      this.topicManager.setCurrentTopic(topic);
+      this.activityManager.loadActivitiesForTopic(topic);
+    }
+
+    this.showExercise();
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // ⏰ SESSION TIMER (20 min)
+  // ═══════════════════════════════════════════════════════════
+  startSessionTimer() {
+    this.sessionTimeLeft = this.seasonManager.getSessionDuration();
+    if (this.sessionTimer) clearInterval(this.sessionTimer);
+    this.sessionTimer = setInterval(() => {
+      this.sessionTimeLeft--;
+      // Update timer display if visible
+      const timerEl = document.getElementById('session-timer');
+      if (timerEl) {
+        const min = Math.floor(this.sessionTimeLeft / 60);
+        const sec = this.sessionTimeLeft % 60;
+        timerEl.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+      }
+      if (this.sessionTimeLeft <= 0) {
+        clearInterval(this.sessionTimer);
+        // Time's up — end match with current stats
+        this.endSeasonMatch();
+      }
+    }, 1000);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // ⏸️ HALFTIME — Entretiempo
+  // ═══════════════════════════════════════════════════════════
+  showHalftime() {
+    const match = this.seasonManager.getCurrentMatch();
+    if (!match) return;
+    const color = this.seasonManager.getEtapaColor(match.etapa);
+    const pct = this.matchStats.total > 0 ? Math.round((this.matchStats.correct / this.matchStats.total) * 100) : 0;
+
+    const tip = pct >= 70
+      ? "¡Vas volando! Seguí así en el segundo tiempo."
+      : pct >= 40
+        ? "Buen primer tiempo. Acordate de las reglas que te enseñé."
+        : "Tranqui, el segundo tiempo es una nueva oportunidad. Pensá cada respuesta.";
+
+    this.container.innerHTML = `
+      <div class="center-container">
+        <div class="card" style="max-width: 550px; text-align: center; padding: 2.5rem;">
+          
+          <h2 style="font-size: 2rem; margin-bottom: 1rem; font-family: var(--font-title);">
+            ⏸️ ¡Entretiempo!
+          </h2>
+
+          <!-- Stats -->
+          <div style="
+            display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem;
+          ">
+            <div style="
+              padding: 1rem 1.5rem; background: rgba(76,175,80,0.1);
+              border-radius: 12px; border: 2px solid rgba(76,175,80,0.2);
+            ">
+              <div style="font-size: 2rem; font-family: var(--font-number); color: var(--success);">${this.matchStats.correct}</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Correctas</div>
+            </div>
+            <div style="
+              padding: 1rem 1.5rem; background: rgba(211,47,47,0.1);
+              border-radius: 12px; border: 2px solid rgba(211,47,47,0.2);
+            ">
+              <div style="font-size: 2rem; font-family: var(--font-number); color: var(--primary);">${this.matchStats.total - this.matchStats.correct}</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Incorrectas</div>
+            </div>
+          </div>
+
+          <!-- Pulpo tip -->
+          ${this.pulpoArmani.render(tip, pct >= 70 ? 'happy' : 'thinking')}
+
+          <button class="btn btn-primary" id="halftime-btn" style="
+            font-size: 1.3rem; padding: 1rem 3rem; margin-top: 1.5rem;
+            background: linear-gradient(135deg, ${color}, ${color}DD);
+          ">
+            ¡Segundo Tiempo! ⚽
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('halftime-btn').addEventListener('click', () => {
+      this.soundSystem.play('click');
+      this.startTurno();
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // 📊 POST-MATCH — Resultado del partido
+  // ═══════════════════════════════════════════════════════════
+  endSeasonMatch() {
+    if (this.sessionTimer) clearInterval(this.sessionTimer);
+
+    const result = this.seasonManager.endMatch(this.matchStats);
+    this.showPostMatch(result);
+  }
+
+  showPostMatch(result) {
+    const match = result.match;
+    const color = this.seasonManager.getEtapaColor(match.etapa);
+    const isWin = result.isWin;
+    const progress = this.seasonManager.getProgress();
+
+    this.container.innerHTML = `
+      <div class="center-container">
+        <div class="card" style="max-width: 600px; text-align: center; padding: 2.5rem;">
+          
+          <!-- Result banner -->
+          <div style="
+            padding: 2rem; border-radius: 20px;
+            background: ${isWin ? 'linear-gradient(135deg, rgba(76,175,80,0.1), rgba(56,142,60,0.05))' : 'linear-gradient(135deg, rgba(244,67,54,0.1), rgba(211,47,47,0.05))'};
+            border: 3px solid ${isWin ? 'rgba(76,175,80,0.3)' : 'rgba(244,67,54,0.3)'};
+            margin-bottom: 1.5rem;
+          ">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">${isWin ? '🏆' : '😔'}</div>
+            <h2 style="font-size: 2rem; margin-bottom: 0.5rem; font-family: var(--font-title);">
+              ${isWin ? '¡VICTORIA!' : 'Derrota'}
+            </h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary);">${match.nombre}</p>
+            
+            <div style="
+              font-size: 3rem; font-family: var(--font-number);
+              color: ${isWin ? 'var(--success)' : 'var(--primary)'};
+              margin: 1rem 0;
+            ">
+              ${this.matchStats.correct}/${this.matchStats.total}
+            </div>
+            <div style="font-size: 1.1rem; color: var(--text-secondary);">
+              ${Math.round(result.percentage)}% de aciertos
+            </div>
+          </div>
+
+          <!-- Pulpo cierre -->
+          ${this.pulpoArmani.render(result.cierre, isWin ? 'celebrate' : 'thinking')}
+
+          <!-- Season progress -->
+          <div style="
+            margin-top: 1.5rem; padding: 1rem;
+            background: rgba(0,0,0,0.03); border-radius: 12px;
+          ">
+            <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              Progreso de la Temporada
+            </div>
+            <div style="
+              width: 100%; height: 12px; background: rgba(0,0,0,0.1);
+              border-radius: 6px; overflow: hidden;
+            ">
+              <div style="
+                width: ${((progress.currentJornada - 1) / 10) * 100}%; height: 100%;
+                background: linear-gradient(90deg, #4CAF50, #D32F2F);
+                border-radius: 6px; transition: width 1s ease;
+              "></div>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.3rem;">
+              Jornada ${Math.min(progress.currentJornada, 10)} de 10 · Promedio: ${progress.promedio}%
+            </div>
+          </div>
+
+          ${result.seasonComplete ? `
+            <div style="
+              margin-top: 1.5rem; padding: 1.5rem;
+              background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,160,0,0.1));
+              border-radius: 16px; border: 2px solid rgba(255,215,0,0.3);
+            ">
+              <p style="font-size: 1.3rem; font-weight: 700; color: #FF8F00;">
+                🏆 ¡Completaste la Temporada!
+              </p>
+              <p style="color: var(--text-secondary);">¡Ya podés rendir el Examen Final!</p>
+            </div>
+          ` : `
+            <p style="margin-top: 1rem; color: var(--text-secondary);">
+              ⏰ ¡Volvé mañana para la Jornada ${progress.currentJornada}!
+            </p>
+          `}
+
+          <button class="btn btn-primary" id="back-season-btn" style="
+            font-size: 1.2rem; padding: 0.8rem 2.5rem; margin-top: 1.5rem;
+          ">
+            ${result.seasonComplete ? '🏆 Ver Temporada' : '📋 Volver al Mapa'}
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('back-season-btn').addEventListener('click', () => {
+      this.showSeasonMap();
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // 📝 FINAL EXAM
+  // ═══════════════════════════════════════════════════════════
+  showFinalExam() {
+    // Reset for exam mode
+    this.matchStats = { correct: 0, total: 0, turnosCompleted: 0 };
+    this.correctInCurrentSet = 0;
+    this.currentExerciseIndex = 0;
+
+    // Load mixed activities
+    this.topicManager.setCurrentTopic('triangulos');
+    this.activityManager.loadActivitiesForTopic('triangulos');
+
+    // Epic intro
+    this.container.innerHTML = `
+      <div class="center-container">
+        <div class="card" style="max-width: 600px; text-align: center; padding: 3rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+          <h1 style="
+            font-size: 2.5rem; font-family: var(--font-title);
+            background: linear-gradient(135deg, #FFD700, #FF8F00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          ">EXAMEN FINAL</h1>
+          <h2 style="color: var(--primary); margin: 0.5rem 0 1.5rem;">Copa Libertadores 2026</h2>
+          
+          ${this.pulpoArmani.render(
+      '🏟️ El Monumental está lleno. 80.000 hinchas esperan. Todo lo que entrenaste fue para este momento. ¡DALE FERCHU!',
+      'celebrate'
+    )}
+
+          <p style="color: var(--text-secondary); margin: 1.5rem 0;">
+            10 preguntas de todos los temas. Necesitás 70% para ser Campeón.
+          </p>
+
+          <button class="btn btn-primary" id="start-exam-btn" style="
+            font-size: 1.5rem; padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #FFD700, #FF8F00);
+            color: #333; font-weight: 800;
+          ">
+            ¡EMPEZAR EL EXAMEN! 🔥
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('start-exam-btn').addEventListener('click', () => {
+      this.soundSystem.play('levelUp');
+      // Use normal exercise flow, but track as exam
+      this._isExamMode = true;
+      this.breakManager.exercisesPerSet = 10; // No breaks during exam
+      this.showExercise();
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
   // BREAK SCREEN — Tiros = respuestas correctas (REWARD)
   // ═══════════════════════════════════════════════════════════
   showBreakScreen() {
@@ -1371,7 +1962,19 @@ export class UIManager {
     penalesGame.onComplete(() => {
       this.breakManager.endBreak();
       this.correctInCurrentSet = 0; // Reset for next set
-      this.showExercise();
+      this.matchStats.turnosCompleted++;
+
+      // Season turno flow
+      if (this.currentTurno >= 3) {
+        // All 3 turnos done → end match
+        this.endSeasonMatch();
+      } else if (this.currentTurno === 1) {
+        // After turno 1 → halftime
+        this.showHalftime();
+      } else {
+        // After turno 2 → turno 3
+        this.startTurno();
+      }
     });
   }
 }
