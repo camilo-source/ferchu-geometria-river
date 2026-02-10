@@ -30,7 +30,7 @@ export class PenalesGame {
 
     // Pelota
     this.ball = { x: 0, y: 0, vx: 0, vy: 0, radius: 12, spin: 0, trail: [] };
-    this.ballStart = { x: 320, y: 380 };
+    this.ballStart = { x: 320, y: 430 };
 
     // Arco (perspectiva)
     this.goal = { x: 110, y: 60, w: 420, h: 170 };
