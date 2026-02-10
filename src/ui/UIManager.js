@@ -479,15 +479,23 @@ export class UIManager {
   // ═══════════════════════════════════════════════════════════
   showExercise() {
     const activity = this.currentActivity;
-    // Guided flow: use the flat exercise list if available
-    let exercise;
-    let totalExercises;
-    if (this._guidedExercises && this._guidedExercises.length > 0) {
-      exercise = this._guidedExercises[this.currentExerciseIndex];
-      totalExercises = this._guidedExercises.length;
-    } else {
-      exercise = activity.exercises[this.currentExerciseIndex];
-      totalExercises = activity.exercises.length;
+    const exercise = activity.exercises[this.currentExerciseIndex];
+
+    // Calculate total and global index for progress bar
+    let totalExercises = activity.exercises.length;
+    let globalIndex = this.currentExerciseIndex;
+    if (this._guidedActivityIds && this._guidedActivityIds.length > 0) {
+      totalExercises = 0;
+      let offset = 0;
+      const allActivities = this.activityManager.activities;
+      this._guidedActivityIds.forEach((id, i) => {
+        const act = allActivities.find(a => a.id === id);
+        if (act) {
+          totalExercises += act.exercises.length;
+          if (i < this._guidedActivityIndex) offset += act.exercises.length;
+        }
+      });
+      globalIndex = offset + this.currentExerciseIndex;
     }
     this.exerciseStartTime = Date.now();
 
@@ -541,7 +549,7 @@ export class UIManager {
                 <span>${topic ? topic.icon : '📐'} ${activity.title}</span>
               </div>
               <div class="hud-item">
-                <span>${this.currentExerciseIndex + 1}/${totalExercises}</span>
+                <span>${globalIndex + 1}/${totalExercises}</span>
               </div>
             </div>
           </div>
@@ -552,7 +560,7 @@ export class UIManager {
             <div style="
               background: linear-gradient(90deg, ${topic ? topic.color : 'var(--primary)'}, var(--accent));
               height: 100%;
-              width: ${((this.currentExerciseIndex + 1) / totalExercises) * 100}%;
+              width: ${((globalIndex + 1) / totalExercises) * 100}%;
               transition: width 0.3s ease;
             "></div>
           </div>
@@ -1175,22 +1183,10 @@ export class UIManager {
 
     const timeSpent = Math.round((Date.now() - this.exerciseStartTime) / 1000);
 
-    // In guided flow, currentExerciseIndex is global — compute local index for the activity
-    let localExerciseIndex = this.currentExerciseIndex;
-    if (this._guidedExercises && this._guidedExercises.length > 0) {
-      // Count how many exercises of THIS activity appear before currentExerciseIndex
-      let localIdx = 0;
-      for (let i = 0; i < this.currentExerciseIndex; i++) {
-        if (this._guidedActivities[i].id === this.currentActivity.id) {
-          localIdx++;
-        }
-      }
-      localExerciseIndex = localIdx;
-    }
-
+    // currentExerciseIndex is always local to currentActivity — safe to pass directly
     const result = this.activityManager.recordResponse(
       this.currentActivity.id,
-      localExerciseIndex,
+      this.currentExerciseIndex,
       userAnswer,
       timeSpent
     );
@@ -1234,22 +1230,32 @@ export class UIManager {
     this.currentExerciseIndex++;
     this.breakManager.exerciseCompleted();
 
-    // Guided flow: check if we exhausted ALL guided exercises
-    if (this._guidedExercises && this._guidedExercises.length > 0) {
-      if (this.currentExerciseIndex >= this._guidedExercises.length) {
-        // All done → go to penalty
-        this.showBreakScreen();
+    // Check if current activity is finished
+    if (this.currentExerciseIndex >= this.currentActivity.exercises.length) {
+      // Guided flow (season mode): move to next activity in sequence
+      if (this._guidedActivityIds && this._guidedActivityIds.length > 0) {
+        this._guidedActivityIndex++;
+        if (this._guidedActivityIndex >= this._guidedActivityIds.length) {
+          // ALL guided activities done → penalty kicks (season reward)
+          this.showBreakScreen();
+          return;
+        }
+        // Load next activity, reset exercise index
+        const nextId = this._guidedActivityIds[this._guidedActivityIndex];
+        const nextAct = this.activityManager.activities.find(a => a.id === nextId);
+        if (nextAct) {
+          this.currentActivity = nextAct;
+          this.activityManager.currentActivity = nextAct.id;
+          this.currentExerciseIndex = 0;
+        } else {
+          this.showBreakScreen();
+          return;
+        }
+      } else {
+        // Free-play mode: show activity complete screen
+        this.showActivityComplete();
         return;
       }
-      // Update current activity to match the current exercise
-      const act = this._guidedActivities[this.currentExerciseIndex];
-      if (act && act.id !== this.currentActivity.id) {
-        this.currentActivity = act;
-        this.activityManager.currentActivity = act.id;
-      }
-    } else if (this.currentExerciseIndex >= this.currentActivity.exercises.length) {
-      this.showBreakScreen();
-      return;
     }
 
     this.showExercise();
@@ -2011,30 +2017,18 @@ export class UIManager {
     this.startSessionTimer();
     this.breakManager.startSession();
 
-    // Map concepto → specific activity IDs
+    // Map concepto → ordered list of activity IDs to complete
     const match = this.seasonManager.getCurrentMatch();
     const concepto = match ? match.concepto : 'angulos-basicos';
-    const activityIds = this.getActivityForConcepto(concepto);
+    this._guidedActivityIds = this.getActivityForConcepto(concepto);
+    this._guidedActivityIndex = 0;
 
-    // Build a combined exercise list from mapped activities
+    // Set the first activity
     const activities = this.activityManager.activities;
-    this._guidedExercises = [];
-    this._guidedActivities = [];
-
-    activityIds.forEach(id => {
-      const act = activities.find(a => a.id === id);
-      if (act) {
-        act.exercises.forEach(ex => {
-          this._guidedExercises.push({ ...ex, _activityType: act.type, _activityTitle: act.title });
-          this._guidedActivities.push(act);
-        });
-      }
-    });
-
-    // Set first activity
-    if (this._guidedActivities.length > 0) {
-      this.currentActivity = this._guidedActivities[0];
-      this.activityManager.currentActivity = this.currentActivity.id;
+    const firstAct = activities.find(a => a.id === this._guidedActivityIds[0]);
+    if (firstAct) {
+      this.currentActivity = firstAct;
+      this.activityManager.currentActivity = firstAct.id;
     }
 
     this.showExercise();
