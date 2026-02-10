@@ -1367,9 +1367,9 @@ export class UIManager {
 
       if (isCompleted) {
         const pct = (result.score / result.total) * 100;
-        statusIcon = pct >= 60 ? '✅' : '❌';
-        bg = pct >= 60 ? 'rgba(76,175,80,0.08)' : 'rgba(244,67,54,0.08)';
-        border = pct >= 60 ? 'rgba(76,175,80,0.3)' : 'rgba(244,67,54,0.3)';
+        statusIcon = pct >= 60 ? '✅' : '🔄';
+        bg = pct >= 60 ? 'rgba(76,175,80,0.08)' : 'rgba(255,152,0,0.08)';
+        border = pct >= 60 ? 'rgba(76,175,80,0.3)' : 'rgba(255,152,0,0.3)';
         opacity = '1';
       } else if (isPlayable) {
         statusIcon = '▶️';
@@ -1974,7 +1974,7 @@ export class UIManager {
               padding: 0.7rem 1.2rem; background: rgba(244,67,54,0.1);
               border-radius: 10px; animation: slideUp 0.5s ease 0.5s both;
             ">
-              <div style="font-size: 1.5rem; font-family: var(--font-number); color: var(--primary); font-weight: 700;">❌ ${this.matchStats.total - this.matchStats.correct}</div>
+              <div style="font-size: 1.5rem; font-family: var(--font-number); color: #FF9800; font-weight: 700;">💪 ${this.matchStats.total - this.matchStats.correct}</div>
             </div>
           </div>
 
@@ -2053,7 +2053,7 @@ export class UIManager {
           
           <!-- Result emoji -->
           <div style="font-size: 5rem; animation: popIn 0.8s ease forwards;">
-            ${isWin ? '🏆' : '😔'}
+            ${isWin ? '🏆' : '💪'}
           </div>
 
           <!-- Title -->
@@ -2061,7 +2061,7 @@ export class UIManager {
             font-size: 2.2rem; margin: 0.5rem 0; font-family: var(--font-title);
             ${isWin ? 'background: linear-gradient(90deg, #FFD700, #FF8F00, #FFD700); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 2s linear infinite;' : 'color: var(--text-primary);'}
           ">
-            ${isWin ? '¡VICTORIA!' : 'Derrota'}
+            ${isWin ? '¡VICTORIA!' : '¡A seguir entrenando!'}
           </h2>
           <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1.5rem;">${match.nombre}</p>
           

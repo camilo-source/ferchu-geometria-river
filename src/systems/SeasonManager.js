@@ -60,7 +60,7 @@ const SEASON = [
             intro: "¡Arranca la Liga! Primer partido oficial. Complementarios y suplementarios.",
             motivacion: "Un jugador de River domina la cancha. ¡Y los ángulos dominan las jugadas!",
             cierre_bueno: "¡Victoria en la Fecha 1! El equipo confía en vos.",
-            cierre_malo: "Derrota en la primera fecha. Pero la Liga es larga, a no bajar los brazos."
+            cierre_malo: "¡Buen intento! Practicá un poco más y la próxima la rompés. La Liga recién empieza."
         },
         dificultad: [1, 2, 2]
     },
@@ -74,7 +74,7 @@ const SEASON = [
             intro: "Fecha 2 de la Liga. Hoy sumamos la división de potencias.",
             motivacion: "Dividir potencias es como hacer un caño: con práctica sale perfecto.",
             cierre_bueno: "¡3 puntos más! Estamos arriba en la tabla.",
-            cierre_malo: "Empate. No está mal, pero podemos más."
+            cierre_malo: "¡Muy bien el esfuerzo! Con un poco más de práctica vas a dominarlas."
         },
         dificultad: [1, 2, 2]
     },
@@ -88,7 +88,7 @@ const SEASON = [
             intro: "¡Clasificaste a la Copa Interna! Hoy: potencia de potencia.",
             motivacion: "En la copa no perdonan. Hay que dominar cada propiedad.",
             cierre_bueno: "¡Pasamos de ronda! La Copa es nuestra.",
-            cierre_malo: "Quedamos eliminados de la Copa... pero nos queda la Liga."
+            cierre_malo: "¡Seguimos en la Copa la próxima! Lo importante es que aprendiste un montón."
         },
         dificultad: [2, 2, 3]
     },
@@ -102,7 +102,7 @@ const SEASON = [
             intro: "Fecha 3. Combinamos todas las propiedades de potencias.",
             motivacion: "Un crack no domina una sola cosa. Domina todo y lo combina.",
             cierre_bueno: "¡Impecable! Sos el goleador de la Liga.",
-            cierre_malo: "Partido difícil. Las combinaciones son el nivel más alto."
+            cierre_malo: "¡Las combinaciones son re difíciles! Que hayas llegado hasta acá es un logro enorme."
         },
         dificultad: [2, 3, 3]
     },
@@ -116,7 +116,7 @@ const SEASON = [
             intro: "Fecha 4. Paralelas cortadas por transversal.",
             motivacion: "Las paralelas son como las líneas del campo. ¡Dominá los ángulos que se forman!",
             cierre_bueno: "¡Goleada! Estamos liderando la tabla.",
-            cierre_malo: "Fecha complicada, pero los grandes se hacen en los malos momentos."
+            cierre_malo: "¡Seguís aprendiendo! Cada ejercicio te hace mejor. Vamos de vuelta."
         },
         dificultad: [2, 3, 3]
     },
@@ -130,7 +130,7 @@ const SEASON = [
             intro: "¡SEMIFINAL! Todo River confía en vos. Potencias nivel BOSS.",
             motivacion: "Mirá a tu alrededor: El Monumental está lleno. Es por River. Es por vos.",
             cierre_bueno: "¡CLASIFICADOS A LA FINAL! ¡VAMOS RIVER! 🔴⚪",
-            cierre_malo: "Quedamos afuera... ¡pero aprendiste un montón! El próximo año volvemos."
+            cierre_malo: "¡Llegaste a la Semifinal! Eso ya es un logro enorme. Practicá y volvé más fuerte."
         },
         dificultad: [3, 3, 3]
     },
@@ -144,7 +144,7 @@ const SEASON = [
             intro: "Vuelta de la semi. Es todo o nada. Repaso total de geometría.",
             motivacion: "Las semifinales son para los valientes. ¡Dale con todo!",
             cierre_bueno: "¡ESTAMOS EN LA FINAAAAL! 🏟️",
-            cierre_malo: "Caímos en la semi... pero la experiencia queda. Vamos por la revancha."
+            cierre_malo: "¡Tremendo esfuerzo! Estuviste cerca. Un repaso más y la próxima la sacás."
         },
         dificultad: [3, 3, 3]
     },
@@ -158,7 +158,7 @@ const SEASON = [
             intro: "🏆 ES LA FINAL DE LA LIBERTADORES. El Monumental está lleno. 80.000 hinchas esperan.",
             motivacion: "Todo lo que entrenaste fue para este momento. ¡DALE FERCHU, DALE RIVER!",
             cierre_bueno: "🏆🏆🏆 ¡¡¡CAMPEÓN DE LA LIBERTADORES!!! ¡¡¡FERCHU CAMPEÓN!!!",
-            cierre_malo: "Perdimos la final... pero llegaste hasta acá. ¡Sos un crack igual!"
+            cierre_malo: "¡Llegaste a la FINAL de la Libertadores! Eso es increíble. ¡Sos un crack, Ferchu!"
         },
         dificultad: [3, 3, 3]
     }

@@ -613,7 +613,7 @@ export class PenalesGame {
 
       // Pelota fuera
       if (this.ball.y < -30 || this.ball.x < -30 || this.ball.x > this.W + 30 || this.ball.y > this.H + 30) {
-        this.shotResult(false, '❌ ¡Afuera!', 'miss');
+        this.shotResult(false, '⚽ ¡Casi! La próxima entra', 'miss');
       }
     }
 
@@ -662,7 +662,7 @@ export class PenalesGame {
       const keeperRight = k.x + keeperReach;
 
       if (b.x >= keeperLeft && b.x <= keeperRight && Math.abs(b.y - k.y) < k.h) {
-        this.shotResult(false, '🧤 ¡Atajadón de Armani!', 'save');
+        this.shotResult(false, '🧤 ¡Armani es un monstruo! Intentá de nuevo', 'save');
       } else {
         this.score++;
         this.shotResult(true, '⚽ ¡GOOOOOL! ¡DALE RIVER!', 'goal');
@@ -674,7 +674,7 @@ export class PenalesGame {
       const nearCrossbar = b.y <= g.y + 8 && b.x > g.x && b.x < g.x + g.w;
 
       if (nearLeftPost || nearRightPost || nearCrossbar) {
-        this.shotResult(false, '🥅 ¡Al palo! ¡Qué cerca!', 'post');
+        this.shotResult(false, '🥅 ¡Al palo! ¡Re cerca! Dale otra vez', 'post');
       }
     }
   }

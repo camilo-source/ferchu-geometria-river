@@ -50,8 +50,8 @@ export class ActivityManager {
                 title: 'El Ojo de Halcón',
                 instructions: 'Mirá el gráfico y decí qué tipo de ángulo es:',
                 exercises: [
-                    { angle: 30, correctAnswer: 'agudo' },
                     { angle: 90, correctAnswer: 'recto' },
+                    { angle: 30, correctAnswer: 'agudo' },
                     { angle: 140, correctAnswer: 'obtuso' },
                     { angle: 10, correctAnswer: 'agudo' },
                     { angle: 170, correctAnswer: 'obtuso' }
@@ -65,10 +65,10 @@ export class ActivityManager {
                 title: 'Francotirador de Ángulos',
                 instructions: 'Estimá cuántos grados mide este ángulo:',
                 exercises: [
-                    { angle: 45, tolerance: 5, correctAnswer: 45 },
                     { angle: 90, tolerance: 5, correctAnswer: 90 },
-                    { angle: 135, tolerance: 5, correctAnswer: 135 },
+                    { angle: 45, tolerance: 5, correctAnswer: 45 },
                     { angle: 180, tolerance: 5, correctAnswer: 180 },
+                    { angle: 135, tolerance: 5, correctAnswer: 135 },
                     { angle: 30, tolerance: 5, correctAnswer: 30 }
                 ]
             },
@@ -80,8 +80,8 @@ export class ActivityManager {
                 title: 'Completá el 90°',
                 instructions: '¿Cuánto mide el ángulo complementario?',
                 exercises: [
-                    { given: 30, correctAnswer: 60 },
                     { given: 45, correctAnswer: 45 },
+                    { given: 30, correctAnswer: 60 },
                     { given: 60, correctAnswer: 30 },
                     { given: 20, correctAnswer: 70 },
                     { given: 75, correctAnswer: 15 }
@@ -95,8 +95,8 @@ export class ActivityManager {
                 title: 'Completá la Recta (180°)',
                 instructions: '¿Cuánto mide el ángulo suplementario?',
                 exercises: [
-                    { given: 120, correctAnswer: 60 },
                     { given: 90, correctAnswer: 90 },
+                    { given: 120, correctAnswer: 60 },
                     { given: 150, correctAnswer: 30 },
                     { given: 45, correctAnswer: 135 },
                     { given: 10, correctAnswer: 170 }
@@ -140,11 +140,11 @@ export class ActivityManager {
                 title: 'Calculá el ángulo X',
                 instructions: '¿Cuánto mide el ángulo "x"?',
                 exercises: [
-                    { labels: ['80°', '10°', 'x'], sides: [5, 0.9, 5.1], correctAnswer: 90 },
-                    { labels: ['20°', '40°', 'x'], sides: [3, 6, 8], correctAnswer: 120 },
-                    { labels: ['36°', '36°', 'x'], sides: [5, 5, 8], correctAnswer: 108 },
                     { labels: ['60°', '60°', 'x'], sides: [5, 5, 5], correctAnswer: 60 },
                     { labels: ['90°', '45°', 'x'], sides: [3, 3, 4.24], correctAnswer: 45 },
+                    { labels: ['80°', '10°', 'x'], sides: [5, 0.9, 5.1], correctAnswer: 90 },
+                    { labels: ['36°', '36°', 'x'], sides: [5, 5, 8], correctAnswer: 108 },
+                    { labels: ['20°', '40°', 'x'], sides: [3, 6, 8], correctAnswer: 120 },
                     { labels: ['70°', 'x', '70°'], sides: [5, 6, 5], correctAnswer: 40 },
                     { labels: ['120°', 'x', '30°'], sides: [8, 3, 5], correctAnswer: 30 },
                     { labels: ['150°', '15°', 'x'], sides: [9, 2, 7.5], correctAnswer: 15 }
@@ -158,13 +158,13 @@ export class ActivityManager {
                 title: 'Vías del Tren',
                 instructions: 'En estas paralelas, ¿cuánto mide el ángulo marcado?',
                 exercises: [
-                    { given: 60, type: 'alterno-interno', correctAnswer: 60 },
+                    { given: 90, type: 'correspondiente', correctAnswer: 90 },
                     { given: 120, type: 'correspondiente', correctAnswer: 120 },
+                    { given: 60, type: 'alterno-interno', correctAnswer: 60 },
+                    { given: 75, type: 'alterno-interno', correctAnswer: 75 },
                     { given: 45, type: 'alterno-externo', correctAnswer: 45 },
                     { given: 150, type: 'conjugado', correctAnswer: 30 },
-                    { given: 90, type: 'correspondiente', correctAnswer: 90 },
                     { given: 135, type: 'conjugado', correctAnswer: 45 },
-                    { given: 75, type: 'alterno-interno', correctAnswer: 75 },
                     { given: 110, type: 'conjugado', correctAnswer: 70 }
                 ]
             }
@@ -198,30 +198,6 @@ export class ActivityManager {
                         correctExp: 7
                     },
                     {
-                        // 3⁵ / 3² = 3³
-                        expression: '3⁵ / 3²',
-                        parts: [
-                            { base: 3, exp: 5 },
-                            { op: '/' },
-                            { base: 3, exp: 2 }
-                        ],
-                        property: 'division',
-                        hint: 'Misma base → restá los exponentes',
-                        correctBase: 3,
-                        correctExp: 3
-                    },
-                    {
-                        // (5²)⁴ = 5⁸
-                        expression: '(5²)⁴',
-                        parts: [
-                            { base: 5, exp: 2, outerExp: 4 }
-                        ],
-                        property: 'potencia-de-potencia',
-                        hint: 'Potencia de potencia → multiplicá los exponentes',
-                        correctBase: 5,
-                        correctExp: 8
-                    },
-                    {
                         // 4³ · 4² = 4⁵
                         expression: '4³ · 4²',
                         parts: [
@@ -235,6 +211,19 @@ export class ActivityManager {
                         correctExp: 5
                     },
                     {
+                        // 3⁵ / 3² = 3³
+                        expression: '3⁵ / 3²',
+                        parts: [
+                            { base: 3, exp: 5 },
+                            { op: '/' },
+                            { base: 3, exp: 2 }
+                        ],
+                        property: 'division',
+                        hint: 'Misma base → restá los exponentes',
+                        correctBase: 3,
+                        correctExp: 3
+                    },
+                    {
                         // 7⁶ / 7⁴ = 7²
                         expression: '7⁶ / 7⁴',
                         parts: [
@@ -246,6 +235,17 @@ export class ActivityManager {
                         hint: 'Misma base → restá los exponentes',
                         correctBase: 7,
                         correctExp: 2
+                    },
+                    {
+                        // (5²)⁴ = 5⁸
+                        expression: '(5²)⁴',
+                        parts: [
+                            { base: 5, exp: 2, outerExp: 4 }
+                        ],
+                        property: 'potencia-de-potencia',
+                        hint: 'Potencia de potencia → multiplicá los exponentes',
+                        correctBase: 5,
+                        correctExp: 8
                     }
                 ]
             },
@@ -271,35 +271,6 @@ export class ActivityManager {
                         correctExp: 8
                     },
                     {
-                        // (3⁵/3²) · 3 = 3³ · 3¹ = 3⁴
-                        expression: '(3⁵ / 3²) · 3',
-                        parts: [
-                            { base: 3, exp: 5 },
-                            { op: '/' },
-                            { base: 3, exp: 2 },
-                            { op: '·' },
-                            { base: 3, exp: 1 }
-                        ],
-                        property: 'div+mult',
-                        hint: 'Primero 3⁵/3² = 3³, después multiplicá',
-                        correctBase: 3,
-                        correctExp: 4
-                    },
-                    {
-                        // (4⁵/4)² = (4⁴)² = 4⁸
-                        expression: '(4⁵ / 4)²',
-                        parts: [
-                            { base: 4, exp: 5 },
-                            { op: '/' },
-                            { base: 4, exp: 1 },
-                            { outerExp: 2 }
-                        ],
-                        property: 'div+pot',
-                        hint: 'Primero dividí adentro: 4⁴, después elevá',
-                        correctBase: 4,
-                        correctExp: 8
-                    },
-                    {
                         // (3³/3) · 3² = 3² · 3² = 3⁴
                         expression: '(3³ / 3) · 3²',
                         parts: [
@@ -315,6 +286,21 @@ export class ActivityManager {
                         correctExp: 4
                     },
                     {
+                        // (3⁵/3²) · 3 = 3³ · 3¹ = 3⁴
+                        expression: '(3⁵ / 3²) · 3',
+                        parts: [
+                            { base: 3, exp: 5 },
+                            { op: '/' },
+                            { base: 3, exp: 2 },
+                            { op: '·' },
+                            { base: 3, exp: 1 }
+                        ],
+                        property: 'div+mult',
+                        hint: 'Primero 3⁵/3² = 3³, después multiplicá',
+                        correctBase: 3,
+                        correctExp: 4
+                    },
+                    {
                         // (4²)³ · 4 = 4⁶ · 4¹ = 4⁷
                         expression: '(4²)³ · 4',
                         parts: [
@@ -326,6 +312,20 @@ export class ActivityManager {
                         hint: 'Primero (4²)³ = 4⁶, después multiplicá',
                         correctBase: 4,
                         correctExp: 7
+                    },
+                    {
+                        // (4⁵/4)² = (4⁴)² = 4⁸
+                        expression: '(4⁵ / 4)²',
+                        parts: [
+                            { base: 4, exp: 5 },
+                            { op: '/' },
+                            { base: 4, exp: 1 },
+                            { outerExp: 2 }
+                        ],
+                        property: 'div+pot',
+                        hint: 'Primero dividí adentro: 4⁴, después elevá',
+                        correctBase: 4,
+                        correctExp: 8
                     }
                 ]
             },
