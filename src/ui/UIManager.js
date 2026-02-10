@@ -446,7 +446,11 @@ export class UIManager {
     `;
 
     document.getElementById('back-topics-btn').addEventListener('click', () => {
-      this.showTopicSelector();
+      if (this.navigationSource === 'season') {
+        this.showSeasonMap();
+      } else {
+        this.showTopicSelector();
+      }
     });
 
     document.querySelectorAll('.activity-card').forEach(card => {
@@ -1484,6 +1488,9 @@ export class UIManager {
     const match = this.seasonManager.startMatch(jornadaNum);
     if (!match) return;
 
+    // Track navigation origin
+    this.navigationSource = 'season';
+
     // Track which jornada we're playing (for endMatch)
     this.currentMatchJornada = jornadaNum || this.seasonManager.getProgress().currentJornada;
 
@@ -1520,11 +1527,11 @@ export class UIManager {
     slides.push({
       bg: `linear-gradient(135deg, ${color}20, ${color}08)`,
       content: `
-        <div style="font-size: 4rem; margin-bottom: 1rem; animation: bounceEmoji 1s ease infinite;">${emoji}</div>
+        <div class="pm-emoji" style="font-size: 5rem;">${emoji}</div>
         <div style="font-size: 0.9rem; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 0.5rem;">${match.etapa}</div>
-        <h1 style="font-size: 2.2rem; color: var(--text-primary); font-family: var(--font-title); margin: 0.5rem 0;">${match.nombre}</h1>
-        <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 500px; margin: 1rem auto; line-height: 1.6;">${match.narrativa.intro}</p>
-        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1.5rem;">⬇️ Deslizá para aprender</div>
+        <h1 style="font-size: 2.5rem; color: var(--text-primary); font-family: var(--font-title); margin: 0.5rem 0;">${match.nombre}</h1>
+        <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 500px; margin: 1rem auto; line-height: 1.6;">${match.narrativa.intro}</p>
+        <div class="pm-hint">🖱️ Usá la ruedita o las flechas ↕️</div>
       `
     });
 
@@ -1533,38 +1540,36 @@ export class UIManager {
       slides.push({
         bg: 'linear-gradient(135deg, rgba(211,47,47,0.08), rgba(25,118,210,0.05))',
         content: `
-          <img src="/assets/images/armani/pulpo-armani.png" style="width: 120px; height: 120px; object-fit: contain; margin-bottom: 1rem; animation: bounceEmoji 2s ease infinite;" alt="Pulpo"/>
-          <h2 style="font-size: 1.8rem; color: var(--primary); font-family: var(--font-title); margin-bottom: 0.5rem;">${teaching.titulo}</h2>
-          <p style="font-size: 1.15rem; color: var(--text-secondary);">El Pulpo Armani te va a explicar paso a paso 🐙</p>
+          <img src="/assets/images/armani/pulpo-armani.png" class="pm-emoji" style="width: 140px; height: 140px; object-fit: contain;" alt="Pulpo"/>
+          <h2 style="font-size: 2rem; color: var(--primary); font-family: var(--font-title); margin: 0.5rem 0;">${teaching.titulo}</h2>
+          <p style="font-size: 1.1rem; color: var(--text-secondary);">El Pulpo Armani te explica paso a paso 🐙</p>
           <div style="margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: rgba(211,47,47,0.08); border-radius: 30px; display: inline-block;">
-            <span style="font-size: 0.9rem; color: var(--primary); font-weight: 600;">${teaching.pasos.length} pasos para entenderlo</span>
+            <span style="font-size: 1rem; color: var(--primary); font-weight: 600;">📚 ${teaching.pasos.length} pasos para entenderlo</span>
           </div>
         `
       });
 
-      // Slides 3-N: Teaching steps (one per slide)
+      // Teaching steps
       const stepColors = ['#1976D2', '#388E3C', '#F57C00', '#7B1FA2', '#D32F2F'];
       teaching.pasos.forEach((paso, i) => {
-        const stepColor = stepColors[i % stepColors.length];
+        const sc = stepColors[i % stepColors.length];
         slides.push({
-          bg: `linear-gradient(135deg, ${stepColor}12, ${stepColor}05)`,
+          bg: `linear-gradient(135deg, ${sc}12, ${sc}05)`,
           content: `
-            <div style="
-              width: 80px; height: 80px; border-radius: 50%;
-              background: ${stepColor}15; border: 3px solid ${stepColor}30;
+            <div class="pm-emoji" style="
+              width: 90px; height: 90px; border-radius: 50%;
+              background: ${sc}15; border: 3px solid ${sc}40;
               display: flex; align-items: center; justify-content: center;
-              margin-bottom: 1.5rem; animation: bounceEmoji 1.5s ease infinite;
             ">
-              <span style="font-size: 2.5rem;">${paso.emoji}</span>
+              <span style="font-size: 2.8rem;">${paso.emoji}</span>
             </div>
             <div style="
-              font-size: 0.8rem; color: ${stepColor}; font-weight: 700;
-              text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem;
+              font-size: 0.8rem; color: ${sc}; font-weight: 700;
+              text-transform: uppercase; letter-spacing: 2px; margin: 1rem 0 0.5rem;
             ">Paso ${i + 1} de ${teaching.pasos.length}</div>
             <p style="
-              font-size: 1.35rem; color: var(--text-primary);
-              max-width: 480px; margin: 0 auto; line-height: 1.7;
-              font-weight: 500;
+              font-size: 1.4rem; color: var(--text-primary);
+              max-width: 480px; margin: 0 auto; line-height: 1.7; font-weight: 500;
             ">${paso.texto}</p>
           `
         });
@@ -1574,15 +1579,15 @@ export class UIManager {
       slides.push({
         bg: 'linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,160,0,0.06))',
         content: `
-          <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: bounceEmoji 1s ease infinite;">📌</div>
+          <div class="pm-emoji" style="font-size: 4rem;">📌</div>
           <div style="font-size: 0.85rem; color: #F57C00; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">REGLA CLAVE</div>
           <div style="
-            background: rgba(255,255,255,0.9); padding: 1.5rem 2rem;
+            background: rgba(255,255,255,0.95); padding: 1.5rem 2rem;
             border-radius: 16px; border: 3px solid rgba(255,160,0,0.3);
             box-shadow: 0 8px 30px rgba(255,160,0,0.1);
-            max-width: 480px; margin: 0 auto;
+            max-width: 500px; margin: 0 auto;
           ">
-            <p style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
+            <p style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
               ${teaching.regla}
             </p>
           </div>
@@ -1593,15 +1598,15 @@ export class UIManager {
       slides.push({
         bg: 'linear-gradient(135deg, rgba(76,175,80,0.1), rgba(56,142,60,0.05))',
         content: `
-          <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: bounceEmoji 1.5s ease infinite;">💡</div>
+          <div class="pm-emoji" style="font-size: 4rem;">💡</div>
           <div style="font-size: 0.85rem; color: #388E3C; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">EJEMPLO</div>
           <div style="
-            background: rgba(255,255,255,0.9); padding: 1.5rem 2rem;
+            background: rgba(255,255,255,0.95); padding: 1.5rem 2rem;
             border-radius: 16px; border: 3px solid rgba(76,175,80,0.3);
             box-shadow: 0 8px 30px rgba(76,175,80,0.1);
-            max-width: 480px; margin: 0 auto;
+            max-width: 500px; margin: 0 auto;
           ">
-            <p style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
+            <p style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); font-family: var(--font-number); margin: 0; line-height: 1.6;">
               ${teaching.ejemplo}
             </p>
           </div>
@@ -1609,11 +1614,11 @@ export class UIManager {
       });
     }
 
-    // Final slide: CTA
+    // Final CTA slide
     slides.push({
       bg: `linear-gradient(135deg, ${color}15, ${color}08)`,
       content: `
-        <img src="/assets/images/armani/pulpo-armani.png" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 1rem;" alt="Pulpo"/>
+        <img src="/assets/images/armani/pulpo-armani.png" style="width: 110px; height: 110px; object-fit: contain; margin-bottom: 1rem;" alt="Pulpo"/>
         <p style="font-size: 1.3rem; font-style: italic; color: var(--text-secondary); max-width: 450px; margin: 0 auto 1.5rem; line-height: 1.6;">
           🐙 "${match.narrativa.motivacion}"
         </p>
@@ -1629,103 +1634,219 @@ export class UIManager {
       `
     });
 
-    // Build progress dots
-    const dotsHTML = slides.map((_, i) => `
-      <div class="slide-dot" data-index="${i}" style="
-        width: ${i === 0 ? '24px' : '8px'}; height: 8px;
-        border-radius: 4px;
-        background: ${i === 0 ? color : 'rgba(0,0,0,0.2)'};
-        transition: all 0.3s;
-      "></div>
-    `).join('');
-
-    // Build slides HTML
-    const slidesHTML = slides.map((slide, i) => `
-      <section class="prematch-slide" data-index="${i}" style="
-        min-height: 100vh; min-height: 100dvh;
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        text-align: center; padding: 2rem 1.5rem;
-        background: ${slide.bg};
-        scroll-snap-align: start;
-        opacity: ${i === 0 ? '1' : '0.3'};
-        transform: ${i === 0 ? 'scale(1)' : 'scale(0.95)'};
-        transition: opacity 0.5s, transform 0.5s;
-      ">
-        ${slide.content}
-      </section>
-    `).join('');
+    let currentSlide = 0;
+    const totalSlides = slides.length;
 
     this.container.innerHTML = `
       <style>
-        @keyframes bounceEmoji {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+        @keyframes slideEnterRight {
+          from { opacity: 0; transform: translateX(60px) scale(0.95); }
+          to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        @keyframes slideEnterLeft {
+          from { opacity: 0; transform: translateX(-60px) scale(0.95); }
+          to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        @keyframes bounceIn {
+          0% { transform: scale(0.3); opacity: 0; }
+          50% { transform: scale(1.15); }
+          100% { transform: scale(1); opacity: 1; }
         }
         @keyframes pulseBtn {
           0%, 100% { transform: scale(1); box-shadow: 0 8px 25px ${color}40; }
-          50% { transform: scale(1.03); box-shadow: 0 12px 35px ${color}50; }
+          50% { transform: scale(1.05); box-shadow: 0 12px 35px ${color}60; }
         }
-        .scroll-snap-container {
-          height: 100vh; height: 100dvh;
-          overflow-y: auto;
-          scroll-snap-type: y mandatory;
-          scroll-behavior: smooth;
-          -webkit-overflow-scrolling: touch;
-        }
-        .scroll-snap-container::-webkit-scrollbar { display: none; }
-        .slide-dots-container {
-          position: fixed; right: 16px; top: 50%;
-          transform: translateY(-50%);
+        .pm-viewport {
+          position: fixed; inset: 0; z-index: 50;
           display: flex; flex-direction: column;
-          gap: 6px; z-index: 100;
-          align-items: center;
+          overflow: hidden;
         }
-        @media (max-width: 600px) {
-          .slide-dots-container {
-            right: 8px;
-          }
+        .pm-progress-bar {
+          height: 5px; background: rgba(0,0,0,0.08);
+          flex-shrink: 0; position: relative;
+        }
+        .pm-progress-fill {
+          height: 100%; background: ${color};
+          border-radius: 0 3px 3px 0;
+          transition: width 0.4s ease;
+        }
+        .pm-slide-area {
+          flex: 1; display: flex;
+          align-items: center; justify-content: center;
+          text-align: center; padding: 2rem 1.5rem;
+          position: relative;
+        }
+        .pm-slide-inner {
+          animation: slideEnterRight 0.45s ease both;
+          max-width: 650px; width: 100%;
+        }
+        .pm-slide-inner.from-left {
+          animation-name: slideEnterLeft;
+        }
+        .pm-emoji {
+          animation: bounceIn 0.5s cubic-bezier(0.68, -0.3, 0.265, 1.25) both;
+          margin-bottom: 1rem;
+        }
+        .pm-hint {
+          font-size: 0.8rem; color: var(--text-secondary);
+          margin-top: 2rem; opacity: 0.7;
+          animation: fadeHint 2s ease infinite;
+        }
+        @keyframes fadeHint {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.8; }
+        }
+        .pm-counter {
+          position: absolute; bottom: 1.5rem; left: 50%;
+          transform: translateX(-50%);
+          display: flex; gap: 6px; align-items: center;
+        }
+        .pm-dot {
+          width: 8px; height: 8px; border-radius: 50%;
+          background: rgba(0,0,0,0.15); transition: all 0.3s;
+        }
+        .pm-dot.active {
+          width: 24px; border-radius: 4px;
+          background: ${color};
+        }
+        .pm-nav-hint {
+          position: absolute; bottom: 3.5rem; left: 50%;
+          transform: translateX(-50%);
+          font-size: 0.75rem; color: var(--text-secondary); opacity: 0.5;
         }
       </style>
 
-      <div class="slide-dots-container">${dotsHTML}</div>
-
-      <div class="scroll-snap-container" id="prematch-scroller">
-        ${slidesHTML}
+      <div class="pm-viewport" id="pm-viewport">
+        <div class="pm-progress-bar">
+          <div class="pm-progress-fill" id="pm-progress" style="width: ${(1 / totalSlides) * 100}%"></div>
+        </div>
+        <div class="pm-slide-area" id="pm-slide-area" style="background: ${slides[0].bg};">
+          <div class="pm-slide-inner" id="pm-slide-inner">
+            ${slides[0].content}
+          </div>
+          <div class="pm-nav-hint" id="pm-nav-hint">
+            ${currentSlide + 1} / ${totalSlides}
+          </div>
+          <div class="pm-counter" id="pm-counter">
+            ${slides.map((_, i) => `<div class="pm-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}
+          </div>
+        </div>
       </div>
     `;
 
-    // Intersection observer for slide animations
-    const scroller = document.getElementById('prematch-scroller');
-    const dots = document.querySelectorAll('.slide-dot');
-    const slideElements = document.querySelectorAll('.prematch-slide');
+    const slideArea = document.getElementById('pm-slide-area');
+    const slideInner = document.getElementById('pm-slide-inner');
+    const progressBar = document.getElementById('pm-progress');
+    const dotContainer = document.getElementById('pm-counter');
+    const navHint = document.getElementById('pm-nav-hint');
+    let isTransitioning = false;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const idx = parseInt(entry.target.dataset.index);
-          // Activate current slide
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'scale(1)';
-          // Update dots
-          dots.forEach((dot, di) => {
-            dot.style.width = di === idx ? '24px' : '8px';
-            dot.style.background = di === idx ? color : 'rgba(0,0,0,0.2)';
-          });
-        } else {
-          entry.target.style.opacity = '0.3';
-          entry.target.style.transform = 'scale(0.95)';
-        }
-      });
-    }, { root: scroller, threshold: 0.6 });
+    const goToSlide = (idx, direction = 'right') => {
+      if (idx < 0 || idx >= totalSlides || idx === currentSlide || isTransitioning) return;
+      isTransitioning = true;
+      this.soundSystem.play('click');
 
-    slideElements.forEach(slide => observer.observe(slide));
+      currentSlide = idx;
 
-    // Bind start button
+      // Update progress
+      progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+
+      // Update bg
+      slideArea.style.background = slides[idx].bg;
+      slideArea.style.transition = 'background 0.4s ease';
+
+      // Update dots
+      dotContainer.innerHTML = slides.map((_, i) =>
+        `<div class="pm-dot ${i === currentSlide ? 'active' : ''}"></div>`
+      ).join('');
+
+      // Update counter
+      navHint.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+      // Animate slide
+      slideInner.className = `pm-slide-inner ${direction === 'left' ? 'from-left' : ''}`;
+      slideInner.style.animation = 'none';
+      slideInner.offsetHeight; // force reflow
+      slideInner.style.animation = '';
+      slideInner.className = `pm-slide-inner ${direction === 'left' ? 'from-left' : ''}`;
+      slideInner.innerHTML = slides[idx].content;
+
+      // Re-bind start button if on CTA slide
+      const startBtn = document.getElementById('start-match-btn');
+      if (startBtn) {
+        startBtn.addEventListener('click', () => {
+          this.soundSystem.play('click');
+          // Clean up listeners
+          cleanup();
+          this.startTurno();
+        });
+      }
+
+      setTimeout(() => { isTransitioning = false; }, 450);
+    };
+
+    // Mouse wheel handler (debounced)
+    let wheelTimeout = null;
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (wheelTimeout) return;
+      wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 400);
+
+      if (e.deltaY > 0) goToSlide(currentSlide + 1, 'right');
+      else if (e.deltaY < 0) goToSlide(currentSlide - 1, 'left');
+    };
+
+    // Keyboard handler
+    const onKeyDown = (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        goToSlide(currentSlide + 1, 'right');
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goToSlide(currentSlide - 1, 'left');
+      }
+    };
+
+    // Touch swipe
+    let touchStartY = 0;
+    const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
+    const onTouchEnd = (e) => {
+      const diff = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) > 50) {
+        goToSlide(currentSlide + (diff > 0 ? 1 : -1), diff > 0 ? 'right' : 'left');
+      }
+    };
+
+    // Click to advance
+    const onClick = (e) => {
+      if (e.target.tagName === 'BUTTON') return;
+      goToSlide(currentSlide + 1, 'right');
+    };
+
+    const viewport = document.getElementById('pm-viewport');
+    viewport.addEventListener('wheel', onWheel, { passive: false });
+    viewport.addEventListener('touchstart', onTouchStart, { passive: true });
+    viewport.addEventListener('touchend', onTouchEnd, { passive: true });
+    viewport.addEventListener('click', onClick);
+    document.addEventListener('keydown', onKeyDown);
+
+    const cleanup = () => {
+      viewport.removeEventListener('wheel', onWheel);
+      viewport.removeEventListener('touchstart', onTouchStart);
+      viewport.removeEventListener('touchend', onTouchEnd);
+      viewport.removeEventListener('click', onClick);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+
+    // Store cleanup for later
+    this._preMatchCleanup = cleanup;
+
+    // Bind initial start button
     const startBtn = document.getElementById('start-match-btn');
     if (startBtn) {
       startBtn.addEventListener('click', () => {
         this.soundSystem.play('click');
+        cleanup();
         this.startTurno();
       });
     }

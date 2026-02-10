@@ -55,7 +55,7 @@ export class ImageRenderer {
 
         // SVG MUCHO MÁS GRANDE - llena toda la columna derecha
         this.container.innerHTML = `
-            <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: auto; min-height: 500px; background: white; border-radius: 15px;">
+            <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: auto; max-height: 450px; min-height: 300px; background: white; border-radius: 15px;">
                 <defs>
                     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
                         <path d="M0,0 L0,6 L9,3 z" fill="#D32F2F" />
@@ -382,6 +382,8 @@ export class ImageRenderer {
         const cy = 300;
         const length = 550;
         const gap = 120; // Separación vertical
+        const yTop = cy - gap / 2; // 240
+        const yBot = cy + gap / 2; // 360
 
         // Ángulo de la transversal (65 grados visuales)
         const angleDeg = 65;
