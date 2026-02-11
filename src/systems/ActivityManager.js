@@ -486,6 +486,143 @@ export class ActivityManager {
                         correctExp: 7
                     }
                 ]
+            },
+
+            // 🔵 NIVEL 4: Detectives de Exponentes (Faltante)
+            {
+                id: 4,
+                type: 'potencia-faltante',
+                title: 'Detective de Exponentes 🕵️',
+                instructions: '¿Qué exponente falta para que la igualdad sea correcta?',
+                exercises: [
+                    {
+                        expression: '6⁷ · 6ⁿ = 6¹¹',
+                        parts: [
+                            { base: 6, exp: 7 },
+                            { op: '·' },
+                            { base: 6, dev: 'n' } // dev = missing
+                        ],
+                        correctAnswer: 4,
+                        missingType: 'exponent',
+                        hint: '7 + ? = 11'
+                    },
+                    {
+                        expression: '4⁵ · 4ⁿ = 4⁹',
+                        parts: [{ base: 4, exp: 5 }, { op: '·' }, { base: 4, dev: 'n' }],
+                        correctAnswer: 4,
+                        missingType: 'exponent',
+                        hint: '5 + ? = 9'
+                    },
+                    {
+                        expression: 'x⁶ : xⁿ = x⁴',
+                        parts: [{ base: 'x', exp: 6 }, { op: ':' }, { base: 'x', dev: 'n' }],
+                        correctAnswer: 2,
+                        missingType: 'exponent',
+                        hint: '6 - ? = 4'
+                    },
+                    {
+                        expression: '(5³)ⁿ = 5¹⁵',
+                        parts: [{ base: 5, exp: 3, outerDev: 'n' }],
+                        correctAnswer: 5,
+                        missingType: 'exponent',
+                        hint: '3 × ? = 15'
+                    },
+                    {
+                        expression: '8¹⁰ : 8ⁿ = 8³',
+                        parts: [{ base: 8, exp: 10 }, { op: ':' }, { base: 8, dev: 'n' }],
+                        correctAnswer: 7,
+                        missingType: 'exponent',
+                        hint: '10 - ? = 3'
+                    }
+                ]
+            },
+
+            // 🟡 NIVEL 5: Álgebra Nuñeza (Letras)
+            {
+                id: 5,
+                type: 'potencia-algebraica',
+                title: 'Álgebra Nuñeza 🧬',
+                instructions: 'Resolvé usando propiedades (ahora con letras):',
+                exercises: [
+                    {
+                        expression: 'x⁵ · x²',
+                        parts: [{ base: 'x', exp: 5 }, { op: '·' }, { base: 'x', exp: 2 }],
+                        property: 'multiplicacion',
+                        hint: 'Base "x", sumá exponentes',
+                        correctBase: 'x',
+                        correctExp: 7
+                    },
+                    {
+                        expression: 'y⁸ : y³',
+                        parts: [{ base: 'y', exp: 8 }, { op: ':' }, { base: 'y', exp: 3 }],
+                        property: 'division',
+                        hint: 'Base "y", restá exponentes',
+                        correctBase: 'y',
+                        correctExp: 5
+                    },
+                    {
+                        expression: '(m⁴)³',
+                        parts: [{ base: 'm', exp: 4, outerExp: 3 }],
+                        property: 'potencia-de-potencia',
+                        hint: 'Multiplicá 4 × 3',
+                        correctBase: 'm',
+                        correctExp: 12
+                    },
+                    {
+                        expression: 'a³ · a · a⁴',
+                        parts: [{ base: 'a', exp: 3 }, { op: '·' }, { base: 'a', exp: 1 }, { op: '·' }, { base: 'a', exp: 4 }],
+                        property: 'multiplicacion',
+                        hint: 'Recuerda: a = a¹. Sumá todo.',
+                        correctBase: 'a',
+                        correctExp: 8
+                    },
+                    {
+                        expression: '(p³)² · p⁵',
+                        parts: [{ base: 'p', exp: 3, outerExp: 2 }, { op: '·' }, { base: 'p', exp: 5 }],
+                        property: 'pot+mult',
+                        hint: 'Primero (p³)² = p⁶',
+                        correctBase: 'p',
+                        correctExp: 11
+                    }
+                ]
+            },
+
+            // 🔴 NIVEL 6: Desafío Final (Combinados Algebraicos)
+            {
+                id: 6,
+                type: 'potencia-boss-algebra',
+                title: 'El Master de las Letras 🎓',
+                instructions: 'Ejercicios combinados nivel examen:',
+                exercises: [
+                    {
+                        expression: '(x³ · x⁴) : x⁵',
+                        property: 'mult+div',
+                        hint: 'Paréntesis primero: x³·x⁴',
+                        correctBase: 'x',
+                        correctExp: 2
+                    },
+                    {
+                        expression: '(a⁴)³ : (a²)⁵',
+                        property: 'pot+div',
+                        hint: 'Potencias primero: a¹² : a¹⁰',
+                        correctBase: 'a',
+                        correctExp: 2
+                    },
+                    {
+                        expression: '(m³)² · m : m⁶',
+                        property: 'pot+mult+div',
+                        hint: 'm⁶ · m¹ : m⁶',
+                        correctBase: 'm',
+                        correctExp: 1
+                    },
+                    {
+                        expression: '((y²)³)² : y¹⁰',
+                        property: 'pot+pot+div',
+                        hint: 'Potencia de potencia de potencia: 2×3×2',
+                        correctBase: 'y',
+                        correctExp: 2
+                    }
+                ]
             }
         ];
     }
@@ -546,6 +683,23 @@ export class ActivityManager {
                 feedback = isCorrect
                     ? '¡Excelente! Correcto ✨'
                     : `Casi. Era ${exercise.correctBase}^${exercise.correctExp} = ${exercise.correctBase}${this._superscript(exercise.correctExp)}`;
+                break;
+            }
+            case 'potencia-faltante':
+                isCorrect = parseInt(userAnswer) === exercise.correctAnswer;
+                feedback = isCorrect ? '¡Bien ahí! 🎯' : `Casi... era ${exercise.correctAnswer}`;
+                break;
+            case 'potencia-algebraica':
+            case 'potencia-boss-algebra': {
+                // userAnswer: { base: "x", exp: 5 }
+                if (typeof userAnswer === 'object' && userAnswer !== null) {
+                    const baseOk = String(userAnswer.base).toLowerCase() === String(exercise.correctBase).toLowerCase();
+                    const expOk = parseInt(userAnswer.exp) === exercise.correctExp;
+                    isCorrect = baseOk && expOk;
+                }
+                feedback = isCorrect
+                    ? '¡Genio del Álgebra! 🧬'
+                    : `Casi. Era ${exercise.correctBase}${this._superscript(exercise.correctExp)}`;
                 break;
             }
         }

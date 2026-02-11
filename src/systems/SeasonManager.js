@@ -54,13 +54,13 @@ const SEASON = [
         jornada: 4,
         nombre: "Liga — Fecha 1",
         etapa: "liga",
-        tema: "triangulos",
-        concepto: "angulos-complementarios",
+        tema: "potenciacion",
+        concepto: "liga-fecha-1", // Concepto combinado
         narrativa: {
-            intro: "¡Arranca la Liga! Primer partido oficial. Complementarios y suplementarios.",
-            motivacion: "Un jugador de River domina la cancha. ¡Y los ángulos dominan las jugadas!",
-            cierre_bueno: "¡Victoria en la Fecha 1! El equipo confía en vos.",
-            cierre_malo: "¡Buen intento! Practicá un poco más y la próxima la rompés. La Liga recién empieza."
+            intro: "¡Arranca la Liga! Fecha 1. Desafío doble: Detectives y Letras.",
+            motivacion: "Primero encontrá el exponente perdido. Después, demostrá que jugar con letras es lo mismo que con números.",
+            cierre_bueno: "¡Excelente debut! Encontraste lo que faltaba y dominaste el álgebra.",
+            cierre_malo: "¡Buen intento! Las letras y los incógnitas son difíciles, pero con práctica salen."
         },
         dificultad: [1, 2, 2]
     },
@@ -68,10 +68,24 @@ const SEASON = [
         jornada: 5,
         nombre: "Liga — Fecha 2",
         etapa: "liga",
+        tema: "triangulos",
+        concepto: "angulos-complementarios",
+        narrativa: {
+            intro: "Fecha 2 de la Liga. Complementarios y suplementarios.",
+            motivacion: "Un jugador de River domina la cancha. ¡Y los ángulos dominan las jugadas!",
+            cierre_bueno: "¡Victoria en la Fecha 2! El equipo confía en vos.",
+            cierre_malo: "¡Buen intento! Practicá un poco más y la próxima la rompés."
+        },
+        dificultad: [1, 2, 2]
+    },
+    {
+        jornada: 6,
+        nombre: "Liga — Fecha 3",
+        etapa: "liga",
         tema: "potenciacion",
         concepto: "potencia-division",
         narrativa: {
-            intro: "Fecha 2 de la Liga. Hoy sumamos la división de potencias.",
+            intro: "Fecha 3 de la Liga. Hoy sumamos la división de potencias.",
             motivacion: "Dividir potencias es como hacer un caño: con práctica sale perfecto.",
             cierre_bueno: "¡3 puntos más! Estamos arriba en la tabla.",
             cierre_malo: "¡Muy bien el esfuerzo! Con un poco más de práctica vas a dominarlas."
@@ -79,7 +93,7 @@ const SEASON = [
         dificultad: [1, 2, 2]
     },
     {
-        jornada: 6,
+        jornada: 7,
         nombre: "Copa Interna",
         etapa: "copa",
         tema: "potenciacion",
@@ -93,13 +107,13 @@ const SEASON = [
         dificultad: [2, 2, 3]
     },
     {
-        jornada: 7,
-        nombre: "Liga — Fecha 3",
+        jornada: 8,
+        nombre: "Liga — Fecha 4",
         etapa: "liga",
         tema: "potenciacion",
         concepto: "potencia-combinados",
         narrativa: {
-            intro: "Fecha 3. Combinamos todas las propiedades de potencias.",
+            intro: "Fecha 4. Combinamos todas las propiedades de potencias.",
             motivacion: "Un crack no domina una sola cosa. Domina todo y lo combina.",
             cierre_bueno: "¡Impecable! Sos el goleador de la Liga.",
             cierre_malo: "¡Las combinaciones son re difíciles! Que hayas llegado hasta acá es un logro enorme."
@@ -107,13 +121,13 @@ const SEASON = [
         dificultad: [2, 3, 3]
     },
     {
-        jornada: 8,
-        nombre: "Liga — Fecha 4",
+        jornada: 9,
+        nombre: "Liga — Fecha 5",
         etapa: "liga",
         tema: "triangulos",
         concepto: "paralelas-transversal",
         narrativa: {
-            intro: "Fecha 4. Paralelas cortadas por transversal.",
+            intro: "Fecha 5 de la Liga. Paralelas cortadas por transversal.",
             motivacion: "Las paralelas son como las líneas del campo. ¡Dominá los ángulos que se forman!",
             cierre_bueno: "¡Goleada! Estamos liderando la tabla.",
             cierre_malo: "¡Seguís aprendiendo! Cada ejercicio te hace mejor. Vamos de vuelta."
@@ -121,7 +135,7 @@ const SEASON = [
         dificultad: [2, 3, 3]
     },
     {
-        jornada: 9,
+        jornada: 10,
         nombre: "Semifinal",
         etapa: "semifinal",
         tema: "potenciacion",
@@ -135,7 +149,7 @@ const SEASON = [
         dificultad: [3, 3, 3]
     },
     {
-        jornada: 10,
+        jornada: 11,
         nombre: "Semifinal — Vuelta",
         etapa: "semifinal",
         tema: "triangulos",
@@ -149,7 +163,7 @@ const SEASON = [
         dificultad: [3, 3, 3]
     },
     {
-        jornada: 11,
+        jornada: 12,
         nombre: "⭐ FINAL — Copa Libertadores ⭐",
         etapa: "final",
         tema: "mixto",
@@ -277,6 +291,28 @@ const CONCEPT_TEACHINGS = {
         ],
         regla: "Todo lo aprendido en 10 jornadas de entrenamiento",
         ejemplo: "¡SOS UN CRACK! Aplicá todo lo que el Pulpo te enseñó."
+    },
+    "potencia-algebraica": {
+        titulo: "🕵️‍♂️ Álgebra Nuñeza (Letras)",
+        pasos: [
+            { texto: "A veces la base no es un número, ¡es una LETRA! (x, y, a).", emoji: "🕵️‍♂️" },
+            { texto: "Las reglas son LAS MISMAS: x² · x³ = x⁵ (sumás 2+3).", emoji: "📝" },
+            { texto: "Si ves una letra sola como 'a', recordá que es 'a¹'.", emoji: "⚠️" },
+            { texto: "¡No te asustes! Es lo mismo, solo que más pro.", emoji: "🧬" }
+        ],
+        regla: "Las letras se operan igual que los números. xⁿ · xᵐ = xⁿ⁺ᵐ",
+        ejemplo: "m⁴ : m² = m²"
+    },
+    "liga-fecha-1": {
+        titulo: "🕵️‍♂️ Misión: El Exponente Perdido",
+        pasos: [
+            { texto: "Vamos por partes. Primero: ENCONTRAR.", emoji: "🔍" },
+            { texto: "Mirá esta jugada: 5² · 5ⁿ = 5⁵. ¿Qué número falta?", emoji: "🤔" },
+            { texto: "¡Facil! Como es multiplicación, sumamos. 2 + ? = 5. ¡El exponente es 3!", emoji: "✅" },
+            { texto: "LISTO. Ahora, lo mismo pero con letras. x² · x³ = x⁵. ¡Es igual de fácil!", emoji: "🧬" }
+        ],
+        regla: "Sumá o restá para encontrar el que falta. ¡Las letras juegan igual que los números!",
+        ejemplo: "Si xⁿ · x² = x⁵, entonces n = 3"
     }
 };
 
@@ -296,7 +332,7 @@ export class SeasonManager {
         } catch (e) { /* fresh start */ }
 
         return {
-            currentJornada: 1,
+            currentJornada: 4, // 🔓 START AT JORNADA 4 FOR TESTING
             lastPlayedDate: null,
             matchResults: [], // { jornada, score, total, date, turnosCompleted }
             totalCorrect: 0,

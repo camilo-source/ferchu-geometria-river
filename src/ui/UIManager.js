@@ -470,6 +470,10 @@ export class UIManager {
     this.currentActivity = activity;
     this.currentExerciseIndex = 0;
     this.activityManager.currentActivity = activityId;
+    // Clear guided/season state so free-play runs correctly
+    this._guidedActivityIds = null;
+    this._guidedActivityIndex = 0;
+    this.navigationSource = 'free';
     this.breakManager.startSession();
     this.showExercise();
   }
@@ -527,7 +531,13 @@ export class UIManager {
       case 'potencia-simple':
       case 'potencia-combinada':
       case 'potencia-boss':
+      case 'potencia-algebraica':
+      case 'potencia-boss-algebra':
         exerciseUI = this.createPotenciacionUI(exercise, activity.type);
+        needsGeometryCanvas = false;
+        break;
+      case 'potencia-faltante':
+        exerciseUI = this.createPotenciacionFaltanteUI(exercise);
         needsGeometryCanvas = false;
         break;
     }
@@ -983,7 +993,9 @@ export class UIManager {
     const difficultyColors = {
       'potencia-simple': { bg: 'rgba(25, 118, 210, 0.1)', border: '#1976D2', label: '⚡ Propiedad Única' },
       'potencia-combinada': { bg: 'rgba(255, 152, 0, 0.1)', border: '#FF9800', label: '🔥 Combinado' },
-      'potencia-boss': { bg: 'rgba(211, 47, 47, 0.1)', border: '#D32F2F', label: '💀 Final Boss' }
+      'potencia-boss': { bg: 'rgba(211, 47, 47, 0.1)', border: '#D32F2F', label: '💀 Final Boss' },
+      'potencia-algebraica': { bg: 'rgba(156, 39, 176, 0.1)', border: '#9C27B0', label: '🧬 Álgebra' },
+      'potencia-boss-algebra': { bg: 'rgba(0, 0, 0, 0.1)', border: '#333', label: '🎓 Master' }
     };
     const style = difficultyColors[activityType] || difficultyColors['potencia-simple'];
 
@@ -1052,11 +1064,10 @@ export class UIManager {
           <div style="position: relative; display: inline-flex; align-items: flex-start;">
             <!-- Base input -->
             <input 
-              type="number" 
+              type="${(activityType.includes('algebra')) ? 'text' : 'number'}" 
               id="potencia-base-input" 
-              min="1" 
-              max="99"
-              placeholder="?"
+              ${!activityType.includes('algebra') ? 'min="1" max="99"' : ''}
+              placeholder="${(activityType.includes('algebra')) ? 'x' : '?'}"
               style="
                 width: 100px;
                 padding: 1rem;
@@ -1108,12 +1119,61 @@ export class UIManager {
     `;
   }
 
+  createPotenciacionFaltanteUI(exercise) {
+    return `
+      <div style="text-align: center;">
+        <div style="
+          background: rgba(0, 150, 136, 0.1); 
+          padding: 2rem; 
+          border-radius: 20px; 
+          border: 2px solid #009688;
+          margin-bottom: 2rem;
+        ">
+          <p style="
+            font-size: 2.5rem; 
+            font-family: var(--font-number);
+            letter-spacing: 2px;
+            margin: 0;
+            font-weight: 700;
+          ">
+            ${this._renderExpression(exercise)}
+          </p>
+        </div>
+
+        ${exercise.hint ? `
+          <div style="color: #00796B; font-weight: 600; margin-bottom: 1.5rem; font-size: 1.1rem;">
+            💡 Pista: ${exercise.hint}
+          </div>
+        ` : ''}
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+          <label style="font-size: 1.2rem;">¿Qué número va en "n"?</label>
+          <input 
+            type="number" 
+            id="potencia-faltante-input" 
+            placeholder="?"
+            style="
+              width: 120px;
+              padding: 1rem;
+              font-size: 2rem;
+              border: 3px solid #009688;
+              border-radius: 12px;
+              text-align: center;
+              font-family: var(--font-number);
+              font-weight: 700;
+            "
+          />
+        </div>
+      </div>
+    `;
+  }
+
   _renderExpression(exercise) {
     // Render la expresión con HTML para exponentes
     let html = exercise.expression;
 
     // Reemplazar exponentes unicode con HTML superscript
-    const superMap = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9' };
+    const superMap = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', 'ⁿ': 'n', 'ˣ': 'x' };
 
     // Convertir superscripts unicode a tags HTML para mejor visual
     let result = '';
@@ -1149,7 +1209,7 @@ export class UIManager {
     const activity = this.currentActivity;
 
     // Potenciación: obtener base y exponente
-    if (['potencia-simple', 'potencia-combinada', 'potencia-boss'].includes(activity.type)) {
+    if (['potencia-simple', 'potencia-combinada', 'potencia-boss', 'potencia-algebraica', 'potencia-boss-algebra'].includes(activity.type)) {
       const baseInput = document.getElementById('potencia-base-input');
       const expInput = document.getElementById('potencia-exp-input');
 
@@ -1159,9 +1219,16 @@ export class UIManager {
       }
 
       userAnswer = {
-        base: parseInt(baseInput.value),
+        base: baseInput.value, // Keep as string for algebraic support
         exp: parseInt(expInput.value)
       };
+    } else if (activity.type === 'potencia-faltante') {
+      const input = document.getElementById('potencia-faltante-input');
+      if (!input || input.value === '') {
+        this.showFeedback('Ingresá el número faltante', 'error');
+        return;
+      }
+      userAnswer = parseInt(input.value);
     } else {
       // Geometría: inputs normales
       const input = document.getElementById('angle-input');
@@ -1996,11 +2063,17 @@ export class UIManager {
     };
     // For potenciación topic (IDs 1-3)
     const POTENCIAS_MAP = {
-      'potencia-multiplicacion': [1],       // simple (mult + div + pot)
-      'potencia-division': [1],             // same activity, different exercises
-      'potencia-de-potencia': [1],          // simple
-      'potencia-combinados': [2],           // combinada
-      'potencia-boss': [3],                 // boss
+      'potencia-multiplicacion': [1, 4],    // simple + faltante (detective)
+      'potencia-division': [1, 4],          // simple + faltante
+      'potencia-de-potencia': [1, 5],       // simple + algebra
+      'potencia-combinados': [2, 5],        // combinada + algebra
+      'potencia-boss': [3, 6],              // boss + boss algebra
+
+      // Mappings directos si se necesitan
+      'potencia-faltante': [4],
+      'potencia-algebraica': [5],
+      'potencia-boss-algebra': [6],
+      'liga-fecha-1': [4, 5] // Detective + Algebra
     };
     return TRIANGULOS_MAP[concepto] || POTENCIAS_MAP[concepto] || [1];
   }
