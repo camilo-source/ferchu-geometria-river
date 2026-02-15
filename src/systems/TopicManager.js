@@ -29,16 +29,15 @@ export const TOPICS = [
         activityCount: 3
     },
     {
-        id: 'raices',
-        name: 'Raíces',
+        id: 'radicacion',
+        name: 'Radicación',
         icon: '√',
         emoji: '🌱',
         color: '#388E3C',
         colorLight: 'rgba(56, 142, 60, 0.1)',
-        description: 'Próximamente...',
-        active: false,
-        comingSoon: true,
-        activityCount: 0
+        description: 'Raíces cuadradas, cúbicas, inversas y de índices superiores',
+        active: true,
+        activityCount: 5
     }
 ];
 

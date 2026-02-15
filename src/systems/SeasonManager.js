@@ -68,55 +68,55 @@ const SEASON = [
         jornada: 5,
         nombre: "Liga — Fecha 2",
         etapa: "liga",
-        tema: "triangulos",
-        concepto: "angulos-complementarios",
+        tema: "potenciacion",
+        concepto: "potencia-extrema",
         narrativa: {
-            intro: "Fecha 2 de la Liga. Complementarios y suplementarios.",
-            motivacion: "Un jugador de River domina la cancha. ¡Y los ángulos dominan las jugadas!",
-            cierre_bueno: "¡Victoria en la Fecha 2! El equipo confía en vos.",
-            cierre_malo: "¡Buen intento! Practicá un poco más y la próxima la rompés."
+            intro: "¡Fecha 2 de la Liga! Hoy enfrentamos los ejercicios MÁS DIFÍCILES de potencias.",
+            motivacion: "Corchetes, llaves, bases negativas y ecuaciones monstruosas. ¡Es hora de demostrar todo lo que sabés!",
+            cierre_bueno: "¡IMPRESIONANTE! Resolviste los ejercicios más difíciles de potencias. ¡Sos un crack absoluto!",
+            cierre_malo: "¡Estos son los más difíciles que hay! Que hayas intentado es de valientes. ¡Vamos de vuelta!"
         },
-        dificultad: [1, 2, 2]
+        dificultad: [3, 3, 3]
     },
     {
         jornada: 6,
         nombre: "Liga — Fecha 3",
         etapa: "liga",
-        tema: "potenciacion",
-        concepto: "potencia-division",
+        tema: "radicacion",
+        concepto: "raiz-cuadrada-basica",
         narrativa: {
-            intro: "Fecha 3 de la Liga. Hoy sumamos la división de potencias.",
-            motivacion: "Dividir potencias es como hacer un caño: con práctica sale perfecto.",
-            cierre_bueno: "¡3 puntos más! Estamos arriba en la tabla.",
-            cierre_malo: "¡Muy bien el esfuerzo! Con un poco más de práctica vas a dominarlas."
+            intro: "¡Fecha 3! Hoy arrancamos con RADICACIÓN. ¿Sabés qué es una raíz cuadrada?",
+            motivacion: "La raíz es la operación INVERSA de la potencia. Si 5² = 25, entonces √25 = 5. ¡Como deshacer un pase!",
+            cierre_bueno: "¡Crack! Ya dominás las raíces cuadradas. El DT está impresionado.",
+            cierre_malo: "¡Las raíces son nuevas! Con práctica las vas a dominar. ¡Vamos de vuelta!"
+        },
+        dificultad: [1, 1, 2]
+    },
+    {
+        jornada: 7,
+        nombre: "Liga — Fecha 4",
+        etapa: "liga",
+        tema: "radicacion",
+        concepto: "raiz-superior-e-inversa",
+        narrativa: {
+            intro: "Fecha 4. Hoy subimos el nivel: raíces cúbicas, de cuarto orden, y operaciones inversas.",
+            motivacion: "Si dominás la raíz cuadrada, la cúbica es lo mismo pero con 3. ¡Vos podés!",
+            cierre_bueno: "¡Impresionante! Raíces de cualquier índice, las resolvés como un crack.",
+            cierre_malo: "¡Las raíces superiores son difíciles! Pero cada intento te hace más fuerte."
         },
         dificultad: [1, 2, 2]
     },
     {
-        jornada: 7,
+        jornada: 8,
         nombre: "Copa Interna",
         etapa: "copa",
-        tema: "potenciacion",
-        concepto: "potencia-de-potencia",
+        tema: "radicacion",
+        concepto: "raiz-boss",
         narrativa: {
-            intro: "¡Clasificaste a la Copa Interna! Hoy: potencia de potencia.",
-            motivacion: "En la copa no perdonan. Hay que dominar cada propiedad.",
-            cierre_bueno: "¡Pasamos de ronda! La Copa es nuestra.",
-            cierre_malo: "¡Seguimos en la Copa la próxima! Lo importante es que aprendiste un montón."
-        },
-        dificultad: [2, 2, 3]
-    },
-    {
-        jornada: 8,
-        nombre: "Liga — Fecha 4",
-        etapa: "liga",
-        tema: "potenciacion",
-        concepto: "potencia-combinados",
-        narrativa: {
-            intro: "Fecha 4. Combinamos todas las propiedades de potencias.",
-            motivacion: "Un crack no domina una sola cosa. Domina todo y lo combina.",
-            cierre_bueno: "¡Impecable! Sos el goleador de la Liga.",
-            cierre_malo: "¡Las combinaciones son re difíciles! Que hayas llegado hasta acá es un logro enorme."
+            intro: "¡COPA INTERNA! Todo lo de raíces combinado: exactas e inversas de todos los índices.",
+            motivacion: "En la copa se juega con todo. ¡Demostrá que dominás las raíces!",
+            cierre_bueno: "¡PASAMOS DE RONDA! Las raíces ya son tuyas.",
+            cierre_malo: "¡Llegaste a la Copa! Eso ya es un logro. Seguí practicando."
         },
         dificultad: [2, 3, 3]
     },
@@ -125,9 +125,37 @@ const SEASON = [
         nombre: "Liga — Fecha 5",
         etapa: "liga",
         tema: "triangulos",
+        concepto: "angulos-complementarios",
+        narrativa: {
+            intro: "Fecha 5 de la Liga. Complementarios y suplementarios.",
+            motivacion: "Un jugador de River domina la cancha. ¡Y los ángulos dominan las jugadas!",
+            cierre_bueno: "¡Victoria! El equipo confía en vos.",
+            cierre_malo: "¡Buen intento! Practicá un poco más y la próxima la rompés."
+        },
+        dificultad: [1, 2, 2]
+    },
+    {
+        jornada: 10,
+        nombre: "Liga — Fecha 6",
+        etapa: "liga",
+        tema: "potenciacion",
+        concepto: "potencia-combinados",
+        narrativa: {
+            intro: "Fecha 6. Combinamos todas las propiedades de potencias.",
+            motivacion: "Un crack no domina una sola cosa. Domina todo y lo combina.",
+            cierre_bueno: "¡Impecable! Sos el goleador de la Liga.",
+            cierre_malo: "¡Las combinaciones son re difíciles! Que hayas llegado hasta acá es un logro enorme."
+        },
+        dificultad: [2, 3, 3]
+    },
+    {
+        jornada: 11,
+        nombre: "Liga — Fecha 7",
+        etapa: "liga",
+        tema: "triangulos",
         concepto: "paralelas-transversal",
         narrativa: {
-            intro: "Fecha 5 de la Liga. Paralelas cortadas por transversal.",
+            intro: "Fecha 7 de la Liga. Paralelas cortadas por transversal.",
             motivacion: "Las paralelas son como las líneas del campo. ¡Dominá los ángulos que se forman!",
             cierre_bueno: "¡Goleada! Estamos liderando la tabla.",
             cierre_malo: "¡Seguís aprendiendo! Cada ejercicio te hace mejor. Vamos de vuelta."
@@ -135,7 +163,7 @@ const SEASON = [
         dificultad: [2, 3, 3]
     },
     {
-        jornada: 10,
+        jornada: 12,
         nombre: "Semifinal",
         etapa: "semifinal",
         tema: "potenciacion",
@@ -149,13 +177,13 @@ const SEASON = [
         dificultad: [3, 3, 3]
     },
     {
-        jornada: 11,
+        jornada: 13,
         nombre: "Semifinal — Vuelta",
         etapa: "semifinal",
-        tema: "triangulos",
-        concepto: "angulos-basicos",
+        tema: "radicacion",
+        concepto: "raiz-boss",
         narrativa: {
-            intro: "Vuelta de la semi. Es todo o nada. Repaso total de geometría.",
+            intro: "Vuelta de la semi. Es todo o nada. Repaso total de raíces.",
             motivacion: "Las semifinales son para los valientes. ¡Dale con todo!",
             cierre_bueno: "¡ESTAMOS EN LA FINAAAAL! 🏟️",
             cierre_malo: "¡Tremendo esfuerzo! Estuviste cerca. Un repaso más y la próxima la sacás."
@@ -163,7 +191,7 @@ const SEASON = [
         dificultad: [3, 3, 3]
     },
     {
-        jornada: 12,
+        jornada: 14,
         nombre: "⭐ FINAL — Copa Libertadores ⭐",
         etapa: "final",
         tema: "mixto",
@@ -280,6 +308,51 @@ const CONCEPT_TEACHINGS = {
         regla: "Identificar bases → Aplicar (aⁿ)ᵐ → Luego × y ÷ → Simplificar",
         ejemplo: "(5² × 5³)² ÷ 5⁴ = (5⁵)² ÷ 5⁴ = 5¹⁰ ÷ 5⁴ = 5⁶"
     },
+    "potencia-extrema": {
+        titulo: "💀 NIVEL EXTREMO — Corchetes, Bases Negativas y Ecuaciones",
+        pasos: [
+            { texto: "Hoy enfrentamos lo más difícil: ejercicios con {corchetes [paréntesis (anidados)]}.", emoji: "🔒" },
+            { texto: "REGLA DE ORO: Siempre resolvé de ADENTRO hacia AFUERA. Primero (), después [], después {}.", emoji: "⚠️" },
+            { texto: "BASES NEGATIVAS: (-base)ᵖᵃʳ = POSITIVO | (-base)ⁱᵐᵖᵃʳ = NEGATIVO. ¡Ojo con el signo!", emoji: "⚡" },
+            { texto: "ECUACIONES: Si te piden el exponente faltante, armá la ecuación con las propiedades y despejá.", emoji: "🧮" },
+            { texto: "¡Vos podés! Estos ejercicios son nivel examen. Si los resolvés, sos un MONSTRUO.", emoji: "💀" }
+        ],
+        regla: "Adentro→Afuera | (-b)ᵖᵃʳ=+ | (-b)ⁱᵐᵖᵃʳ=- | Ecuación de exponentes: despejá n",
+        ejemplo: "{[(y⁸:y³)²]·y⁹}:y⁷ → y⁵→y¹⁰→y¹⁹→y¹² | (-3)⁴=81 | (x·x)²⁰:(xⁿ)⁸=1 → n=5"
+    },
+    "raiz-cuadrada-basica": {
+        titulo: "√ ¿Qué es una RAÍZ CUADRADA?",
+        pasos: [
+            { texto: "La raíz es la operación INVERSA de la potencia. ¡Deshace lo que hizo la potencia!", emoji: "√" },
+            { texto: "Si 5² = 25, entonces √25 = 5. La raíz 'pregunta': ¿qué número al cuadrado da 25?", emoji: "🤔" },
+            { texto: "√9 = 3 porque 3² = 9. √49 = 7 porque 7² = 49.", emoji: "📝" },
+            { texto: "Pensalo como un gol: si sabés que 3 pases hicieron el gol, la raíz te dice quién los dio ⚽", emoji: "💡" }
+        ],
+        regla: "√n = x cuando x² = n (¿qué número al cuadrado da n?)",
+        ejemplo: "√121 = 11 porque 11 × 11 = 121"
+    },
+    "raiz-superior-e-inversa": {
+        titulo: "∛ Raíces Cúbicas y Superiores",
+        pasos: [
+            { texto: "La raíz CÚBICA (∛) pregunta: ¿qué número al CUBO da esto?", emoji: "∛" },
+            { texto: "∛125 = 5 porque 5³ = 5×5×5 = 125", emoji: "📝" },
+            { texto: "También hay raíz de CUARTO (⁴√), de QUINTO (⁵√), etc. Siempre es la inversa de la potencia.", emoji: "🔢" },
+            { texto: "⁵√32 = 2 porque 2⁵ = 2×2×2×2×2 = 32. ¡El índice te dice qué potencia deshacés!", emoji: "⚡" }
+        ],
+        regla: "ⁿ√a = x cuando xⁿ = a (el índice dice qué potencia invertimos)",
+        ejemplo: "∛27 = 3 porque 3³ = 27 | ⁴√625 = 5 porque 5⁴ = 625"
+    },
+    "raiz-boss": {
+        titulo: "💀 BOSS MODE — Raíces Combinadas",
+        pasos: [
+            { texto: "Llegaste al nivel más difícil de raíces. ¡Acá se mezcla todo!", emoji: "💀" },
+            { texto: "Raíces cuadradas, cúbicas, de cuarto y quinto orden.", emoji: "🔢" },
+            { texto: "Operaciones inversas: si te dan a³ = 343, vos calculás ∛343.", emoji: "🔍" },
+            { texto: "Todos los índices mezclados. ¡Todo junto! ¡Vos podés! ⚽", emoji: "🏆" }
+        ],
+        regla: "Raíces exactas + inversas de todos los índices = BOSS COMPLETO",
+        ejemplo: "√225 = 15 | ∛216 = 6 | ⁴√81 = 3"
+    },
     "repaso-general": {
         titulo: "🏆 REPASO FINAL — Todo lo que aprendiste",
         pasos: [
@@ -287,9 +360,10 @@ const CONCEPT_TEACHINGS = {
             { texto: "ÁNGULOS: agudo < 90°, recto = 90°, obtuso > 90°. Complementarios = 90°, Suplementarios = 180°.", emoji: "📐" },
             { texto: "TRIÁNGULOS: 3 ángulos suman 180°. Equilátero, Isósceles, Escaleno.", emoji: "📐" },
             { texto: "POTENCIAS: × → sumar exp. | ÷ → restar exp. | (aⁿ)ᵐ → multiplicar exp.", emoji: "🔢" },
+            { texto: "RAÍCES: √ invierte la potencia. √25=5 | ∛27=3 | De cualquier índice.", emoji: "√" },
             { texto: "¡Estás listo! Demostrá todo lo que sabés. ¡VAMOS FERCHU!", emoji: "🔴⚪" }
         ],
-        regla: "Todo lo aprendido en 10 jornadas de entrenamiento",
+        regla: "Todo lo aprendido en la temporada: ángulos + potencias + raíces",
         ejemplo: "¡SOS UN CRACK! Aplicá todo lo que el Pulpo te enseñó."
     },
     "potencia-algebraica": {
@@ -332,7 +406,7 @@ export class SeasonManager {
         } catch (e) { /* fresh start */ }
 
         return {
-            currentJornada: 4, // 🔓 START AT JORNADA 4 FOR TESTING
+            currentJornada: 5, // 🔓 START AT JORNADA 5 FOR TESTING
             lastPlayedDate: null,
             matchResults: [], // { jornada, score, total, date, turnosCompleted }
             totalCorrect: 0,

@@ -32,6 +32,9 @@ export class ActivityManager {
             case 'potenciacion':
                 this.loadPotenciacionActivities();
                 break;
+            case 'radicacion':
+                this.loadRadicacionActivities();
+                break;
             default:
                 this.loadTriangulosActivities();
         }
@@ -623,6 +626,628 @@ export class ActivityManager {
                         correctExp: 2
                     }
                 ]
+            },
+
+            // ═══════════════════════════════════════════════════════════
+            // 💀💀💀 ACTIVIDAD 5 — LOS EJERCICIOS MÁS DIFÍCILES 💀💀💀
+            // Fuente: TP N°4 Parte IV EXTRAS + Clase Ferchu 09.02 + Pizarrón
+            // ═══════════════════════════════════════════════════════════
+
+            // 🟣 NIVEL 7: Corchetes y Llaves — Resolver de adentro hacia afuera
+            {
+                id: 7,
+                type: 'potencia-boss-algebra',
+                title: '🔒 Corchetes y Llaves',
+                instructions: '¡Ejercicios con paréntesis, corchetes y llaves! Resolvé de ADENTRO hacia AFUERA:',
+                exercises: [
+                    {
+                        // {[(y⁸ : y³)²] · y⁹} : y⁷
+                        // Paso 1: y⁸ : y³ = y⁵
+                        // Paso 2: (y⁵)² = y¹⁰
+                        // Paso 3: y¹⁰ · y⁹ = y¹⁹
+                        // Paso 4: y¹⁹ : y⁷ = y¹²
+                        expression: '{[(y⁸ : y³)²] · y⁹} : y⁷',
+                        property: 'div+pot+mult+div',
+                        hint: 'Paso a paso: y⁸:y³=y⁵ → (y⁵)²=y¹⁰ → y¹⁰·y⁹=y¹⁹ → y¹⁹:y⁷=?',
+                        correctBase: 'y',
+                        correctExp: 12
+                    },
+                    {
+                        // [a¹⁰ · a³⁰ · a]³ : (a¹⁰)¹⁰
+                        // Paso 1: a¹⁰ · a³⁰ · a¹ = a⁴¹
+                        // Paso 2: (a⁴¹)³ = a¹²³
+                        // Paso 3: (a¹⁰)¹⁰ = a¹⁰⁰
+                        // Paso 4: a¹²³ : a¹⁰⁰ = a²³
+                        expression: '[a¹⁰ · a³⁰ · a]³ : (a¹⁰)¹⁰',
+                        property: 'mult+pot+div',
+                        hint: 'Corchete: 10+30+1=41 → (a⁴¹)³=a¹²³ | Divisor: a¹⁰⁰ | Final: 123-100=?',
+                        correctBase: 'a',
+                        correctExp: 23
+                    },
+                    {
+                        // (3² / 3)⁴ · 3
+                        // Paso 1: 3² / 3¹ = 3¹
+                        // Paso 2: (3¹)⁴ = 3⁴
+                        // Paso 3: 3⁴ · 3¹ = 3⁵
+                        expression: '(3² / 3)⁴ · 3',
+                        property: 'div+pot+mult',
+                        hint: 'Adentro: 3²/3=3¹ → (3¹)⁴=3⁴ → 3⁴·3=?',
+                        correctBase: 3,
+                        correctExp: 5
+                    },
+                    {
+                        // (7²)³ · (7⁴ / 7)
+                        // Paso 1: (7²)³ = 7⁶
+                        // Paso 2: 7⁴ / 7¹ = 7³
+                        // Paso 3: 7⁶ · 7³ = 7⁹
+                        expression: '(7²)³ · (7⁴ / 7)',
+                        property: 'pot+div+mult',
+                        hint: 'Izq: (7²)³=7⁶ | Der: 7⁴/7=7³ | Final: 7⁶·7³=?',
+                        correctBase: 7,
+                        correctExp: 9
+                    },
+                    {
+                        // (2⁴ · 2⁵) : (2¹² / 2⁴)
+                        // Paso 1: 2⁴ · 2⁵ = 2⁹
+                        // Paso 2: 2¹² / 2⁴ = 2⁸
+                        // Paso 3: 2⁹ : 2⁸ = 2¹
+                        expression: '(2⁴ · 2⁵) : (2¹² / 2⁴)',
+                        property: 'mult+div+div',
+                        hint: 'Izq: 2⁴·2⁵=2⁹ | Der: 2¹²/2⁴=2⁸ | Final: 2⁹:2⁸=?',
+                        correctBase: 2,
+                        correctExp: 1
+                    },
+                    {
+                        // (5⁴)² : 5⁶
+                        // Paso 1: (5⁴)² = 5⁸
+                        // Paso 2: 5⁸ : 5⁶ = 5²
+                        expression: '(5⁴)² : 5⁶',
+                        property: 'pot+div',
+                        hint: '(5⁴)²=5⁸ → 5⁸:5⁶=?',
+                        correctBase: 5,
+                        correctExp: 2
+                    }
+                ]
+            },
+
+            // 🟣 NIVEL 8: Bases Negativas — ¡Cuidado con el signo!
+            {
+                id: 8,
+                type: 'potencia-negativa',
+                title: '⚠️ Bases Negativas',
+                instructions: 'Resolvé con bases NEGATIVAS. Recordá: (-base)ᵖᵃʳ = positivo, (-base)ⁱᵐᵖᵃʳ = negativo',
+                exercises: [
+                    {
+                        // [(-3)⁵⁰ : (-3)⁴⁸]² = [(-3)²]² = (-3)⁴ = 81
+                        expression: '[(-3)⁵⁰ : (-3)⁴⁸]²',
+                        parts: [
+                            { base: -3, exp: 50 },
+                            { op: ':' },
+                            { base: -3, exp: 48 },
+                            { outerExp: 2 }
+                        ],
+                        property: 'div+pot',
+                        hint: 'Div: 50-48=2 → [(-3)²]² → potencia de potencia: 2×2=4 → (-3)⁴ = positivo',
+                        correctAnswer: 81,
+                        correctDisplay: '(-3)⁴ = 81',
+                        steps: [
+                            '(-3)⁵⁰ : (-3)⁴⁸ = (-3)²',
+                            '[(-3)²]² = (-3)⁴',
+                            '(-3)⁴ = 81 (par → positivo)'
+                        ]
+                    },
+                    {
+                        // (-2)⁷ · (-2)³ = (-2)¹⁰ = 1024
+                        expression: '(-2)⁷ · (-2)³',
+                        parts: [
+                            { base: -2, exp: 7 },
+                            { op: '·' },
+                            { base: -2, exp: 3 }
+                        ],
+                        property: 'multiplicacion',
+                        hint: 'Misma base: 7+3=10 → (-2)¹⁰. ¿Exponente par o impar?',
+                        correctAnswer: 1024,
+                        correctDisplay: '(-2)¹⁰ = 1024',
+                        steps: [
+                            '(-2)⁷ · (-2)³ = (-2)¹⁰',
+                            'Exponente 10 es PAR → resultado positivo',
+                            '2¹⁰ = 1024'
+                        ]
+                    },
+                    {
+                        // [(-2)⁸ : (-2)⁵]² = [(-2)³]² = (-2)⁶ = 64
+                        expression: '[(-2)⁸ : (-2)⁵]²',
+                        parts: [
+                            { base: -2, exp: 8 },
+                            { op: ':' },
+                            { base: -2, exp: 5 },
+                            { outerExp: 2 }
+                        ],
+                        property: 'div+pot',
+                        hint: 'Div: 8-5=3 → [(-2)³]² → 3×2=6 → (-2)⁶',
+                        correctAnswer: 64,
+                        correctDisplay: '(-2)⁶ = 64',
+                        steps: [
+                            '(-2)⁸ : (-2)⁵ = (-2)³',
+                            '[(-2)³]² = (-2)⁶',
+                            '(-2)⁶ = 64 (par → positivo)'
+                        ]
+                    },
+                    {
+                        // (-5)⁴ : (-5)² = (-5)² = 25
+                        expression: '(-5)⁴ : (-5)²',
+                        parts: [
+                            { base: -5, exp: 4 },
+                            { op: ':' },
+                            { base: -5, exp: 2 }
+                        ],
+                        property: 'division',
+                        hint: '4-2=2 → (-5)². ¿Exponente par o impar?',
+                        correctAnswer: 25,
+                        correctDisplay: '(-5)² = 25',
+                        steps: [
+                            '(-5)⁴ : (-5)² = (-5)²',
+                            'Exponente 2 es PAR → positivo',
+                            '5² = 25'
+                        ]
+                    },
+                    {
+                        // (-3)⁵ · (-3)² = (-3)⁷ = -2187
+                        expression: '(-3)⁵ · (-3)²',
+                        parts: [
+                            { base: -3, exp: 5 },
+                            { op: '·' },
+                            { base: -3, exp: 2 }
+                        ],
+                        property: 'multiplicacion',
+                        hint: '5+2=7 → (-3)⁷. Exponente IMPAR → resultado negativo',
+                        correctAnswer: -2187,
+                        correctDisplay: '(-3)⁷ = -2187',
+                        steps: [
+                            '(-3)⁵ · (-3)² = (-3)⁷',
+                            'Exponente 7 es IMPAR → negativo',
+                            '-(3⁷) = -2187'
+                        ]
+                    }
+                ]
+            },
+
+            // 💀 NIVEL 9: EL MONSTRUO FINAL — Hallar el exponente faltante en ecuaciones complejas
+            {
+                id: 9,
+                type: 'potencia-faltante-avanzado',
+                title: '💀 El Monstruo Final',
+                instructions: '¡El nivel más difícil! Encontrá el exponente que falta para que la igualdad se cumpla:',
+                exercises: [
+                    {
+                        // (x · x)²⁰ : (xⁿ)⁸ = 1
+                        // Izq: (x²)²⁰ = x⁴⁰
+                        // x⁴⁰ : x⁸ⁿ = x⁰ = 1
+                        // 40 = 8n → n = 5
+                        expression: '(x · x)²⁰ : (xⁿ)⁸ = 1',
+                        hint: 'Izq: (x·x)²⁰ = (x²)²⁰ = x⁴⁰ | Para que dé 1 (x⁰), los exponentes deben ser iguales → 40 = 8×?',
+                        correctAnswer: 5,
+                        missingType: 'exponent',
+                        steps: [
+                            '(x · x)²⁰ = (x²)²⁰ = x⁴⁰',
+                            '(xⁿ)⁸ = x⁸ⁿ',
+                            'Para que x⁴⁰ : x⁸ⁿ = x⁰ = 1',
+                            '40 = 8n → n = 5'
+                        ]
+                    },
+                    {
+                        // (a¹⁰ · aⁿ · a²) : (a²)¹⁰ = a³
+                        // Izq: a^(12+n) | Der: a²⁰
+                        // 12 + n - 20 = 3
+                        // n = 3 + 20 - 12 = 11
+                        expression: '(a¹⁰ · aⁿ · a²) : (a²)¹⁰ = a³',
+                        hint: 'Izq: a^(10+n+2) = a^(12+n) | Der: (a²)¹⁰ = a²⁰ | Ecuación: (12+n) - 20 = 3',
+                        correctAnswer: 11,
+                        missingType: 'exponent',
+                        steps: [
+                            'Numerador: a¹⁰ · aⁿ · a² = a^(12+n)',
+                            'Denominador: (a²)¹⁰ = a²⁰',
+                            'División: a^(12+n-20) = a³',
+                            '12 + n - 20 = 3 → n = 11'
+                        ]
+                    },
+                    {
+                        // [(-5)³¹ · (-5)²¹ · (-5)ⁿ] : [(-5)²⁵ · (-5)²⁵]² = (-5)²
+                        // Izq: (-5)^(52+n)
+                        // Der: [(-5)⁵⁰]² = (-5)¹⁰⁰
+                        // 52 + n - 100 = 2 → n = 50
+                        expression: '[(-5)³¹ · (-5)²¹ · (-5)ⁿ] : [(-5)²⁵ · (-5)²⁵]² = (-5)²',
+                        hint: 'Izq: 31+21+n = 52+n | Der: [(-5)⁵⁰]² = (-5)¹⁰⁰ | Ecuación: (52+n) - 100 = 2',
+                        correctAnswer: 50,
+                        missingType: 'exponent',
+                        steps: [
+                            'Primer corchete: (-5)^(31+21+n) = (-5)^(52+n)',
+                            'Segundo corchete: [(-5)²⁵ · (-5)²⁵]² = [(-5)⁵⁰]² = (-5)¹⁰⁰',
+                            'División: (52+n) - 100 = 2',
+                            '52 + n = 102 → n = 50'
+                        ]
+                    },
+                    {
+                        // 9¹⁷ · 9ⁿ : 9⁶ = 9¹⁹
+                        // 17 + n - 6 = 19
+                        // n = 19 + 6 - 17 = 8
+                        expression: '9¹⁷ · 9ⁿ : 9⁶ = 9¹⁹',
+                        hint: '17 + n - 6 = 19 → n = ?',
+                        correctAnswer: 8,
+                        missingType: 'exponent',
+                        steps: [
+                            '9¹⁷ · 9ⁿ : 9⁶ = 9^(17+n-6)',
+                            '17 + n - 6 = 19',
+                            '11 + n = 19',
+                            'n = 8'
+                        ]
+                    },
+                    {
+                        // (2ⁿ)⁴ · 2² : 2⁶ = 2¹²
+                        // 4n + 2 - 6 = 12
+                        // 4n = 16 → n = 4
+                        expression: '(2ⁿ)⁴ · 2² : 2⁶ = 2¹²',
+                        hint: 'Pot de pot: (2ⁿ)⁴ = 2⁴ⁿ → 4n + 2 - 6 = 12 → 4n = ?',
+                        correctAnswer: 4,
+                        missingType: 'exponent',
+                        steps: [
+                            '(2ⁿ)⁴ = 2⁴ⁿ',
+                            '2⁴ⁿ · 2² : 2⁶ = 2^(4n+2-6) = 2^(4n-4)',
+                            '4n - 4 = 12',
+                            '4n = 16 → n = 4'
+                        ]
+                    },
+                    {
+                        // [(3⁵ : 3²)ⁿ] · 3⁴ = 3¹⁹
+                        // Paso 1: 3⁵ : 3² = 3³
+                        // Paso 2: (3³)ⁿ = 3³ⁿ
+                        // Paso 3: 3³ⁿ · 3⁴ = 3^(3n+4) = 3¹⁹
+                        // 3n + 4 = 19 → 3n = 15 → n = 5
+                        expression: '[(3⁵ : 3²)ⁿ] · 3⁴ = 3¹⁹',
+                        hint: 'Adentro: 3⁵:3²=3³ → (3³)ⁿ=3³ⁿ → 3ⁿ+4 = 19 → 3n = ?',
+                        correctAnswer: 5,
+                        missingType: 'exponent',
+                        steps: [
+                            '3⁵ : 3² = 3³',
+                            '(3³)ⁿ = 3³ⁿ',
+                            '3³ⁿ · 3⁴ = 3^(3n+4)',
+                            '3n + 4 = 19 → 3n = 15 → n = 5'
+                        ]
+                    }
+                ]
+            }
+        ];
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // √ TEMA: RADICACIÓN
+    // Ejercicios extraídos del TP Nº1 PARTE V - RADICACIÓN
+    // Dificultad ascendente: raíces exactas → inversas → completar → estimación
+    // ═══════════════════════════════════════════════════════════
+    loadRadicacionActivities() {
+        this.activities = [
+            // ═══════════════════════════════════════════════════════════
+            // 🟢 NIVEL 1: Raíces Cuadradas Exactas (lo más básico)
+            // TP ejercicio 1-2 parte a
+            // ═══════════════════════════════════════════════════════════
+            {
+                id: 1,
+                type: 'raiz-cuadrada',
+                title: 'Raíces Cuadradas √ ⚡',
+                instructions: 'Calculá la raíz cuadrada. ¿Qué número multiplicado por sí mismo da el de adentro?',
+                exercises: [
+                    {
+                        expression: '√9',
+                        radicand: 9,
+                        index: 2,
+                        correctAnswer: 3,
+                        hint: '¿Qué número × sí mismo = 9? → 3 × 3 = 9'
+                    },
+                    {
+                        expression: '√25',
+                        radicand: 25,
+                        index: 2,
+                        correctAnswer: 5,
+                        hint: '5 × 5 = 25'
+                    },
+                    {
+                        expression: '√49',
+                        radicand: 49,
+                        index: 2,
+                        correctAnswer: 7,
+                        hint: '7 × 7 = 49'
+                    },
+                    {
+                        expression: '√1',
+                        radicand: 1,
+                        index: 2,
+                        correctAnswer: 1,
+                        hint: '1 × 1 = 1'
+                    },
+                    {
+                        expression: '√0',
+                        radicand: 0,
+                        index: 2,
+                        correctAnswer: 0,
+                        hint: '0 × 0 = 0'
+                    },
+                    {
+                        expression: '√169',
+                        radicand: 169,
+                        index: 2,
+                        correctAnswer: 13,
+                        hint: '13 × 13 = 169'
+                    },
+                    {
+                        expression: '√121',
+                        radicand: 121,
+                        index: 2,
+                        correctAnswer: 11,
+                        hint: '11 × 11 = 121'
+                    }
+                ]
+            },
+
+            // ═══════════════════════════════════════════════════════════
+            // 🟡 NIVEL 2: Raíces Cúbicas y de otros índices
+            // TP ejercicio 1-2 parte b + ejercicio de Joaquín
+            // ═══════════════════════════════════════════════════════════
+            {
+                id: 2,
+                type: 'raiz-superior',
+                title: 'Raíces Cúbicas y más ∛ 🔥',
+                instructions: 'Ahora con raíces cúbicas (∛) y de quinto orden (⁵√). ¿Qué número elevado al índice da el radicando?',
+                exercises: [
+                    {
+                        expression: '∛125',
+                        radicand: 125,
+                        index: 3,
+                        correctAnswer: 5,
+                        hint: '5 × 5 × 5 = 125 → 5³ = 125'
+                    },
+                    {
+                        expression: '∛64',
+                        radicand: 64,
+                        index: 3,
+                        correctAnswer: 4,
+                        hint: '4 × 4 × 4 = 64 → 4³ = 64'
+                    },
+                    {
+                        expression: '∛1000',
+                        radicand: 1000,
+                        index: 3,
+                        correctAnswer: 10,
+                        hint: '10 × 10 × 10 = 1000 → 10³ = 1000'
+                    },
+                    {
+                        expression: '∛27',
+                        radicand: 27,
+                        index: 3,
+                        correctAnswer: 3,
+                        hint: '3 × 3 × 3 = 27 → 3³ = 27'
+                    },
+                    {
+                        expression: '⁵√32',
+                        radicand: 32,
+                        index: 5,
+                        correctAnswer: 2,
+                        hint: '2⁵ = 2×2×2×2×2 = 32'
+                    },
+                    {
+                        expression: '⁵√1',
+                        radicand: 1,
+                        index: 5,
+                        correctAnswer: 1,
+                        hint: '1 elevado a cualquier cosa da 1'
+                    },
+                    {
+                        expression: '⁴√625',
+                        radicand: 625,
+                        index: 4,
+                        correctAnswer: 5,
+                        hint: '5⁴ = 5×5×5×5 = 625'
+                    }
+                ]
+            },
+
+            // ═══════════════════════════════════════════════════════════
+            // 🟡 NIVEL 3: Operación Inversa — ¿Qué número pensó?
+            // TP ejercicio 1-1 + ejercicio 2-1
+            // ═══════════════════════════════════════════════════════════
+            {
+                id: 3,
+                type: 'raiz-inversa',
+                title: '¿Qué Número Pensó? 🤔',
+                instructions: 'Encontrá el número "a" que cumple la condición. ¡Es la operación inversa de la potencia!',
+                exercises: [
+                    {
+                        expression: 'a² = 121 → a = ?',
+                        equation: 'a² = 121',
+                        power: 2,
+                        result: 121,
+                        correctAnswer: 11,
+                        hint: 'Valentina: "Si al número que pensé lo multiplico por sí mismo, da 121" → √121'
+                    },
+                    {
+                        expression: 'a³ = 64 → a = ?',
+                        equation: 'a³ = 64',
+                        power: 3,
+                        result: 64,
+                        correctAnswer: 4,
+                        hint: 'Joaquín: "Si al mío lo elevo al cubo, me da 64" → ∛64'
+                    },
+                    {
+                        expression: 'a⁵ = 1 → a = ?',
+                        equation: 'a⁵ = 1',
+                        power: 5,
+                        result: 1,
+                        correctAnswer: 1,
+                        hint: 'Ivana: "Si lo elevo a la quinta, me da 1" → ⁵√1'
+                    },
+                    {
+                        expression: 'a³ = 27 → a = ?',
+                        equation: 'a³ = 27',
+                        power: 3,
+                        result: 27,
+                        correctAnswer: 3,
+                        hint: '¿Quién elevado al cubo da 27? → 3³ = 27'
+                    },
+                    {
+                        expression: 'a⁴ = 625 → a = ?',
+                        equation: 'a⁴ = 625',
+                        power: 4,
+                        result: 625,
+                        correctAnswer: 5,
+                        hint: '¿Quién a la cuarta da 625? → 5⁴ = 625'
+                    },
+                    {
+                        expression: 'a² = 49 → a = ?',
+                        equation: 'a² = 49',
+                        power: 2,
+                        result: 49,
+                        correctAnswer: 7,
+                        hint: '¿Quién al cuadrado da 49? → 7² = 49'
+                    },
+                    {
+                        expression: 'a¹⁰ = 0 → a = ?',
+                        equation: 'a¹⁰ = 0',
+                        power: 10,
+                        result: 0,
+                        correctAnswer: 0,
+                        hint: 'Solo un número elevado a cualquier potencia da 0...'
+                    }
+                ]
+            },
+
+            // ═══════════════════════════════════════════════════════════
+            // 🔵 NIVEL 4: Completar y Justificar
+            // TP ejercicio 3
+            // ═══════════════════════════════════════════════════════════
+            {
+                id: 4,
+                type: 'raiz-completar',
+                title: 'Completá y Justificá ✍️',
+                instructions: 'Completá el resultado de la raíz Y justificá: "porque __² = __"',
+                exercises: [
+                    {
+                        expression: '√169 = ? porque ?² = 169',
+                        radicand: 169,
+                        index: 2,
+                        correctAnswer: 13,
+                        justification: '13² = 169',
+                        hint: '? × ? = 169 → 13 × 13 = 169'
+                    },
+                    {
+                        expression: '∛64 = ? porque ?³ = 64',
+                        radicand: 64,
+                        index: 3,
+                        correctAnswer: 4,
+                        justification: '4³ = 64',
+                        hint: '? × ? × ? = 64 → 4 × 4 × 4 = 64'
+                    },
+                    {
+                        expression: '√36 = ? porque ?² = 36',
+                        radicand: 36,
+                        index: 2,
+                        correctAnswer: 6,
+                        justification: '6² = 36',
+                        hint: '6 × 6 = 36'
+                    },
+                    {
+                        expression: '⁵√100000 = ? porque ?⁵ = 100000',
+                        radicand: 100000,
+                        index: 5,
+                        correctAnswer: 10,
+                        justification: '10⁵ = 100000',
+                        hint: '10 × 10 × 10 × 10 × 10 = 100000'
+                    },
+                    {
+                        expression: '√144 = ? porque ?² = 144',
+                        radicand: 144,
+                        index: 2,
+                        correctAnswer: 12,
+                        justification: '12² = 144',
+                        hint: '12 × 12 = 144'
+                    },
+                    {
+                        expression: '∛8 = ? porque ?³ = 8',
+                        radicand: 8,
+                        index: 3,
+                        correctAnswer: 2,
+                        justification: '2³ = 8',
+                        hint: '2 × 2 × 2 = 8'
+                    },
+                    {
+                        expression: '√196 = ? porque ?² = 196',
+                        radicand: 196,
+                        index: 2,
+                        correctAnswer: 14,
+                        justification: '14² = 196',
+                        hint: '14 × 14 = 196'
+                    }
+                ]
+            },
+
+            // ═══════════════════════════════════════════════════════════
+            // � NIVEL 5: Boss Final de Raíces — Todo combinado
+            // Mezcla de raíces cuadradas, cúbicas, quintas + inversas
+            // ═══════════════════════════════════════════════════════════
+            {
+                id: 5,
+                type: 'raiz-boss',
+                title: '💀 El Boss de las Raíces',
+                instructions: '¡Todo combinado! Raíces exactas e inversas de todos los índices. ¡Demostrá todo lo que aprendiste!',
+                exercises: [
+                    {
+                        expression: '√225',
+                        radicand: 225,
+                        index: 2,
+                        correctAnswer: 15,
+                        hint: '15 × 15 = 225'
+                    },
+                    {
+                        expression: '∛216',
+                        radicand: 216,
+                        index: 3,
+                        correctAnswer: 6,
+                        hint: '6 × 6 × 6 = 216'
+                    },
+                    {
+                        expression: 'a² = 256 → a = ?',
+                        power: 2,
+                        result: 256,
+                        correctAnswer: 16,
+                        hint: '√256 = ? → 16 × 16 = 256'
+                    },
+                    {
+                        expression: '⁴√81',
+                        radicand: 81,
+                        index: 4,
+                        correctAnswer: 3,
+                        hint: '3⁴ = 3×3×3×3 = 81'
+                    },
+                    {
+                        expression: '√289',
+                        radicand: 289,
+                        index: 2,
+                        correctAnswer: 17,
+                        hint: '17 × 17 = 289'
+                    },
+                    {
+                        expression: '∛512',
+                        radicand: 512,
+                        index: 3,
+                        correctAnswer: 8,
+                        hint: '8 × 8 × 8 = 512'
+                    },
+                    {
+                        expression: 'a³ = 343 → a = ?',
+                        power: 3,
+                        result: 343,
+                        correctAnswer: 7,
+                        hint: '∛343 = ? → 7 × 7 × 7 = 343'
+                    }
+                ]
             }
         ];
     }
@@ -700,6 +1325,65 @@ export class ActivityManager {
                 feedback = isCorrect
                     ? '¡Genio del Álgebra! 🧬'
                     : `Casi. Era ${exercise.correctBase}${this._superscript(exercise.correctExp)}`;
+                break;
+            }
+            // ═══ ACTIVIDAD 5 — Nuevos tipos ═══
+            case 'potencia-negativa': {
+                // userAnswer is a number (the final numeric result)
+                const parsed = parseInt(userAnswer);
+                isCorrect = parsed === exercise.correctAnswer;
+                if (isCorrect) {
+                    feedback = '¡Increíble! Dominás las bases negativas 🔥';
+                } else {
+                    const stepsText = exercise.steps ? '\n' + exercise.steps.join(' → ') : '';
+                    feedback = `Casi. Era ${exercise.correctDisplay}${stepsText}`;
+                }
+                break;
+            }
+            case 'potencia-faltante-avanzado': {
+                const parsedAnswer = parseInt(userAnswer);
+                isCorrect = parsedAnswer === exercise.correctAnswer;
+                if (isCorrect) {
+                    feedback = '¡MONSTRUOSO! Resolviste el ejercicio más difícil 💀🏆';
+                } else {
+                    const stepsText = exercise.steps ? '\n' + exercise.steps.join(' → ') : '';
+                    feedback = `Casi... el exponente era ${exercise.correctAnswer}${stepsText}`;
+                }
+                break;
+            }
+            // ═══ RADICACIÓN ═══
+            case 'raiz-cuadrada':
+            case 'raiz-superior':
+            case 'raiz-completar': {
+                const parsedVal = parseInt(userAnswer);
+                isCorrect = parsedVal === exercise.correctAnswer;
+                if (isCorrect) {
+                    feedback = '¡Perfecto! Dominás las raíces √';
+                } else {
+                    const justif = exercise.justification ? ` (${exercise.justification})` : '';
+                    feedback = `Casi. Era ${exercise.correctAnswer}${justif}`;
+                }
+                break;
+            }
+            case 'raiz-inversa': {
+                const parsedInv = parseInt(userAnswer);
+                isCorrect = parsedInv === exercise.correctAnswer;
+                if (isCorrect) {
+                    feedback = '¡Genio! Encontraste el número 🔍';
+                } else {
+                    feedback = `Casi. El número era ${exercise.correctAnswer} porque ${exercise.correctAnswer}${exercise.power === 2 ? '²' : exercise.power === 3 ? '³' : '⁴'} = ${exercise.result}`;
+                }
+                break;
+            }
+
+            case 'raiz-boss': {
+                const parsedBoss = parseInt(userAnswer);
+                isCorrect = parsedBoss === exercise.correctAnswer;
+                if (isCorrect) {
+                    feedback = '¡MONSTRUOSO! Dominás las raíces como un BOSS 💀🏆';
+                } else {
+                    feedback = `Casi... era ${exercise.correctAnswer}`;
+                }
                 break;
             }
         }
