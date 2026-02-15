@@ -549,6 +549,15 @@ export class UIManager {
         exerciseUI = this.createRadicacionUI(exercise, activity.type);
         needsGeometryCanvas = false;
         break;
+      // ═══ POTENCIACIÓN AVANZADA ═══
+      case 'potencia-negativa':
+        exerciseUI = this.createPotenciaNegativaUI(exercise);
+        needsGeometryCanvas = false;
+        break;
+      case 'potencia-faltante-avanzado':
+        exerciseUI = this.createPotenciaFaltanteAvanzadoUI(exercise);
+        needsGeometryCanvas = false;
+        break;
     }
 
     const topic = this.topicManager.getCurrentTopic();
@@ -1232,6 +1241,201 @@ export class UIManager {
     `;
   }
 
+  // ═══════════════════════════════════════════════════════════
+  // UI: BASES NEGATIVAS (NUEVO)
+  // ═══════════════════════════════════════════════════════════
+  createPotenciaNegativaUI(exercise) {
+    return `
+      <div style="text-align: center;">
+        <div style="
+          display: inline-block;
+          background: rgba(244, 67, 54, 0.1);
+          border: 2px solid #F44336;
+          color: #F44336;
+          padding: 6px 20px;
+          border-radius: 20px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          margin-bottom: 2rem;
+        ">⚠️ Bases Negativas</div>
+
+        <div style="
+          background: linear-gradient(135deg, rgba(244, 67, 54, 0.06), rgba(244, 67, 54, 0.12));
+          padding: 2.5rem 2rem;
+          border-radius: 20px;
+          margin-bottom: 2rem;
+          border: 2px solid rgba(244, 67, 54, 0.2);
+        ">
+          <div style="
+            font-size: 2.5rem;
+            font-family: var(--font-number);
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: 2px;
+            line-height: 1.6;
+          ">
+            ${exercise.expression}
+          </div>
+        </div>
+
+        <div style="
+          background: rgba(255, 193, 7, 0.1);
+          border: 1px solid rgba(255, 193, 7, 0.3);
+          padding: 1rem 1.5rem;
+          border-radius: 12px;
+          margin-bottom: 1.5rem;
+          font-size: 0.95rem;
+          color: #F57F17;
+        ">
+          💡 <strong>Recordá:</strong> (-base)<sup>par</sup> = positivo │ (-base)<sup>impar</sup> = negativo
+        </div>
+
+        ${exercise.hint ? `
+          <div style="
+            background: rgba(255, 193, 7, 0.05);
+            border: 1px dashed rgba(255, 193, 7, 0.3);
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: #F57F17;
+          ">
+            🔍 <strong>Pista:</strong> ${exercise.hint}
+          </div>
+        ` : ''}
+
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1rem;
+        ">
+          <label style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary);">
+            Resultado =
+          </label>
+          <input 
+            type="number" 
+            id="potencia-negativa-input" 
+            placeholder="?"
+            style="
+              width: 140px;
+              padding: 1rem;
+              font-size: 2.5rem;
+              border: 3px solid #F44336;
+              border-radius: 12px;
+              background: white;
+              color: var(--text-primary);
+              text-align: center;
+              font-family: var(--font-number);
+              font-weight: 700;
+            "
+          />
+        </div>
+
+        <p style="
+          margin-top: 1rem;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+        ">
+          ¡Cuidado con el signo! Puede ser positivo o negativo
+        </p>
+      </div>
+    `;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // UI: EXPONENTE FALTANTE AVANZADO (NUEVO)
+  // ═══════════════════════════════════════════════════════════
+  createPotenciaFaltanteAvanzadoUI(exercise) {
+    return `
+      <div style="text-align: center;">
+        <div style="
+          display: inline-block;
+          background: rgba(0, 0, 0, 0.08);
+          border: 2px solid #333;
+          color: #333;
+          padding: 6px 20px;
+          border-radius: 20px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          margin-bottom: 2rem;
+        ">💀 El Monstruo Final</div>
+
+        <div style="
+          background: linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.08));
+          padding: 2.5rem 1.5rem;
+          border-radius: 20px;
+          margin-bottom: 2rem;
+          border: 2px solid rgba(0,0,0,0.15);
+        ">
+          <div style="
+            font-size: 2.2rem;
+            font-family: var(--font-number);
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+            line-height: 1.8;
+          ">
+            ${exercise.expression}
+          </div>
+        </div>
+
+        ${exercise.hint ? `
+          <div style="
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            color: #F57F17;
+          ">
+            💡 <strong>Pista:</strong> ${exercise.hint}
+          </div>
+        ` : ''}
+
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1rem;
+        ">
+          <label style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary);">
+            n =
+          </label>
+          <input 
+            type="number" 
+            id="potencia-faltante-avanzado-input" 
+            min="0"
+            placeholder="?"
+            style="
+              width: 120px;
+              padding: 1rem;
+              font-size: 2.5rem;
+              border: 3px solid #333;
+              border-radius: 12px;
+              background: white;
+              color: var(--text-primary);
+              text-align: center;
+              font-family: var(--font-number);
+              font-weight: 700;
+            "
+          />
+        </div>
+
+        <p style="
+          margin-top: 1rem;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+        ">
+          Encontrá el exponente n para que la igualdad se cumpla
+        </p>
+      </div>
+    `;
+  }
+
   createPotenciacionFaltanteUI(exercise) {
     return `
       <div style="text-align: center;">
@@ -1339,6 +1543,20 @@ export class UIManager {
       const input = document.getElementById('potencia-faltante-input');
       if (!input || input.value === '') {
         this.showFeedback('Ingresá el número faltante', 'error');
+        return;
+      }
+      userAnswer = parseInt(input.value);
+    } else if (activity.type === 'potencia-negativa') {
+      const input = document.getElementById('potencia-negativa-input');
+      if (!input || input.value === '') {
+        this.showFeedback('Ingresá el resultado numérico', 'error');
+        return;
+      }
+      userAnswer = parseInt(input.value);
+    } else if (activity.type === 'potencia-faltante-avanzado') {
+      const input = document.getElementById('potencia-faltante-avanzado-input');
+      if (!input || input.value === '') {
+        this.showFeedback('Ingresá el exponente faltante', 'error');
         return;
       }
       userAnswer = parseInt(input.value);
@@ -2201,7 +2419,11 @@ export class UIManager {
       'raiz-superior-e-inversa': [2, 3],   // superiores + inversas
       'raiz-boss': [4, 5],                // completar + boss
     };
-    return TRIANGULOS_MAP[concepto] || POTENCIAS_MAP[concepto] || RADICACION_MAP[concepto] || [1];
+    // Mappings adicionales cross-topic
+    const EXTRA_MAP = {
+      'potencia-extrema': [7, 8, 9],      // corchetes + negativas + monstruo final
+    };
+    return TRIANGULOS_MAP[concepto] || POTENCIAS_MAP[concepto] || RADICACION_MAP[concepto] || EXTRA_MAP[concepto] || [1];
   }
 
   // ═══════════════════════════════════════════════════════════
