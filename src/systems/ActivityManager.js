@@ -654,10 +654,6 @@ export class ActivityManager {
                     },
                     {
                         // [a¹⁰ · a³⁰ · a]³ : (a¹⁰)¹⁰
-                        // Paso 1: a¹⁰ · a³⁰ · a¹ = a⁴¹
-                        // Paso 2: (a⁴¹)³ = a¹²³
-                        // Paso 3: (a¹⁰)¹⁰ = a¹⁰⁰
-                        // Paso 4: a¹²³ : a¹⁰⁰ = a²³
                         expression: '[a¹⁰ · a³⁰ · a]³ : (a¹⁰)¹⁰',
                         property: 'mult+pot+div',
                         hint: 'Corchete: 10+30+1=41 → (a⁴¹)³=a¹²³ | Divisor: a¹⁰⁰ | Final: 123-100=?',
@@ -665,21 +661,7 @@ export class ActivityManager {
                         correctExp: 23
                     },
                     {
-                        // (3² / 3)⁴ · 3
-                        // Paso 1: 3² / 3¹ = 3¹
-                        // Paso 2: (3¹)⁴ = 3⁴
-                        // Paso 3: 3⁴ · 3¹ = 3⁵
-                        expression: '(3² / 3)⁴ · 3',
-                        property: 'div+pot+mult',
-                        hint: 'Adentro: 3²/3=3¹ → (3¹)⁴=3⁴ → 3⁴·3=?',
-                        correctBase: 3,
-                        correctExp: 5
-                    },
-                    {
                         // (7²)³ · (7⁴ / 7)
-                        // Paso 1: (7²)³ = 7⁶
-                        // Paso 2: 7⁴ / 7¹ = 7³
-                        // Paso 3: 7⁶ · 7³ = 7⁹
                         expression: '(7²)³ · (7⁴ / 7)',
                         property: 'pot+div+mult',
                         hint: 'Izq: (7²)³=7⁶ | Der: 7⁴/7=7³ | Final: 7⁶·7³=?',
@@ -688,24 +670,11 @@ export class ActivityManager {
                     },
                     {
                         // (2⁴ · 2⁵) : (2¹² / 2⁴)
-                        // Paso 1: 2⁴ · 2⁵ = 2⁹
-                        // Paso 2: 2¹² / 2⁴ = 2⁸
-                        // Paso 3: 2⁹ : 2⁸ = 2¹
                         expression: '(2⁴ · 2⁵) : (2¹² / 2⁴)',
                         property: 'mult+div+div',
                         hint: 'Izq: 2⁴·2⁵=2⁹ | Der: 2¹²/2⁴=2⁸ | Final: 2⁹:2⁸=?',
                         correctBase: 2,
                         correctExp: 1
-                    },
-                    {
-                        // (5⁴)² : 5⁶
-                        // Paso 1: (5⁴)² = 5⁸
-                        // Paso 2: 5⁸ : 5⁶ = 5²
-                        expression: '(5⁴)² : 5⁶',
-                        property: 'pot+div',
-                        hint: '(5⁴)²=5⁸ → 5⁸:5⁶=?',
-                        correctBase: 5,
-                        correctExp: 2
                     }
                 ]
             },
@@ -752,25 +721,6 @@ export class ActivityManager {
                             '(-2)⁷ · (-2)³ = (-2)¹⁰',
                             'Exponente 10 es PAR → resultado positivo',
                             '2¹⁰ = 1024'
-                        ]
-                    },
-                    {
-                        // [(-2)⁸ : (-2)⁵]² = [(-2)³]² = (-2)⁶ = 64
-                        expression: '[(-2)⁸ : (-2)⁵]²',
-                        parts: [
-                            { base: -2, exp: 8 },
-                            { op: ':' },
-                            { base: -2, exp: 5 },
-                            { outerExp: 2 }
-                        ],
-                        property: 'div+pot',
-                        hint: 'Div: 8-5=3 → [(-2)³]² → 3×2=6 → (-2)⁶',
-                        correctAnswer: 64,
-                        correctDisplay: '(-2)⁶ = 64',
-                        steps: [
-                            '(-2)⁸ : (-2)⁵ = (-2)³',
-                            '[(-2)³]² = (-2)⁶',
-                            '(-2)⁶ = 64 (par → positivo)'
                         ]
                     },
                     {
@@ -821,8 +771,6 @@ export class ActivityManager {
                 exercises: [
                     {
                         // (x · x)²⁰ : (xⁿ)⁸ = 1
-                        // Izq: (x²)²⁰ = x⁴⁰
-                        // x⁴⁰ : x⁸ⁿ = x⁰ = 1
                         // 40 = 8n → n = 5
                         expression: '(x · x)²⁰ : (xⁿ)⁸ = 1',
                         hint: 'Izq: (x·x)²⁰ = (x²)²⁰ = x⁴⁰ | Para que dé 1 (x⁰), los exponentes deben ser iguales → 40 = 8×?',
@@ -837,9 +785,7 @@ export class ActivityManager {
                     },
                     {
                         // (a¹⁰ · aⁿ · a²) : (a²)¹⁰ = a³
-                        // Izq: a^(12+n) | Der: a²⁰
-                        // 12 + n - 20 = 3
-                        // n = 3 + 20 - 12 = 11
+                        // n = 11
                         expression: '(a¹⁰ · aⁿ · a²) : (a²)¹⁰ = a³',
                         hint: 'Izq: a^(10+n+2) = a^(12+n) | Der: (a²)¹⁰ = a²⁰ | Ecuación: (12+n) - 20 = 3',
                         correctAnswer: 11,
@@ -852,25 +798,8 @@ export class ActivityManager {
                         ]
                     },
                     {
-                        // [(-5)³¹ · (-5)²¹ · (-5)ⁿ] : [(-5)²⁵ · (-5)²⁵]² = (-5)²
-                        // Izq: (-5)^(52+n)
-                        // Der: [(-5)⁵⁰]² = (-5)¹⁰⁰
-                        // 52 + n - 100 = 2 → n = 50
-                        expression: '[(-5)³¹ · (-5)²¹ · (-5)ⁿ] : [(-5)²⁵ · (-5)²⁵]² = (-5)²',
-                        hint: 'Izq: 31+21+n = 52+n | Der: [(-5)⁵⁰]² = (-5)¹⁰⁰ | Ecuación: (52+n) - 100 = 2',
-                        correctAnswer: 50,
-                        missingType: 'exponent',
-                        steps: [
-                            'Primer corchete: (-5)^(31+21+n) = (-5)^(52+n)',
-                            'Segundo corchete: [(-5)²⁵ · (-5)²⁵]² = [(-5)⁵⁰]² = (-5)¹⁰⁰',
-                            'División: (52+n) - 100 = 2',
-                            '52 + n = 102 → n = 50'
-                        ]
-                    },
-                    {
                         // 9¹⁷ · 9ⁿ : 9⁶ = 9¹⁹
-                        // 17 + n - 6 = 19
-                        // n = 19 + 6 - 17 = 8
+                        // n = 8
                         expression: '9¹⁷ · 9ⁿ : 9⁶ = 9¹⁹',
                         hint: '17 + n - 6 = 19 → n = ?',
                         correctAnswer: 8,
@@ -883,28 +812,10 @@ export class ActivityManager {
                         ]
                     },
                     {
-                        // (2ⁿ)⁴ · 2² : 2⁶ = 2¹²
-                        // 4n + 2 - 6 = 12
-                        // 4n = 16 → n = 4
-                        expression: '(2ⁿ)⁴ · 2² : 2⁶ = 2¹²',
-                        hint: 'Pot de pot: (2ⁿ)⁴ = 2⁴ⁿ → 4n + 2 - 6 = 12 → 4n = ?',
-                        correctAnswer: 4,
-                        missingType: 'exponent',
-                        steps: [
-                            '(2ⁿ)⁴ = 2⁴ⁿ',
-                            '2⁴ⁿ · 2² : 2⁶ = 2^(4n+2-6) = 2^(4n-4)',
-                            '4n - 4 = 12',
-                            '4n = 16 → n = 4'
-                        ]
-                    },
-                    {
                         // [(3⁵ : 3²)ⁿ] · 3⁴ = 3¹⁹
-                        // Paso 1: 3⁵ : 3² = 3³
-                        // Paso 2: (3³)ⁿ = 3³ⁿ
-                        // Paso 3: 3³ⁿ · 3⁴ = 3^(3n+4) = 3¹⁹
-                        // 3n + 4 = 19 → 3n = 15 → n = 5
+                        // n = 5
                         expression: '[(3⁵ : 3²)ⁿ] · 3⁴ = 3¹⁹',
-                        hint: 'Adentro: 3⁵:3²=3³ → (3³)ⁿ=3³ⁿ → 3ⁿ+4 = 19 → 3n = ?',
+                        hint: 'Adentro: 3⁵:3²=3³ → (3³)ⁿ=3³ⁿ → 3n+4 = 19 → 3n = ?',
                         correctAnswer: 5,
                         missingType: 'exponent',
                         steps: [
