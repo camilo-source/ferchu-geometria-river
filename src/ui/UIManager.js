@@ -540,6 +540,15 @@ export class UIManager {
         exerciseUI = this.createPotenciacionFaltanteUI(exercise);
         needsGeometryCanvas = false;
         break;
+      // ═══ RADICACIÓN ═══
+      case 'raiz-cuadrada':
+      case 'raiz-superior':
+      case 'raiz-inversa':
+      case 'raiz-completar':
+      case 'raiz-boss':
+        exerciseUI = this.createRadicacionUI(exercise, activity.type);
+        needsGeometryCanvas = false;
+        break;
     }
 
     const topic = this.topicManager.getCurrentTopic();
@@ -1119,6 +1128,110 @@ export class UIManager {
     `;
   }
 
+  // ═══════════════════════════════════════════════════════════
+  // UI: RADICACIÓN (NUEVO)
+  // ═══════════════════════════════════════════════════════════
+  createRadicacionUI(exercise, activityType) {
+    const difficultyColors = {
+      'raiz-cuadrada': { bg: 'rgba(56, 142, 60, 0.1)', border: '#388E3C', label: '√ Raíz Cuadrada', gradient: 'rgba(56, 142, 60, 0.06), rgba(56, 142, 60, 0.12)' },
+      'raiz-superior': { bg: 'rgba(255, 152, 0, 0.1)', border: '#FF9800', label: '∛ Raíces Superiores', gradient: 'rgba(255, 152, 0, 0.06), rgba(255, 152, 0, 0.12)' },
+      'raiz-inversa': { bg: 'rgba(156, 39, 176, 0.1)', border: '#9C27B0', label: '🤔 Operación Inversa', gradient: 'rgba(156, 39, 176, 0.06), rgba(156, 39, 176, 0.12)' },
+      'raiz-completar': { bg: 'rgba(0, 150, 136, 0.1)', border: '#009688', label: '✍️ Completar y Justificar', gradient: 'rgba(0, 150, 136, 0.06), rgba(0, 150, 136, 0.12)' },
+      'raiz-boss': { bg: 'rgba(211, 47, 47, 0.1)', border: '#D32F2F', label: '💀 Boss de Raíces', gradient: 'rgba(211, 47, 47, 0.06), rgba(211, 47, 47, 0.12)' }
+    };
+    const style = difficultyColors[activityType] || difficultyColors['raiz-cuadrada'];
+
+    return `
+      <div style="text-align: center;">
+        <!-- Badge de dificultad -->
+        <div style="
+          display: inline-block;
+          background: ${style.bg};
+          border: 2px solid ${style.border};
+          color: ${style.border};
+          padding: 6px 20px;
+          border-radius: 20px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          margin-bottom: 2rem;
+        ">${style.label}</div>
+
+        <!-- Expresión matemática grande -->
+        <div style="
+          background: linear-gradient(135deg, ${style.gradient});
+          padding: 2.5rem 2rem;
+          border-radius: 20px;
+          margin-bottom: 2rem;
+          border: 2px solid ${style.border}30;
+        ">
+          <div style="
+            font-size: 3rem;
+            font-family: var(--font-number);
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: 2px;
+            line-height: 1.6;
+          ">
+            ${exercise.expression}
+          </div>
+        </div>
+
+        <!-- Pista -->
+        ${exercise.hint ? `
+          <div style="
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            color: #F57F17;
+          ">
+            💡 <strong>Pista:</strong> ${exercise.hint}
+          </div>
+        ` : ''}
+
+        <!-- Input de respuesta -->
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1rem;
+        ">
+          <label style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary);">
+            Resultado =
+          </label>
+          <input 
+            type="number" 
+            id="radicacion-input" 
+            placeholder="?"
+            style="
+              width: 120px;
+              padding: 1rem;
+              font-size: 2.5rem;
+              border: 3px solid ${style.border};
+              border-radius: 12px;
+              background: white;
+              color: var(--text-primary);
+              text-align: center;
+              font-family: var(--font-number);
+              font-weight: 700;
+            "
+          />
+        </div>
+
+        <p style="
+          margin-top: 1rem;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+        ">
+          Escribí el resultado numérico
+        </p>
+      </div>
+    `;
+  }
+
   createPotenciacionFaltanteUI(exercise) {
     return `
       <div style="text-align: center;">
@@ -1226,6 +1339,13 @@ export class UIManager {
       const input = document.getElementById('potencia-faltante-input');
       if (!input || input.value === '') {
         this.showFeedback('Ingresá el número faltante', 'error');
+        return;
+      }
+      userAnswer = parseInt(input.value);
+    } else if (['raiz-cuadrada', 'raiz-superior', 'raiz-inversa', 'raiz-completar', 'raiz-boss'].includes(activity.type)) {
+      const input = document.getElementById('radicacion-input');
+      if (!input || input.value === '') {
+        this.showFeedback('Ingresá el resultado de la raíz', 'error');
         return;
       }
       userAnswer = parseInt(input.value);
@@ -2075,7 +2195,13 @@ export class UIManager {
       'potencia-boss-algebra': [6],
       'liga-fecha-1': [4, 5] // Detective + Algebra
     };
-    return TRIANGULOS_MAP[concepto] || POTENCIAS_MAP[concepto] || [1];
+    // For radicación topic (IDs 1-5)
+    const RADICACION_MAP = {
+      'raiz-cuadrada-basica': [1, 2],     // cuadradas + superiores
+      'raiz-superior-e-inversa': [2, 3],   // superiores + inversas
+      'raiz-boss': [4, 5],                // completar + boss
+    };
+    return TRIANGULOS_MAP[concepto] || POTENCIAS_MAP[concepto] || RADICACION_MAP[concepto] || [1];
   }
 
   // ═══════════════════════════════════════════════════════════
